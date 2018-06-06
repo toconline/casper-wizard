@@ -1,0 +1,36 @@
+<link rel="import" href="../polymer/polymer-element.html">
+
+<dom-module id="casper-wizard">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <h2>Hello [[prop1]]!</h2>
+  </template>
+
+  <script>
+    /**
+     * `casper-wizard`
+     * Wizard a container for simple dialogs with the infamous prev-next buttons
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class CasperWizard extends Polymer.Element {
+      static get is() { return 'casper-wizard'; }
+      static get properties() {
+        return {
+          prop1: {
+            type: String,
+            value: 'casper-wizard'
+          }
+        };
+      }
+    }
+
+    window.customElements.define(CasperWizard.is, CasperWizard);
+  </script>
+</dom-module>
