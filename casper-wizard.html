@@ -6,8 +6,18 @@
       :host {
         display: block;
       }
+
+      ::slotted(*) {
+        background: red;
+        margin-bottom: 2px;
+        height: 500px;
+      }
+
     </style>
-    <h2>Hello [[prop1]]!</h2>
+
+    <div class="content" id="content">
+      <slot></slot>
+    </div>
   </template>
 
   <script>
@@ -29,6 +39,12 @@
           }
         };
       }
+
+      ready () {
+        super.ready();
+        console.log("casper-wizard ready");
+      }
+
     }
 
     window.customElements.define(CasperWizard.is, CasperWizard);
