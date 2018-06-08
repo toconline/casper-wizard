@@ -1,4 +1,5 @@
 <link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../casper-wizard/casper-wizard-page.html">
 
 <dom-module id="casper-wizard">
   <template>
@@ -7,17 +8,23 @@
         display: block;
       }
 
-      ::slotted(*) {
-        background: red;
-        margin-bottom: 2px;
+      ::slotted(div) {
+        background: yellow;
+        border: 2px red solid;
+        margin: 10px;
         height: 500px;
       }
 
-    </style>
+      .container-tabs {
+        border: 30px blue solid;
+      }
 
-    <div class="content" id="content">
+    </style>
+      
+    <div class="container-tabs">
       <slot></slot>
     </div>
+    
   </template>
 
   <script>
@@ -42,7 +49,38 @@
 
       ready () {
         super.ready();
-        console.log("casper-wizard ready");
+        console.log("wizard ready", this);
+        // console.log("casper-wizard ready for", this.querySelector("slot").assignedElements().length);
+        
+        let nextButton = document.createElement('paper-button');
+        let backButton = document.createElement('paper-button');
+        nextButton.innerHTML ='Next';
+        backButton.innerHTML = 'Back';
+        nextButton.style = 'position: absolute; right: 5%; bottom: 5%;'
+        backButton.style = 'position: absolute; right: 13%; bottom: 5%;'
+        this.shadowRoot.querySelector("#login").appendChild(nextButton);
+        this.shadowRoot.querySelector("#login").appendChild(backButton);
+      }
+
+      connectedCallback () {
+        super.connectedCallback();
+        console.log("wizard connectedCallback", this);
+        
+        // let wizards;
+
+        // if(this.tagName.toLocaleLowerCase() == CasperWizard.is){
+        //   wizards = this.querySelectorAll("casper-wizard-page");
+        // }else{
+        //   wizards = this.shadowRoot.querySelectorAll("casper-wizard-page");
+        // }
+
+        // wizards[0].querySelector("h1").style.display = "none";
+      }
+
+      _handleClick(e) {
+        console.info(e.target.id + ' was clicked.');
+        // console.log("Next button clicked");
+        this.shadowRoot.querySelector("casper-wizard-page").style.display = "none";
       }
 
     }

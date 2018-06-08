@@ -1,0 +1,75 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../paper-button/paper-button.html">
+<link rel="import" href="../iron-icon/iron-icon.html">
+<link rel="import" href="../casper-icons/casper-icons.html">
+
+<dom-module id="casper-wizard-page">
+  <template>
+    <style>
+      :host {
+        display: block;
+        /*background: green;*/
+        border: 2px red solid;
+        margin: 10px;
+        height: 500px;
+        position: relative;
+      }
+
+      .nav {
+        /*background: pink;*/
+        position: absolute;
+        right: 5%;
+        bottom: 5%;
+      }
+
+      .nav-close {
+        position: absolute;
+        right: 0;
+        top: 0;
+      }
+
+    </style>
+
+    <div>
+      <slot></slot>
+      <!-- <div class="nav">
+        <paper-button raised>Back</paper-button>
+        <paper-button raised>Next</paper-button>
+      </div>
+      <div class="nav-close">
+        <iron-icon icon="casper-icons:cancel"></iron-icon>
+      </div> -->
+    </div>
+    
+  </template>
+
+  <script>
+    /**
+     * `casper-wizard-page`
+     * Wizard a container for simple dialogs with the infamous prev-next buttons
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class CasperWizardPage extends Polymer.Element {
+      static get is() { return 'casper-wizard-page'; }
+      static get properties() {
+        return {
+          prop1: {
+            type: String,
+            value: 'casper-wizard-page'
+          }
+        };
+      }
+
+      ready () {
+        super.ready();
+        console.log("casper-wizard-page ready");
+      }
+
+    }
+
+    window.customElements.define(CasperWizardPage.is, CasperWizardPage);
+  </script>
+</dom-module>
