@@ -7,40 +7,18 @@
   <template>
     <style>
       :host {
-        display: block;
-        /*background: green;*/
-        border: 2px red solid;
-        margin: 10px;
-        height: 500px;
-        position: relative;
+        display: none;
+        flex-direction: column;
+        padding: 12px;
       }
 
-      .nav {
-        /*background: pink;*/
-        position: absolute;
-        right: 5%;
-        bottom: 5%;
-      }
-
-      .nav-close {
-        position: absolute;
-        right: 0;
-        top: 0;
+      .title {
+        color: --var(primary-color);
       }
 
     </style>
-
-    <div>
-      <slot></slot>
-      <!-- <div class="nav">
-        <paper-button raised>Back</paper-button>
-        <paper-button raised>Next</paper-button>
-      </div>
-      <div class="nav-close">
-        <iron-icon icon="casper-icons:cancel"></iron-icon>
-      </div> -->
-    </div>
-    
+    <span class="title">[[title]]</span>
+    <slot></slot>
   </template>
 
   <script>
@@ -56,16 +34,15 @@
       static get is() { return 'casper-wizard-page'; }
       static get properties() {
         return {
-          prop1: {
+          title: {
             type: String,
-            value: 'casper-wizard-page'
           }
         };
       }
 
-      ready () {
-        super.ready();
-        console.log("casper-wizard-page ready");
+      connectedCallback() {
+        super.connectedCallback();
+        console.log('cb casper-wizard-page:', this.title);
       }
 
     }

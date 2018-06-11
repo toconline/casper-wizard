@@ -7,28 +7,8 @@
       :host {
         display: block;
       }
-
-      ::slotted(div) {
-        background: yellow;
-        border: 2px red solid;
-        margin: 10px;
-        height: 500px;
-      }
-
-      .container-tabs {
-        border: 30px blue solid;
-      }
-
-      /*.buttons {
-        background-color: red;
-      }*/
-
     </style>
-      
-    <div class="container-tabs">
-      <slot></slot>
-    </div>
-    
+    <slot></slot>
   </template>
 
   <script>
@@ -55,17 +35,24 @@
         super.ready();
         console.log("wizard ready", this);
 
-        let navButtons = document.createElement('div');
-            navButtons.className = 'navButtons';
-            navButtons.innerHTML = '<paper-button class="back" raised>Back</paper-button><paper-button class="next" raised">Next</paper-button>';
-            navButtons.addEventListener('click', e => this._handleClick(e));
+        this._pageIndex = 0;
+        this._pages = this.shadowRoot.querySelectorAll('casper-wizard-page');
 
-        let closeButton = document.createElement('div');
-            closeButton.className = 'closeButton';
-            closeButton.innerHTML = '<a href="#"><iron-icon icon="casper-icons:cancel"></iron-icon></a>';
-        
-        this.shadowRoot.querySelector("casper-wizard-page").appendChild(navButtons);
-        this.shadowRoot.querySelector("casper-wizard-page").appendChild(closeButton);
+        this._prevButton = document.createElement('paper-button');
+        this._prevButton.textContent = 'previous';
+        this._prevButton.raised = true;
+        this._prevButton.addEventListener('tap', e => this._gotoPreviousPage(e));
+        this._prevButton.classList = 'wizard-button';
+        this.shadowRoot.appendChild(this._prevButton);
+
+        this._nextButton = document.createElement('paper-button');
+        this._nextButton.textContent = 'next';
+        this._nextButton.raised = true;
+        this._nextButton.addEventListener('tap', e => this._gotoNextPage(e));
+        this._nextButton.classList = 'wizard-button';
+        this.shadowRoot.appendChild(this._nextButton);
+
+        this._activatePage(0);
       }
 
       connectedCallback () {
@@ -74,27 +61,24 @@
         
       }
 
-      _handleClick(e) {
-        if (hasClass(e.target, 'back')) {
-            // .back clicked
-            
-            console.log("Back clicked");
-        } else if (hasClass(e.target, 'next')) {
-            // .next clicked
-            
-            if (this.shadowRoot.querySelector("#login").style.display = "block") {
-              this.shadowRoot.querySelector("#login").style.display = "none";
-              this.shadowRoot.querySelector("#uploader").style.display = "block";
-            } else {
-              this.shadowRoot.querySelector("#uploader").style.display = "block"
-              this.shadowRoot.querySelector("#uploader").style.display = "none";
-            }
-            console.log("Next clicked");
+      _gotoPreviousPage (event) {
+        if ( this._pageIndex >= 1 ) {
+          this._activatePage(this._pageIndex - 1);
         }
+      }
 
-        function hasClass(elem, className) {
-          return elem.classList.contains(className);
+      _gotoNextPage (event) {
+        if ( this._pageIndex < this._pages.length - 1 ) {
+          this._activatePage(this._pageIndex + 1);
         }
+      }
+
+      _activatePage (pageIndex) {
+        if ( this._pageIndex !== undefined ) {
+          this._pages[this._pageIndex].style.display = 'none';
+        }
+        this._pageIndex = pageIndex;
+        this._pages[this._pageIndex].style.display = 'flex';
       }
 
     }
