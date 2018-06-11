@@ -19,6 +19,10 @@
         border: 30px blue solid;
       }
 
+      /*.buttons {
+        background-color: red;
+      }*/
+
     </style>
       
     <div class="container-tabs">
@@ -50,37 +54,47 @@
       ready () {
         super.ready();
         console.log("wizard ready", this);
-        // console.log("casper-wizard ready for", this.querySelector("slot").assignedElements().length);
+
+        let navButtons = document.createElement('div');
+            navButtons.className = 'navButtons';
+            navButtons.innerHTML = '<paper-button class="back" raised>Back</paper-button><paper-button class="next" raised">Next</paper-button>';
+            navButtons.addEventListener('click', e => this._handleClick(e));
+
+        let closeButton = document.createElement('div');
+            closeButton.className = 'closeButton';
+            closeButton.innerHTML = '<a href="#"><iron-icon icon="casper-icons:cancel"></iron-icon></a>';
         
-        let nextButton = document.createElement('paper-button');
-        let backButton = document.createElement('paper-button');
-        nextButton.innerHTML ='Next';
-        backButton.innerHTML = 'Back';
-        nextButton.style = 'position: absolute; right: 5%; bottom: 5%;'
-        backButton.style = 'position: absolute; right: 13%; bottom: 5%;'
-        this.shadowRoot.querySelector("#login").appendChild(nextButton);
-        this.shadowRoot.querySelector("#login").appendChild(backButton);
+        this.shadowRoot.querySelector("casper-wizard-page").appendChild(navButtons);
+        this.shadowRoot.querySelector("casper-wizard-page").appendChild(closeButton);
       }
 
       connectedCallback () {
         super.connectedCallback();
         console.log("wizard connectedCallback", this);
         
-        // let wizards;
-
-        // if(this.tagName.toLocaleLowerCase() == CasperWizard.is){
-        //   wizards = this.querySelectorAll("casper-wizard-page");
-        // }else{
-        //   wizards = this.shadowRoot.querySelectorAll("casper-wizard-page");
-        // }
-
-        // wizards[0].querySelector("h1").style.display = "none";
       }
 
       _handleClick(e) {
-        console.info(e.target.id + ' was clicked.');
-        // console.log("Next button clicked");
-        this.shadowRoot.querySelector("casper-wizard-page").style.display = "none";
+        if (hasClass(e.target, 'back')) {
+            // .back clicked
+            
+            console.log("Back clicked");
+        } else if (hasClass(e.target, 'next')) {
+            // .next clicked
+            
+            if (this.shadowRoot.querySelector("#login").style.display = "block") {
+              this.shadowRoot.querySelector("#login").style.display = "none";
+              this.shadowRoot.querySelector("#uploader").style.display = "block";
+            } else {
+              this.shadowRoot.querySelector("#uploader").style.display = "block"
+              this.shadowRoot.querySelector("#uploader").style.display = "none";
+            }
+            console.log("Next clicked");
+        }
+
+        function hasClass(elem, className) {
+          return elem.classList.contains(className);
+        }
       }
 
     }
