@@ -33,7 +33,7 @@
 
       ready () {
         super.ready();
-        console.log("wizard ready", this);
+        // console.log("wizard ready", this);
 
         this._pageIndex = 0;
         this._pages = this.shadowRoot.querySelectorAll('casper-wizard-page');
@@ -42,22 +42,28 @@
         this._prevButton.textContent = 'previous';
         this._prevButton.raised = true;
         this._prevButton.addEventListener('tap', e => this._gotoPreviousPage(e));
-        this._prevButton.classList = 'wizard-button';
+        this._prevButton.classList = 'wizard-previous-button';
         this.shadowRoot.appendChild(this._prevButton);
 
         this._nextButton = document.createElement('paper-button');
         this._nextButton.textContent = 'next';
         this._nextButton.raised = true;
         this._nextButton.addEventListener('tap', e => this._gotoNextPage(e));
-        this._nextButton.classList = 'wizard-button';
+        this._nextButton.classList = 'wizard-next-button';
         this.shadowRoot.appendChild(this._nextButton);
+
+        this._closeButton = document.createElement('a');
+        this._closeButton.innerHTML = '<iron-icon icon="casper-icons:cancel"></iron-icon>';
+        this._closeButton.addEventListener('tap', e => this._closePage(e));
+        this._closeButton.classList = 'wizard-close-button';
+        this.shadowRoot.appendChild(this._closeButton);
 
         this._activatePage(0);
       }
 
       connectedCallback () {
         super.connectedCallback();
-        console.log("wizard connectedCallback", this);
+        // console.log("wizard connectedCallback", this);
         
       }
 
@@ -79,6 +85,13 @@
         }
         this._pageIndex = pageIndex;
         this._pages[this._pageIndex].style.display = 'flex';
+      }
+
+      _closePage (event) {
+        this._pages[this._pageIndex].style.display = 'none';
+        this._nextButton.style.display = 'none';
+        this._prevButton.style.display = 'none';
+        this._closeButton.style.display = 'none';
       }
 
     }
