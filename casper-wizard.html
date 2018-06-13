@@ -22,7 +22,7 @@
      * @polymer
      * @demo demo/index.html
      */
-    class CasperWizard extends Polymer.Element {
+    class CasperWizard extends Polymer.mixinBehaviors([Polymer.IronOverlayBehavior], Polymer.Element) {
       static get is() { return 'casper-wizard'; }
       
       static get properties() {
