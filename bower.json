@@ -4,7 +4,8 @@
   "main": "casper-wizard.html",
   "dependencies": {
     "polymer": "Polymer/polymer#^2.0.0",
-    "paper-button": "^2.1.1"
+    "paper-button": "^2.1.1",
+    "iron-pages": "^2.1.1"
   },
   "devDependencies": {
     "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^2.0.0",

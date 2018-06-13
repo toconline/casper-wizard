@@ -1,7 +1,4 @@
 <link rel="import" href="../polymer/polymer-element.html">
-<link rel="import" href="../paper-button/paper-button.html">
-<link rel="import" href="../iron-icon/iron-icon.html">
-<link rel="import" href="../casper-icons/casper-icons.html">
 
 <dom-module id="casper-wizard-page">
   <template>
@@ -14,11 +11,15 @@
 
       .title {
         color: --var(primary-color);
+        font-size: 24px;
+        font-weight: bold;
       }
 
     </style>
+    
     <span class="title">[[title]]</span>
     <slot></slot>
+    
   </template>
 
   <script>
@@ -32,6 +33,7 @@
      */
     class CasperWizardPage extends Polymer.Element {
       static get is() { return 'casper-wizard-page'; }
+      
       static get properties() {
         return {
           title: {

@@ -8,7 +8,9 @@
         display: block;
       }
     </style>
-    <slot></slot>
+
+      <slot></slot>
+    
   </template>
 
   <script>
@@ -22,12 +24,10 @@
      */
     class CasperWizard extends Polymer.Element {
       static get is() { return 'casper-wizard'; }
+      
       static get properties() {
         return {
-          prop1: {
-            type: String,
-            value: 'casper-wizard'
-          }
+          
         };
       }
 
@@ -88,10 +88,7 @@
       }
 
       _closePage (event) {
-        this._pages[this._pageIndex].style.display = 'none';
-        this._nextButton.style.display = 'none';
-        this._prevButton.style.display = 'none';
-        this._closeButton.style.display = 'none';
+        this.parentNode.close(this);
       }
 
     }
