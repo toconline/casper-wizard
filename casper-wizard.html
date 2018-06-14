@@ -2,6 +2,7 @@
 <link rel="import" href="/bower_components/casper-wizard/casper-wizard-page.html">
 
 <link rel="import" href="/bower_components/iron-overlay-behavior/iron-overlay-behavior.html">
+<link rel="import" href="/bower_components/iron-fit-behavior/iron-fit-behavior.html">
 
 <dom-module id="casper-wizard">
   <template>
@@ -12,7 +13,7 @@
     </style>
 
       <slot></slot>
-    
+
   </template>
 
   <script>
@@ -24,12 +25,12 @@
      * @polymer
      * @demo demo/index.html
      */
-    class CasperWizard extends Polymer.mixinBehaviors([Polymer.IronOverlayBehavior], Polymer.Element) {
+    class CasperWizard extends Polymer.mixinBehaviors([Polymer.IronOverlayBehavior, Polymer.IronFitBehavior], Polymer.Element) {
       static get is() { return 'casper-wizard'; }
-      
+
       static get properties() {
         return {
-          
+
         };
       }
 
@@ -66,7 +67,7 @@
       connectedCallback () {
         super.connectedCallback();
         // console.log("wizard connectedCallback", this);
-        
+
       }
 
       _gotoPreviousPage (event) {
