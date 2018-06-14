@@ -5,7 +5,8 @@
   "dependencies": {
     "polymer": "Polymer/polymer#^2.0.0",
     "paper-button": "^2.1.1",
-    "iron-pages": "^2.1.1"
+    "iron-pages": "^2.1.1",
+    "iron-overlay-behavior": "^2.3.4"
   },
   "devDependencies": {
     "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^2.0.0",
