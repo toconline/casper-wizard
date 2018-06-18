@@ -2,6 +2,38 @@
 <link rel="import" href="/bower_components/vaadin-upload/vaadin-upload.html">
 <link rel="import" href="/bower_components/paper-ripple/paper-ripple.html">
 
+<dom-module id="casper-vaadin-upload" theme-for="vaadin-upload">
+  <template>
+    <style>
+      :host {
+        border: dashed 2px gray;
+        border-radius: 6px;
+        padding: 12px;
+        color: gray;
+      } 
+
+      :host([dragover]) {
+        color: var(--primary-color);
+        border: solid 2px var(--primary-color);
+      }
+
+      [part="upload-button"] {
+        color: white;
+        background-color: var(--primary-color);
+      }
+
+      [part="drop-label"] {
+        align-items: center;
+      }      
+ 
+      [part="drop-label-icon"] {
+        margin: 6px;
+      }
+
+    </style>
+  </template>
+</dom-module>
+
 <dom-module id="casper-wizard-upload-panel">
   <template>
     <style>
@@ -17,8 +49,6 @@
 
     </style>
     
-    <!-- <slot></slot> -->
-
     <div id="upload_panel" class="container-uploader">
       <vaadin-upload  id="upload"
                       accept="image/jpeg, image/png"
@@ -47,7 +77,7 @@
       
       static get properties() {
         return {
-          
+          uploadUrl: String
         };
       }
 
@@ -57,7 +87,7 @@
 
       connectedCallback () {
         super.connectedCallback();
-        // console.log('cb casper-wizard-upload-panel:', this.title);
+        console.log('cb casper-wizard-upload-panel:', this.title);
       }
 
     }

@@ -13,6 +13,14 @@
       :host {
         display: block;
       }
+
+      .wizard-next-button {
+        position: absolute;
+        background-color: red;
+        right: 0;
+        bottom: 0;
+      }
+
     </style>
 
       
@@ -30,23 +38,51 @@
      * @demo demo/index.html
      */
     class CasperWizard extends Polymer.mixinBehaviors([Polymer.IronOverlayBehavior, Polymer.IronFitBehavior], Polymer.Element) {
-      static get is() { return 'casper-wizard'; }
+      
+      static get is () { 
+        return 'casper-wizard'; 
+      }
 
-      static get properties() {
+/*      static get properties() {
         return {
 
         };
-      }
+      }*/
 
       ready () {
         super.ready();
         // console.log("wizard ready", this);
 
+        let style = document.createElement('style');
+        style.type = 'text/css';
+        style.innerHTML = `
+            .wizard-next-button { 
+              position: absolute;
+              color: white; 
+              background-color: var(--primary-color); 
+              right: 12px; 
+              bottom: 12px; 
+            }
+            .wizard-previous-button {
+              position: absolute;
+              color: white; 
+              background-color: var(--primary-color); 
+              right: 100px;
+              bottom: 12px;
+            }
+            .wizard-close-button {
+              position: absolute;
+              top: 0;
+              right: 0;
+              padding: 12px;
+            };`
+        this.shadowRoot.appendChild(style);
+
         this._pageIndex = 0;
+        this._boundJobNotification = this._onJobNotification.bind(this);
+
         this._pages = this.shadowRoot.querySelectorAll('casper-wizard-page');
-        this._uploadPanel = this.shadowRoot.querySelector('casper-wizard-upload-panel');
-        this._statusPanel = this.shadowRoot.querySelector('casper-wizard-status-panel');
-        this._errorPanel = this.shadowRoot.querySelector('casper-wizard-error-panel');
+
 
         this._prevButton = document.createElement('paper-button');
         this._prevButton.textContent = 'previous';
@@ -74,10 +110,6 @@
       connectedCallback () {
         super.connectedCallback();
         // console.log("wizard connectedCallback", this);
-
-        this._uploadPanel.style.display = 'none';
-        this._statusPanel.style.display = 'none';
-        this._errorPanel.style.display = 'none';
       }
 
       _gotoPreviousPage (event) {
@@ -87,12 +119,13 @@
       }
 
       _gotoNextPage (event) {
-        if ( this._pageIndex < this._pages.length - 1 ) {
-          this._activatePage(this._pageIndex + 1);
+        if ( typeof this['nextOnPage' + this._pageIndex] === 'function' ) {
+          this['nextOnPage' + this._pageIndex].apply(this);
+        } else {
+          if ( this._pageIndex < this._pages.length - 1 ) {
+            this._activatePage(this._pageIndex + 1);
+          }
         }
-
-        // this._pages[this._pageIndex].style.display = 'none';
-
         // this._uploadPanel.style.display = 'none';
         // this._statusPanel.style.display = 'flex';
         // this._errorPanel.style.display = 'none';
@@ -108,6 +141,58 @@
 
       _closePage (event) {
         this.close(this);
+      }
+
+      showUploadPage () {
+        if ( this._uploadPage === undefined ) {
+          this._uploadPage = document.createElement('casper-wizard-upload-panel');
+          this.shadowRoot.appendChild(this._uploadPage);
+        }
+        this._pages[this._pageIndex].style.display = 'none';
+        this._uploadPage.style.display = 'flex';
+      }
+
+      showStatusPage () {
+        if ( this._statusPage === undefined ) {
+          this._statusPage = document.createElement('casper-wizard-status-panel');
+          this.shadowRoot.appendChild(this._statusPage);
+        }
+        this._pages[this._pageIndex].style.display = 'none';
+        this._statusPage.style.display = 'flex'
+      }
+
+      showErrorPage () {
+        if ( this._errorPage === undefined ) {
+          this._errorPanel  = document.createElement('casper-wizard-error-panel');
+          this.shadowRoot.appendChild(this._errorPanel);
+        }
+        this._pages[this._pageIndex].style.display = 'none';
+        this._errorPanel.style.display = 'flex';
+      }
+
+      submitJob (job, timeout) {
+        job.validity          = timeout;
+        job.entity_id         = null;
+        job.user_id           = null;
+        job.sharded_schema    = null;   // TODO move this to socket
+        job.company_schema    = null;
+        job.accounting_schema = null; 
+        job.accounting_prefix = null;
+        this.socket.submitJob(job, this._submitJobResponse.bind(this), { validity: timeout, ttr: timeout * 0.7});
+      }
+
+      _submitJobResponse (response) {
+        if ( response.success === true ) {
+          if ( this._jobId ) {
+            this.socket.removeEventListener(this._jobId, this._boundJobNotification);
+          }
+          this._jobId = response.channel;
+          this.socket.addEventListener(this._jobId, this._boundJobNotification);
+        }
+      }
+
+      _onJobNotification (notification) {
+        console.log(notification);
       }
 
     }

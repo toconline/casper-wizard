@@ -23,6 +23,7 @@
 
       .container-status {
         margin-top: 120px;
+
       }
 
       .container-status span {
@@ -31,13 +32,11 @@
 
     </style>
     
-    <!-- <slot></slot> -->
-
     <div id="status_panel" class="container-status">
-      <!-- <template is="dom-repeat" items="{{progress}}"> -->
+      <template is="dom-repeat" items="{{progressMessages}}">
         <span>{{item.message}}</span>
         <vaadin-progress-bar indeterminate min="0" max="100"></vaadin-progress-bar>
-      <!-- </template> -->
+      </template>
     </div>
 
   </template>
@@ -51,12 +50,21 @@
      * @polymer
      * @demo demo/index.html
      */
-    class CasperWizardStatusPanel extends CasperWizardPage {
-      static get is() { return 'casper-wizard-status-panel'; }
+    class CasperWizardStatusPanel extends Polymer.Element {
       
-      static get properties() {
+      static get is () { 
+        return 'casper-wizard-status-panel';
+      }
+      
+      static get properties () {
         return {
-          
+          progressMessages: {
+            type: Object
+          },
+          progressCount: {
+            type: Number,
+            value: 1
+          }
         };
       }
 
@@ -66,9 +74,25 @@
 
       connectedCallback () {
         super.connectedCallback();
-        // console.log('cb casper-wizard-status-panel:', this.title);
+        this.setProgressCount(1, true);
       }
 
+      setProgressCount (count, forced) {
+        if ( count !== this.progressCount || forced) {
+          this.progressCount = count;
+          this.progressMessages = null;
+          var pdata = Array.apply(null, { length: this.progressCount }).map(function() { return { message: '\xA0' }; });
+          pdata[0].message = 'Em fila de espera';
+          this.progressMessages = pdata;
+
+          for ( let idx = 1; idx <= this.progressMessages.length; idx++ ) {
+            const pbar = this.shadowRoot.querySelector(`vaadin-progress-bar:nth-of-type(${idx})`);
+            if ( pbar ) {
+              pbar.indeterminate = true;
+            }
+          }
+        }
+      }
     }
 
     window.customElements.define(CasperWizardStatusPanel.is, CasperWizardStatusPanel);
