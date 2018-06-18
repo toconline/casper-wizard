@@ -1,5 +1,8 @@
 <link rel="import" href="/bower_components/polymer/polymer-element.html">
 <link rel="import" href="/bower_components/casper-wizard/casper-wizard-page.html">
+<link rel="import" href="/bower_components/casper-wizard/casper-wizard-upload-panel.html">
+<link rel="import" href="/bower_components/casper-wizard/casper-wizard-status-panel.html">
+<link rel="import" href="/bower_components/casper-wizard/casper-wizard-error-panel.html">
 
 <link rel="import" href="/bower_components/iron-overlay-behavior/iron-overlay-behavior.html">
 <link rel="import" href="/bower_components/iron-fit-behavior/iron-fit-behavior.html">
@@ -41,6 +44,9 @@
 
         this._pageIndex = 0;
         this._pages = this.shadowRoot.querySelectorAll('casper-wizard-page');
+        this._uploadPanel = this.shadowRoot.querySelector('casper-wizard-upload-panel');
+        this._statusPanel = this.shadowRoot.querySelector('casper-wizard-status-panel');
+        this._errorPanel = this.shadowRoot.querySelector('casper-wizard-error-panel');
 
         this._prevButton = document.createElement('paper-button');
         this._prevButton.textContent = 'previous';
@@ -62,13 +68,16 @@
         this._closeButton.classList = 'wizard-close-button';
         this.shadowRoot.appendChild(this._closeButton);
 
-        this._activatePage(0);
+        this._activatePage(0)
       }
 
       connectedCallback () {
         super.connectedCallback();
         // console.log("wizard connectedCallback", this);
 
+        this._uploadPanel.style.display = 'none';
+        this._statusPanel.style.display = 'none';
+        this._errorPanel.style.display = 'none';
       }
 
       _gotoPreviousPage (event) {
@@ -81,6 +90,12 @@
         if ( this._pageIndex < this._pages.length - 1 ) {
           this._activatePage(this._pageIndex + 1);
         }
+
+        // this._pages[this._pageIndex].style.display = 'none';
+
+        // this._uploadPanel.style.display = 'none';
+        // this._statusPanel.style.display = 'flex';
+        // this._errorPanel.style.display = 'none';
       }
 
       _activatePage (pageIndex) {
