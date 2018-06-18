@@ -1,0 +1,94 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="/bower_components/iron-icon/iron-icon.html">
+
+<dom-module id="casper-wizard-error-panel">
+  <template>
+    <style>
+      :host {
+        display: flex;
+        flex-direction: column;
+        padding: 12px;
+      }
+
+      .container-error {
+        margin-top: 120px;
+        text-align: center;
+      }
+
+      .error_pad {
+        width: 72px;
+        height: 100%;
+        margin-right: 12px;
+      }
+
+      .error_icon {
+        fill: #B94F4F;
+        --iron-icon-height: 72px;
+        --iron-icon-width: 72px;
+      }
+
+      .error_message {
+        font-size: 16px;
+        font-weight: 500;
+        color: grey;
+        right: 0;
+        top: 0;
+        overflow: auto;
+        margin: 0;
+        max-height: 250px;
+      }
+
+      .error_message h2 {
+        margin-top: 0px;
+        color: grey;
+      }
+
+    </style>
+    
+    <!-- <slot></slot> -->
+
+    <div id="error_panel" class="container-error">
+      <div class="error_pad">
+        <iron-icon icon="casper-icons:error-outline" class="error_icon"></iron-icon>
+      </div>
+      <div class="error_message">
+        <!-- <h2>[[i18n('i18n_error')]]</h2> -->
+        <h2>Erro</h2>
+        <span id="error_message"></span>
+      </div>
+    </div>
+    
+  </template>
+
+  <script>
+    /**
+     * `casper-wizard-error-panel`
+     * Wizard a container for simple dialogs with the infamous prev-next buttons
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class CasperWizardErrorPanel extends CasperWizardPage {
+      static get is() { return 'casper-wizard-error-panel'; }
+      
+      static get properties() {
+        return {
+          
+        };
+      }
+
+      ready () {
+        super.ready();
+      }
+
+      connectedCallback () {
+        super.connectedCallback();
+        // console.log('cb casper-wizard-error-panel:', this.title);
+      }
+
+    }
+
+    window.customElements.define(CasperWizardErrorPanel.is, CasperWizardErrorPanel);
+  </script>
+</dom-module>

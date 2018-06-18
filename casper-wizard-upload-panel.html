@@ -1,0 +1,67 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="/bower_components/vaadin-upload/vaadin-upload.html">
+<link rel="import" href="/bower_components/paper-ripple/paper-ripple.html">
+
+<dom-module id="casper-wizard-upload-panel">
+  <template>
+    <style>
+      :host {
+        display: flex;
+        flex-direction: column;
+        padding: 12px;
+      }
+
+      .container-uploader {
+        margin-top: 110px;
+      }
+
+    </style>
+    
+    <!-- <slot></slot> -->
+
+    <div id="upload_panel" class="container-uploader">
+      <vaadin-upload  id="upload"
+                      accept="image/jpeg, image/png"
+                      target="[[uploadUrl]]"
+                      max-files="1"
+                      method="POST"
+                      timeout="300000"
+                      form-data-name="my-attachment">
+      <paper-ripple id="ripple" style="pointer-events: none;"></paper-ripple>
+      </vaadin-upload>
+    </div>
+
+  </template>
+
+  <script>
+    /**
+     * `casper-wizard-upload-panel`
+     * Wizard a container for simple dialogs with the infamous prev-next buttons
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class CasperWizardUploadPanel extends CasperWizardPage {
+      static get is() { return 'casper-wizard-upload-panel'; }
+      
+      static get properties() {
+        return {
+          
+        };
+      }
+
+      ready () {
+        super.ready();
+      }
+
+      connectedCallback () {
+        super.connectedCallback();
+        // console.log('cb casper-wizard-upload-panel:', this.title);
+      }
+
+    }
+
+    window.customElements.define(CasperWizardUploadPanel.is, CasperWizardUploadPanel);
+  </script>
+</dom-module>
