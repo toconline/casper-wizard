@@ -1,11 +1,13 @@
-<link rel="import" href="/bower_components/polymer/polymer-element.html">
-<link rel="import" href="/bower_components/casper-wizard/casper-wizard-page.html">
-<link rel="import" href="/bower_components/casper-wizard/casper-wizard-upload-panel.html">
-<link rel="import" href="/bower_components/casper-wizard/casper-wizard-status-panel.html">
-<link rel="import" href="/bower_components/casper-wizard/casper-wizard-error-panel.html">
 
-<link rel="import" href="/bower_components/iron-overlay-behavior/iron-overlay-behavior.html">
-<link rel="import" href="/bower_components/iron-fit-behavior/iron-fit-behavior.html">
+
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../casper-common-ui/casper-i18n-behavior.html">
+<link rel="import" href="../casper-wizard/casper-wizard-page.html">
+<link rel="import" href="../casper-wizard/casper-wizard-upload-panel.html">
+<link rel="import" href="../casper-wizard/casper-wizard-progress-page.html">
+<link rel="import" href="../casper-wizard/casper-wizard-status-page.html">
+<link rel="import" href="../iron-overlay-behavior/iron-overlay-behavior.html">
+<link rel="import" href="../iron-fit-behavior/iron-fit-behavior.html">
 
 <dom-module id="casper-wizard">
   <template>
@@ -28,6 +30,7 @@
       
   </template>
 
+
   <script>
     /**
      * `casper-wizard`
@@ -37,17 +40,11 @@
      * @polymer
      * @demo demo/index.html
      */
-    class CasperWizard extends Polymer.mixinBehaviors([Polymer.IronOverlayBehavior, Polymer.IronFitBehavior], Polymer.Element) {
+    class CasperWizard extends Polymer.mixinBehaviors([Polymer.IronOverlayBehavior, Polymer.IronFitBehavior], Casper.I18n(Polymer.Element)) {
       
       static get is () { 
         return 'casper-wizard'; 
       }
-
-/*      static get properties() {
-        return {
-
-        };
-      }*/
 
       ready () {
         super.ready();
@@ -113,22 +110,27 @@
       }
 
       _gotoPreviousPage (event) {
-        if ( this._pageIndex >= 1 ) {
-          this._activatePage(this._pageIndex - 1);
+        if ( this._statusPage !== undefined && this._statusPage.style.display !== 'none' ) {
+          this._activatePage(this._pageIndex);
+        } else {
+          if ( this._pageIndex >= 1 ) {
+            if ( typeof this['previousOnPage' + this._pageIndex] === 'function' ) {
+              this['previousOnPage' + this._pageIndex].apply(this);
+            } else {
+              this._activatePage(this._pageIndex - 1);
+            }
+          }
         }
       }
 
       _gotoNextPage (event) {
-        if ( typeof this['nextOnPage' + this._pageIndex] === 'function' ) {
-          this['nextOnPage' + this._pageIndex].apply(this);
-        } else {
-          if ( this._pageIndex < this._pages.length - 1 ) {
+        if ( this._pageIndex < this._pages.length - 1 ) {
+          if ( typeof this['nextOnPage' + this._pageIndex] === 'function' ) {
+            this['nextOnPage' + this._pageIndex].apply(this);
+          } else {
             this._activatePage(this._pageIndex + 1);
           }
         }
-        // this._uploadPanel.style.display = 'none';
-        // this._statusPanel.style.display = 'flex';
-        // this._errorPanel.style.display = 'none';
       }
 
       _activatePage (pageIndex) {
@@ -136,6 +138,12 @@
           this._pages[this._pageIndex].style.display = 'none';
         }
         this._pageIndex = pageIndex;
+        if ( this._progressPage !== undefined ) {
+          this._progressPage.style.display = 'none';
+        }
+        if ( this._statusPage !== undefined ) {
+          this._statusPage.style.display = 'none';
+        }
         this._pages[this._pageIndex].style.display = 'flex';
       }
 
@@ -143,31 +151,60 @@
         this.close(this);
       }
 
-      showUploadPage () {
+      nextPage () {
+        if ( this._pageIndex < this._pages.length - 1 ) {
+          this._activatePage(this._pageIndex + 1);
+        }  
+      }
+
+      /*showUploadPage () {
         if ( this._uploadPage === undefined ) {
           this._uploadPage = document.createElement('casper-wizard-upload-panel');
           this.shadowRoot.appendChild(this._uploadPage);
         }
         this._pages[this._pageIndex].style.display = 'none';
         this._uploadPage.style.display = 'flex';
+      }*/
+
+      showProgressPage () {
+        // ... hide current pages ...
+        this._pages[this._pageIndex].style.display = 'none';
+        if ( this._statusPage !== undefined ) {
+          this._statusPage.style.display = 'none';
+        }  
+        // ... create page if needed ...
+        if ( this._progressPage === undefined ) {
+          this._progressPage = document.createElement('casper-wizard-progress-page');
+          this.shadowRoot.appendChild(this._progressPage);
+        }
+
+        // ... show progress page
+        this._progressPage.style.display = 'flex';
       }
 
-      showStatusPage () {
+      showStatusPage (notification) {
+        // ... hide current pages ...
+        this._pages[this._pageIndex].style.display = 'none';
+        if ( this._progressPage !== undefined ) {
+          this._progressPage.style.display = 'none';
+        }        
+        // ... create page if needed ...
         if ( this._statusPage === undefined ) {
-          this._statusPage = document.createElement('casper-wizard-status-panel');
+          this._statusPage  = document.createElement('casper-wizard-status-page');
           this.shadowRoot.appendChild(this._statusPage);
         }
-        this._pages[this._pageIndex].style.display = 'none';
-        this._statusPage.style.display = 'flex'
-      }
 
-      showErrorPage () {
-        if ( this._errorPage === undefined ) {
-          this._errorPanel  = document.createElement('casper-wizard-error-panel');
-          this.shadowRoot.appendChild(this._errorPanel);
+        // ... set message and or icon ...
+        this._statusPage.message = this.i18n.apply(this, notification.message);
+        if ( notification.title !== undefined ) {
+          this._statusPage.title = notification.title;
         }
-        this._pages[this._pageIndex].style.display = 'none';
-        this._errorPanel.style.display = 'flex';
+        if ( notification.response !== undefined && notification.response.stash_icon !== undefined ) {
+          this._statusPage.icon = notification.response.stash_icon;
+        }
+
+        // show status page
+        this._statusPage.style.display = 'flex';
       }
 
       submitJob (job, timeout) {
@@ -178,7 +215,7 @@
         job.company_schema    = null;
         job.accounting_schema = null; 
         job.accounting_prefix = null;
-        this.socket.submitJob(job, this._submitJobResponse.bind(this), { validity: timeout, ttr: timeout * 0.7});
+        this.socket.submitJob(job, this._submitJobResponse.bind(this), { validity: timeout, ttr: timeout, timeout: timeout});
       }
 
       _submitJobResponse (response) {
@@ -191,8 +228,35 @@
         }
       }
 
-      _onJobNotification (notification) {
+      _onJobNotification (event) {
+        this._updateUI(event.detail);
+      }
+
+      _updateUI (notification) {
+
         console.log(notification);
+
+        switch (notification.status) {
+          case 'in-progress':
+            this.showProgressPage();
+            this._progressPage.updateProgress(notification.index, this.i18n.apply(this, notification.message), notification.progress);
+            break;
+          case 'completed':
+            if ( typeof this['jobCompletedOnPage' + this._pageIndex] === 'function' ) {
+              this['jobCompletedOnPage' + this._pageIndex].apply(this, [notification.message, notification.response]);
+            } else {
+              // TODO auto close on last page??
+            }
+            //this._onUploadCompletedCallbackData = { link: notification.link };
+            //this._closeDialog();
+            break;
+          case 'failed':
+          case 'error':
+            this.showStatusPage(notification);
+            break;
+          default:
+            break;
+        }
       }
 
     }

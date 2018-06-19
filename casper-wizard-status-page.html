@@ -1,17 +1,19 @@
-<link rel="import" href="../polymer/polymer-element.html">
-<link rel="import" href="/bower_components/iron-icon/iron-icon.html">
 
-<dom-module id="casper-wizard-error-panel">
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../casper-icons/casper-icons.html">
+<link rel="import" href="../iron-icon/iron-icon.html">
+
+<dom-module id="casper-wizard-status-page">
   <template>
     <style>
       :host {
-        display: flex;
-        flex-direction: column;
+        display: none;
         padding: 12px;
       }
 
       .container-error {
         margin-top: 120px;
+        display: flex;
         text-align: center;
       }
 
@@ -43,18 +45,15 @@
         color: grey;
       }
 
-    </style>
-    
-    <!-- <slot></slot> -->
+    </style>    
 
     <div id="error_panel" class="container-error">
       <div class="error_pad">
-        <iron-icon icon="casper-icons:error-outline" class="error_icon"></iron-icon>
+        <iron-icon icon="[[icon]]" class="error_icon"></iron-icon>
       </div>
       <div class="error_message">
-        <!-- <h2>[[i18n('i18n_error')]]</h2> -->
-        <h2>Erro</h2>
-        <span id="error_message"></span>
+        <h2>[[title]]</h2>
+        <span id="error_message">[[message]]</span>
       </div>
     </div>
     
@@ -62,33 +61,38 @@
 
   <script>
     /**
-     * `casper-wizard-error-panel`
+     * `casper-wizard-status-page`
      * Wizard a container for simple dialogs with the infamous prev-next buttons
      *
      * @customElement
      * @polymer
      * @demo demo/index.html
      */
-    class CasperWizardErrorPanel extends CasperWizardPage {
-      static get is() { return 'casper-wizard-error-panel'; }
+    class CasperWizardStatusPage extends CasperWizardPage {
       
-      static get properties() {
+      static get is () { 
+        return 'casper-wizard-status-page'; 
+      }
+      
+      static get properties () {
         return {
-          
+          title: {
+            type: String,
+            value: 'Erro'
+          },
+          message: {
+            type: String,
+            value: '\xA0' 
+          },
+          icon: {
+            type: String,
+            value: 'casper-icons:error-outline'
+          }
         };
-      }
-
-      ready () {
-        super.ready();
-      }
-
-      connectedCallback () {
-        super.connectedCallback();
-        // console.log('cb casper-wizard-error-panel:', this.title);
       }
 
     }
 
-    window.customElements.define(CasperWizardErrorPanel.is, CasperWizardErrorPanel);
+    window.customElements.define(CasperWizardStatusPage.is, CasperWizardStatusPage);
   </script>
 </dom-module>
