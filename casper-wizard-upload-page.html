@@ -1,3 +1,23 @@
+<!doctype html>
+<!--
+  - Copyright (c) 2014-2016 Cloudware S.A. All rights reserved.
+  -
+  - This file is part of casper-wizard.
+  -
+  - casper-wizard is free software: you can redistribute it and/or modify
+  - it under the terms of the GNU Affero General Public License as published by
+  - the Free Software Foundation, either version 3 of the License, or
+  - (at your option) any later version.
+  -
+  - casper-wizard  is distributed in the hope that it will be useful,
+  - but WITHOUT ANY WARRANTY; without even the implied warranty of
+  - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  - GNU General Public License for more details.
+  -
+  - You should have received a copy of the GNU Affero General Public License
+  - along with casper-wizard.  If not, see <http://www.gnu.org/licenses/>.
+  -
+ -->
 <link rel="import" href="../polymer/polymer-element.html">
 <link rel="import" href="/bower_components/vaadin-upload/vaadin-upload.html">
 <link rel="import" href="/bower_components/paper-ripple/paper-ripple.html">
@@ -34,7 +54,7 @@
   </template>
 </dom-module>
 
-<dom-module id="casper-wizard-upload-panel">
+<dom-module id="casper-wizard-upload-page">
   <template>
     <style>
       :host {
@@ -49,6 +69,7 @@
 
     </style>
     
+    <slot name="before"></slot>
     <div id="upload_panel" class="container-uploader">
       <vaadin-upload  id="upload"
                       accept="image/jpeg, image/png"
@@ -60,20 +81,23 @@
       <paper-ripple id="ripple" style="pointer-events: none;"></paper-ripple>
       </vaadin-upload>
     </div>
-
+    <slot name="after"></slot>
   </template>
 
   <script>
     /**
-     * `casper-wizard-upload-panel`
+     * `casper-wizard-upload-page`
      * Wizard a container for simple dialogs with the infamous prev-next buttons
      *
      * @customElement
      * @polymer
      * @demo demo/index.html
      */
-    class CasperWizardUploadPanel extends CasperWizardPage {
-      static get is() { return 'casper-wizard-upload-panel'; }
+    class CasperWizardUploadPage extends CasperWizardPage {
+      
+      static get is () { 
+        return 'casper-wizard-upload-page';
+      }
       
       static get properties() {
         return {
@@ -87,11 +111,11 @@
 
       connectedCallback () {
         super.connectedCallback();
-        console.log('cb casper-wizard-upload-panel:', this.title);
+        console.log('cb casper-wizard-upload-page:', this.title);
       }
 
     }
 
-    window.customElements.define(CasperWizardUploadPanel.is, CasperWizardUploadPanel);
+    window.customElements.define(CasperWizardUploadPage.is, CasperWizardUploadPage);
   </script>
 </dom-module>
