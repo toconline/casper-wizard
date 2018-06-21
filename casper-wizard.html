@@ -8,6 +8,8 @@
 <link rel="import" href="../casper-wizard/casper-wizard-status-page.html">
 <link rel="import" href="../iron-overlay-behavior/iron-overlay-behavior.html">
 <link rel="import" href="../iron-fit-behavior/iron-fit-behavior.html">
+<link rel="import" href="../paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../casper-icons/casper-icons.html">
 
 <dom-module id="casper-wizard">
   <template>
@@ -16,16 +18,8 @@
         display: block;
       }
 
-      .wizard-next-button {
-        position: absolute;
-        background-color: red;
-        right: 0;
-        bottom: 0;
-      }
-
     </style>
 
-      
     <slot></slot>
       
   </template>
@@ -53,19 +47,24 @@
         let style = document.createElement('style');
         style.type = 'text/css';
         style.innerHTML = `
-            .wizard-next-button { 
-              position: absolute;
-              color: white; 
-              background-color: var(--primary-color); 
+            paper-icon-button {
+              width: 60px;
+              height: 60px;
+            }
+            paper-icon-button[disabled] {
+              color: #f2f2f2;
+            }
+            .wizard-next-button {
+              position: absolute; 
               right: 12px; 
-              bottom: 12px; 
+              bottom: 12px;
+              color: #00ABC1;
             }
             .wizard-previous-button {
-              position: absolute;
-              color: white; 
-              background-color: var(--primary-color); 
-              right: 100px;
+              position: absolute; 
+              right: 60px;
               bottom: 12px;
+              color: #00ABC1;
             }
             .wizard-close-button {
               position: absolute;
@@ -81,21 +80,19 @@
         this._pages = this.shadowRoot.querySelectorAll('casper-wizard-page');
 
 
-        this._prevButton = document.createElement('paper-button');
-        this._prevButton.textContent = 'previous';
-        this._prevButton.raised = true;
+        this._prevButton = document.createElement('div');
+        this._prevButton.innerHTML = '<paper-icon-button icon="casper-icons:arrow-left" disabled></paper-icon-button>';
         this._prevButton.addEventListener('tap', e => this._gotoPreviousPage(e));
         this._prevButton.classList = 'wizard-previous-button';
         this.shadowRoot.appendChild(this._prevButton);
 
-        this._nextButton = document.createElement('paper-button');
-        this._nextButton.textContent = 'next';
-        this._nextButton.raised = true;
+        this._nextButton = document.createElement('div');
+        this._nextButton.innerHTML = '<paper-icon-button icon="casper-icons:arrow-right"></paper-icon-button>';
         this._nextButton.addEventListener('tap', e => this._gotoNextPage(e));
         this._nextButton.classList = 'wizard-next-button';
         this.shadowRoot.appendChild(this._nextButton);
 
-        this._closeButton = document.createElement('a');
+        this._closeButton = document.createElement('div');
         this._closeButton.innerHTML = '<iron-icon icon="casper-icons:cancel"></iron-icon>';
         this._closeButton.addEventListener('tap', e => this._closePage(e));
         this._closeButton.classList = 'wizard-close-button';
@@ -145,6 +142,7 @@
           this._statusPage.style.display = 'none';
         }
         this._pages[this._pageIndex].style.display = 'flex';
+        this._prevButton.disabled = false;
       }
 
       _closePage (event) {
@@ -159,7 +157,7 @@
 
       /*showUploadPage () {
         if ( this._uploadPage === undefined ) {
-          this._uploadPage = document.createElement('casper-wizard-upload-panel');
+          this._uploadPage = document.createElement('casper-wizard-upload-page');
           this.shadowRoot.appendChild(this._uploadPage);
         }
         this._pages[this._pageIndex].style.display = 'none';
@@ -205,6 +203,7 @@
 
         // show status page
         this._statusPage.style.display = 'flex';
+        this._prevButton.disabled = false;
       }
 
       submitJob (job, timeout) {
