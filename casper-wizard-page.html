@@ -36,9 +36,27 @@
         font-weight: bold;
       }
 
+      #header {
+        background-color: #00ABC1;
+        height: 42px;
+        color: white;
+        padding: 0px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-radius: 6px 6px 0px 0px;
+      }
+
+      .header {
+        margin: 8px;
+      }
+
     </style>
+
+    <div id="header">
+      <h2 id="title" class="header">[[title]]</h2>
+    </div>
     
-    <span class="title">[[title]]</span>
     <slot></slot>
     
   </template>

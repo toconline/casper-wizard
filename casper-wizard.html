@@ -67,29 +67,31 @@
         style.type = 'text/css';
         style.innerHTML = `
             paper-icon-button {
-              width: 60px;
-              height: 60px;
+              width: 80px;
+              height: 80px;
             }
             paper-icon-button[disabled] {
               color: #f2f2f2;
             }
             .wizard-next-button {
               position: absolute; 
-              right: 12px; 
-              bottom: 12px;
+              right: 0px; 
+              bottom: 0px;
               color: #00ABC1;
             }
             .wizard-previous-button {
               position: absolute; 
               right: 60px;
-              bottom: 12px;
+              bottom: 0px;
               color: #00ABC1;
             }
             .wizard-close-button {
+              width: 50px;
+              height: 50px;
               position: absolute;
-              top: 0;
-              right: 0;
-              padding: 12px;
+              top: 8px;
+              right: 8px;
+              color: #FFF;
             };`
         this.shadowRoot.appendChild(style);
 
@@ -98,21 +100,20 @@
 
         this._pages = this.shadowRoot.querySelectorAll('casper-wizard-page');
 
-
-        this._prevButton = document.createElement('div');
-        this._prevButton.innerHTML = '<paper-icon-button icon="casper-icons:arrow-left" disabled></paper-icon-button>';
+        this._prevButton = document.createElement('paper-icon-button');
+        this._prevButton.icon = 'casper-icons:arrow-left';
         this._prevButton.addEventListener('tap', e => this._gotoPreviousPage(e));
         this._prevButton.classList = 'wizard-previous-button';
         this.shadowRoot.appendChild(this._prevButton);
 
-        this._nextButton = document.createElement('div');
-        this._nextButton.innerHTML = '<paper-icon-button icon="casper-icons:arrow-right"></paper-icon-button>';
+        this._nextButton = document.createElement('paper-icon-button');
+        this._nextButton.icon = 'casper-icons:arrow-right';
         this._nextButton.addEventListener('tap', e => this._gotoNextPage(e));
         this._nextButton.classList = 'wizard-next-button';
         this.shadowRoot.appendChild(this._nextButton);
 
-        this._closeButton = document.createElement('div');
-        this._closeButton.innerHTML = '<iron-icon icon="casper-icons:cancel"></iron-icon>';
+        this._closeButton = document.createElement('paper-icon-button');
+        this._closeButton.icon = 'casper-icons:close';
         this._closeButton.addEventListener('tap', e => this._closePage(e));
         this._closeButton.classList = 'wizard-close-button';
         this.shadowRoot.appendChild(this._closeButton);
@@ -196,13 +197,12 @@
           this._statusPage.style.display = 'none';
         }
         this._pages[this._pageIndex].style.display = 'flex';
-        this._prevButton.disabled = false;
+        this._prevButton.setAttribute("disabled", "");
       }
 
       _closePage (event) {
         this.close(this);
       }
-
 
       /*showUploadPage () {
         if ( this._uploadPage === undefined ) {
@@ -251,8 +251,8 @@
         }
 
         // show status page
+        this._prevButton.removeAttribute("disabled", "");
         this._statusPage.style.display = 'flex';
-        this._prevButton.disabled = false;
       }
 
       _submitJobResponse (response) {
