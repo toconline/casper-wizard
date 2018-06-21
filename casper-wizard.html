@@ -1,9 +1,28 @@
-
+<!doctype html>
+<!--
+  - Copyright (c) 2014-2016 Cloudware S.A. All rights reserved.
+  -
+  - This file is part of casper-wizard.
+  -
+  - casper-wizard is free software: you can redistribute it and/or modify
+  - it under the terms of the GNU Affero General Public License as published by
+  - the Free Software Foundation, either version 3 of the License, or
+  - (at your option) any later version.
+  -
+  - casper-wizard  is distributed in the hope that it will be useful,
+  - but WITHOUT ANY WARRANTY; without even the implied warranty of
+  - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  - GNU General Public License for more details.
+  -
+  - You should have received a copy of the GNU Affero General Public License
+  - along with casper-wizard.  If not, see <http://www.gnu.org/licenses/>.
+  -
+ -->
 
 <link rel="import" href="../polymer/polymer-element.html">
 <link rel="import" href="../casper-common-ui/casper-i18n-behavior.html">
 <link rel="import" href="../casper-wizard/casper-wizard-page.html">
-<link rel="import" href="../casper-wizard/casper-wizard-upload-panel.html">
+<link rel="import" href="../casper-wizard/casper-wizard-upload-page.html">
 <link rel="import" href="../casper-wizard/casper-wizard-progress-page.html">
 <link rel="import" href="../casper-wizard/casper-wizard-status-page.html">
 <link rel="import" href="../iron-overlay-behavior/iron-overlay-behavior.html">
@@ -106,6 +125,41 @@
         // console.log("wizard connectedCallback", this);
       }
 
+      //***************************************************************************************//
+      //                                                                                       //
+      //                      ~~~ API to be used by the Wizards of Oz ~~~                      //
+      //                                                                                       //
+      //***************************************************************************************//
+
+      nextPage () {
+        if ( this._pageIndex < this._pages.length - 1 ) {
+          this._activatePage(this._pageIndex + 1);
+        }  
+      }
+
+      previousPage () {
+        if ( this._pageIndex >= 1 ) {
+          this._activatePage(this._pageIndex - 1);
+        }
+      }
+
+      submitJob (job, timeout) {
+        job.validity          = timeout;
+        job.entity_id         = null;
+        job.user_id           = null;
+        job.sharded_schema    = null;   // TODO move this to socket
+        job.company_schema    = null;
+        job.accounting_schema = null; 
+        job.accounting_prefix = null;
+        this.socket.submitJob(job, this._submitJobResponse.bind(this), { validity: timeout, ttr: timeout, timeout: timeout});
+      }
+
+      //***************************************************************************************//
+      //                                                                                       //
+      //                    ~~~ Internals of the underworld implementaion ~~~                  //
+      //                                                                                       //
+      //***************************************************************************************//
+
       _gotoPreviousPage (event) {
         if ( this._statusPage !== undefined && this._statusPage.style.display !== 'none' ) {
           this._activatePage(this._pageIndex);
@@ -149,11 +203,6 @@
         this.close(this);
       }
 
-      nextPage () {
-        if ( this._pageIndex < this._pages.length - 1 ) {
-          this._activatePage(this._pageIndex + 1);
-        }  
-      }
 
       /*showUploadPage () {
         if ( this._uploadPage === undefined ) {
@@ -206,17 +255,6 @@
         this._prevButton.disabled = false;
       }
 
-      submitJob (job, timeout) {
-        job.validity          = timeout;
-        job.entity_id         = null;
-        job.user_id           = null;
-        job.sharded_schema    = null;   // TODO move this to socket
-        job.company_schema    = null;
-        job.accounting_schema = null; 
-        job.accounting_prefix = null;
-        this.socket.submitJob(job, this._submitJobResponse.bind(this), { validity: timeout, ttr: timeout, timeout: timeout});
-      }
-
       _submitJobResponse (response) {
         if ( response.success === true ) {
           if ( this._jobId ) {
@@ -251,7 +289,11 @@
             break;
           case 'failed':
           case 'error':
-            this.showStatusPage(notification);
+            if ( typeof this['errorOnPage' + this._pageIndex] === 'function' ) {
+              this['errorOnPage' + this._pageIndex].apply(this, [notification]);
+            } else {
+              this.showStatusPage(notification);
+            }
             break;
           default:
             break;
