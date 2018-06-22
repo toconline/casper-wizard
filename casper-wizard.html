@@ -89,8 +89,8 @@
               width: 50px;
               height: 50px;
               position: absolute;
-              top: 8px;
-              right: 8px;
+              top: -4px;
+              right: 0px;
               color: #FFF;
             };`
         this.shadowRoot.appendChild(style);
@@ -286,7 +286,9 @@
               // TODO auto close on last page??
             }
             //this._onUploadCompletedCallbackData = { link: notification.link };
-            //this._closeDialog();
+            this._nextButton.icon = 'casper-icons:check-circle';
+            this._nextButton.addEventListener('tap', e => this._closePage(e));
+            // this._closePage();
             break;
           case 'failed':
           case 'error':

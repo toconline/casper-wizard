@@ -28,7 +28,6 @@
       :host {
         display: flex;
         flex-direction: column;
-        padding: 12px;
       }
 
       vaadin-progress-bar {
@@ -51,13 +50,46 @@
         text-align: center;
       }
 
+      .title {
+        color: --var(primary-color);
+        font-size: 24px;
+        font-weight: bold;
+      }
+
+      #header {
+        background-color: #00ABC1;
+        height: 42px;
+        color: white;
+        padding: 0px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-radius: 6px 6px 0px 0px;
+      }
+
+      .header {
+        margin: 12px;
+      }
+
+      .pager {
+        padding: 12px;
+        display: flex;
+        flex-direction: column;
+      }
+
     </style>
+
+    <div id="header">
+      <h2 id="title" class="header">[[title]]</h2>
+    </div>
     
+    <div class="pager">
     <div id="status_panel" class="container-status">
       <template is="dom-repeat" items="{{progressMessages}}">
         <span>[[item.message]]</span>
         <vaadin-progress-bar indeterminate min="0" max="100"></vaadin-progress-bar>
       </template>
+    </div>
     </div>
 
   </template>
@@ -85,6 +117,9 @@
           progressCount: {
             type: Number,
             value: 1
+          },
+          title: {
+            type: String
           }
         };
       }
