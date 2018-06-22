@@ -222,6 +222,7 @@
         // ... create page if needed ...
         if ( this._progressPage === undefined ) {
           this._progressPage = document.createElement('casper-wizard-progress-page');
+          this._progressPage.title = 'Progresso em curso';
           this.shadowRoot.appendChild(this._progressPage);
         }
 

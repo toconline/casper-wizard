@@ -27,8 +27,8 @@
   <template>
     <style>
       :host {
-        display: none;
-        padding: 12px;
+        display: flex;
+        flex-direction: column;
       }
 
       .container-error {
@@ -64,15 +64,42 @@
         color: grey;
       }
 
-    </style>    
+      #header {
+        background-color: #00ABC1;
+        height: 42px;
+        color: white;
+        padding: 0px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-radius: 6px 6px 0px 0px;
+      }
 
-    <div id="error_panel" class="container-error">
-      <div class="error_pad">
-        <iron-icon icon="[[icon]]" class="error_icon"></iron-icon>
-      </div>
-      <div class="error_message">
-        <h2>[[title]]</h2>
-        <span id="error_message">[[message]]</span>
+      .header {
+        margin: 12px;
+      }
+
+      .pager {
+        padding: 12px;
+        display: flex;
+        flex-direction: column;
+      }
+
+    </style>
+
+    <div id="header">
+      <h2 id="title" class="header">[[title]]</h2>
+    </div>
+
+    <div class="pager">
+      <div id="error_panel" class="container-error">
+        <div class="error_pad">
+          <iron-icon icon="[[icon]]" class="error_icon"></iron-icon>
+        </div>
+        <div class="error_message">
+          <h2>[[title]]</h2>
+          <span id="error_message">[[message]]</span>
+        </div>
       </div>
     </div>
     
@@ -95,10 +122,10 @@
       
       static get properties () {
         return {
-          title: {
-            type: String,
-            value: 'Erro'
-          },
+          // title: {
+          //   type: String,
+          //   value: 'Erro'
+          // },
           message: {
             type: String,
             value: '\xA0' 
