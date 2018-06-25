@@ -77,13 +77,13 @@
               position: absolute; 
               right: 0px; 
               bottom: 0px;
-              color: #00ABC1;
+              color: var(--primary-color);
             }
             .wizard-previous-button {
               position: absolute; 
               right: 60px;
               bottom: 0px;
-              color: #00ABC1;
+              color: var(--primary-color);
             }
             .wizard-close-button {
               width: 50px;
@@ -271,6 +271,10 @@
         this._updateUI(event.detail);
       }
 
+      _cancelProgress (event) {
+        console.log('Cancel progress!');
+      }
+
       _updateUI (notification) {
 
         console.log(notification);
@@ -279,6 +283,7 @@
           case 'in-progress':
             this.showProgressPage();
             this._progressPage.updateProgress(notification.index, this.i18n.apply(this, notification.message), notification.progress);
+            this._prevButton.addEventListener('tap', e => this._cancelProgress(e));
             break;
           case 'completed':
             if ( typeof this['jobCompletedOnPage' + this._pageIndex] === 'function' ) {
@@ -289,7 +294,6 @@
             //this._onUploadCompletedCallbackData = { link: notification.link };
             this._nextButton.icon = 'casper-icons:check-circle';
             this._nextButton.addEventListener('tap', e => this._closePage(e));
-            // this._closePage();
             break;
           case 'failed':
           case 'error':
