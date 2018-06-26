@@ -234,6 +234,8 @@
           } else {
             this._activatePage(this._pageIndex + 1);
           }
+        } else {
+          this.close();
         }
       }
 
@@ -245,20 +247,18 @@
         if ( this._statusPage !== undefined ) {
           this._statusPage.style.display = 'none';
         }
+
+        this._pages[this._pageIndex].style.opacity = 0.8;
+
+        const page = this._pages[pageIndex];
+        page.style.zIndex = '2';
+        page.style.opacity = 1.0;
+        page.classList.add('slidein');
+        page.classList.remove('left');
+        page.classList.remove('right');
+        this._pageIndex = pageIndex;
         this._updateWizardButtons();
-
-        if ( pageIndex !== this.pageIndex ) {
-          const page = this._pages[pageIndex];
-
-          page.style.zIndex = '2';
-          page.style.opacity = 1.0;
-          page.classList.add('slidein');
-          page.classList.remove('left');
-          page.classList.remove('right');
-          this._pages[this._pageIndex].style.opacity = 0.8;
-          this._pageIndex = pageIndex;
-          this._slideTimeout = setTimeout(() => this._pageSlideTimer(), 1 * 1000);
-        }
+        this._slideTimeout = setTimeout(() => this._pageSlideTimer(), 1 * 1000);
       }
 
       _pageSlideTimer (event) {
@@ -286,12 +286,13 @@
 
       _updateWizardButtons () {
         this._prevButton.disabled = this._pageIndex === 0;
+        this._nextButton.disabled = false;
         this._nextButton.icon = (this._pageIndex === this._pages.length - 1) ? 'casper-icons:check-circle' : 'casper-icons:arrow-right';
       }
 
-      _closePage (event) {
+      /*_closePage (event) {
         this.close(this);
-      }
+      }*/
 
       showProgressPage () {
         if ( this._statusPage !== undefined ) {
@@ -373,8 +374,6 @@
               // TODO auto close on last page??
             }
             //this._onUploadCompletedCallbackData = { link: notification.link };
-            //this._nextButton.icon = 'casper-icons:check-circle';
-            this._nextButton.addEventListener('tap', e => this._closePage(e));
             break;
           case 'failed':
           case 'error':
