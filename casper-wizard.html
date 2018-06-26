@@ -35,12 +35,10 @@
     <style>
       :host {
         display: block;
+        position: relative;
       }
 
     </style>
-
-    <slot></slot>
-      
   </template>
 
 
@@ -71,19 +69,28 @@
               height: 80px;
             }
             paper-icon-button[disabled] {
-              color: #f2f2f2;
+              color: #eee;
+            }
+            .page-container {
+              overflow-x: hidden;
+              width: 800px;
+              height: 520px;
+              background-color: black;
+              position: relative;
             }
             .wizard-next-button {
               position: absolute; 
               right: 0px; 
               bottom: 0px;
               color: var(--primary-color);
+              z-index: 4;
             }
             .wizard-previous-button {
               position: absolute; 
               right: 60px;
               bottom: 0px;
               color: var(--primary-color);
+              z-index: 4;
             }
             .wizard-close-button {
               width: 50px;
@@ -92,13 +99,45 @@
               top: -4px;
               right: 0px;
               color: #FFF;
-            };`
+              z-index: 4;
+            }
+            .page  {
+              top: 0px;
+              height: 100%;
+              position: absolute;
+              -moz-transform: translateZ(0);
+              -ms-transform: translateZ(0);
+              -o-transform: translateZ(0);
+              transform: translateZ(0);
+              background-color: #ccc;
+            }
+            .slidein {
+              -moz-transition: transform 1s ease-in-out;
+              -webkit-transition: transform 1s ease-in-out;
+              -o-transition: transform 1s ease-in-out;
+              transition: transform 1s ease-in-out;
+            }
+            .left {
+              transform: translate3d(-100%, 0, 0);
+            }
+            .right {
+              transform: translate3d(100%, 0, 0);
+            }`;
         this.shadowRoot.appendChild(style);
+
+        this._pageContainer = document.createElement('div');
+        this._pageContainer.classList.add('page-container');
+        this.shadowRoot.appendChild(this._pageContainer);
 
         this._pageIndex = 0;
         this._boundJobNotification = this._onJobNotification.bind(this);
 
         this._pages = this.shadowRoot.querySelectorAll('casper-wizard-page');
+        for ( let idx = 0; idx < this._pages.length; idx++ ) {
+          const page = this._pages[idx];
+          page.classList.add('page');
+          this._pageContainer.appendChild(page);
+        }
 
         this._prevButton = document.createElement('paper-icon-button');
         this._prevButton.icon = 'casper-icons:arrow-left';
@@ -118,12 +157,17 @@
         this._closeButton.classList = 'wizard-close-button';
         this.shadowRoot.appendChild(this._closeButton);
 
-        this._activatePage(0)
+        this._adjustSlideClasses();
       }
 
       connectedCallback () {
         super.connectedCallback();
         // console.log("wizard connectedCallback", this);
+      }
+
+      setOptions (options) {
+        console.log(this.is, options);
+        this.options = JSON.parse(JSON.stringify(options));
       }
 
       //***************************************************************************************//
@@ -162,6 +206,10 @@
       //***************************************************************************************//
 
       _gotoPreviousPage (event) {
+        if ( this._slideTimeout !== undefined ) {
+          return;
+        }
+
         if ( this._statusPage !== undefined && this._statusPage.style.display !== 'none' ) {
           this._activatePage(this._pageIndex);
         } else {
@@ -176,6 +224,10 @@
       }
 
       _gotoNextPage (event) {
+        if ( this._slideTimeout !== undefined ) {
+          return;
+        }
+
         if ( this._pageIndex < this._pages.length - 1 ) {
           if ( typeof this['nextOnPage' + this._pageIndex] === 'function' ) {
             this['nextOnPage' + this._pageIndex].apply(this);
@@ -186,36 +238,62 @@
       }
 
       _activatePage (pageIndex) {
-        if ( this._pageIndex !== undefined ) {
-          this._pages[this._pageIndex].style.display = 'none';
-        }
-        this._pageIndex = pageIndex;
+
         if ( this._progressPage !== undefined ) {
           this._progressPage.style.display = 'none';
         }
         if ( this._statusPage !== undefined ) {
           this._statusPage.style.display = 'none';
         }
-        this._pages[this._pageIndex].style.display = 'flex';
-        this._prevButton.setAttribute("disabled", "");
+        this._updateWizardButtons();
+
+        if ( pageIndex !== this.pageIndex ) {
+          const page = this._pages[pageIndex];
+
+          page.style.zIndex = '2';
+          page.style.opacity = 1.0;
+          page.classList.add('slidein');
+          page.classList.remove('left');
+          page.classList.remove('right');
+          this._pages[this._pageIndex].style.opacity = 0.8;
+          this._pageIndex = pageIndex;
+          this._slideTimeout = setTimeout(() => this._pageSlideTimer(), 1 * 1000);
+        }
+      }
+
+      _pageSlideTimer (event) {
+        this._slideTimeout = undefined;
+        this._adjustSlideClasses();
+        this._updateWizardButtons();
+      }
+
+      _adjustSlideClasses () {
+        for ( let idx = 0; idx < this._pages.length; idx++ ) {
+          const page = this._pages[idx];
+            
+          page.classList.remove('slidein');
+          if ( idx <  this._pageIndex ) {
+            page.classList.add('left'); 
+            page.style.zIndex = '0';
+          } else if ( idx > this._pageIndex ) {
+            page.classList.add('right'); 
+            page.style.zIndex = '0';
+          } else {
+            page.style.zIndex = '1';
+          }
+        }
+      }
+
+      _updateWizardButtons () {
+        this._prevButton.disabled = this._pageIndex === 0;
+        this._nextButton.icon = (this._pageIndex === this._pages.length - 1) ? 'casper-icons:check-circle' : 'casper-icons:arrow-right';
       }
 
       _closePage (event) {
         this.close(this);
       }
 
-      /*showUploadPage () {
-        if ( this._uploadPage === undefined ) {
-          this._uploadPage = document.createElement('casper-wizard-upload-page');
-          this.shadowRoot.appendChild(this._uploadPage);
-        }
-        this._pages[this._pageIndex].style.display = 'none';
-        this._uploadPage.style.display = 'flex';
-      }*/
-
       showProgressPage () {
-        // ... hide current pages ...
-        this._pages[this._pageIndex].style.display = 'none';
         if ( this._statusPage !== undefined ) {
           this._statusPage.style.display = 'none';
         }  
@@ -223,24 +301,25 @@
         if ( this._progressPage === undefined ) {
           this._progressPage = document.createElement('casper-wizard-progress-page');
           this._progressPage.title = 'Progresso em curso';
-          this.shadowRoot.appendChild(this._progressPage);
+          this._pageContainer.appendChild(this._progressPage);
         }
 
         // ... show progress page
-        this._prevButton.removeAttribute("disabled", "");
+        this._progressPage.style.zIndex = '3';
         this._progressPage.style.display = 'flex';
+        this._prevButton.disabled = false;
+        this._nextButton.disabled = true;
       }
 
       showStatusPage (notification) {
         // ... hide current pages ...
-        this._pages[this._pageIndex].style.display = 'none';
         if ( this._progressPage !== undefined ) {
           this._progressPage.style.display = 'none';
         }        
         // ... create page if needed ...
         if ( this._statusPage === undefined ) {
           this._statusPage  = document.createElement('casper-wizard-status-page');
-          this.shadowRoot.appendChild(this._statusPage);
+          this._pageContainer.appendChild(this._statusPage);
         }
 
         // ... set message and or icon ...
@@ -253,8 +332,10 @@
         }
 
         // show status page
-        this._prevButton.removeAttribute("disabled", "");
+        this._statusPage.style.zIndex = '3';
         this._statusPage.style.display = 'flex';
+        this._prevButton.disabled = false;
+        this._nextButton.disabled = true;
       }
 
       _submitJobResponse (response) {
@@ -292,7 +373,7 @@
               // TODO auto close on last page??
             }
             //this._onUploadCompletedCallbackData = { link: notification.link };
-            this._nextButton.icon = 'casper-icons:check-circle';
+            //this._nextButton.icon = 'casper-icons:check-circle';
             this._nextButton.addEventListener('tap', e => this._closePage(e));
             break;
           case 'failed':

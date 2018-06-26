@@ -25,40 +25,36 @@
   <template>
     <style>
       :host {
-        display: none;
+        display: block;
+        width: 100%;
+      }
+
+      .content {
+        padding: 12px;
+        display: flex;
         flex-direction: column;
-        /*padding: 12px;*/
       }
 
       .title {
-        color: --var(primary-color);
-        font-size: 24px;
-        font-weight: bold;
-      }
-
-      #header {
         background-color: var(--primary-color);
-        height: 42px;
         color: white;
-        padding: 0px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        border-radius: 6px 6px 0px 0px;
+        line-height: 42px;
+        height: 42px;
+        font-size: 20px;
+        font-weight: bold;
+        padding: 0px 48px 0px 12px;
+        margin: 0px;
+        text-overflow: ellipsis;
+        white-space: nowrap; 
+        overflow: hidden;
       }
-
-      .header {
-        margin: 12px;
-      }
-
     </style>
 
-    <div id="header">
-      <h2 id="title" class="header">[[title]]</h2>
+    <h1 class="title">[[title]]</h1>
+    <div class="content">
+      <slot></slot>
     </div>
-    
-    <slot></slot>
-    
+
   </template>
 
   <script>
@@ -71,7 +67,10 @@
      * @demo demo/index.html
      */
     class CasperWizardPage extends Polymer.Element {
-      static get is() { return 'casper-wizard-page'; }
+
+      static get is () { 
+        return 'casper-wizard-page'; 
+      }
       
       static get properties() {
         return {
@@ -79,11 +78,6 @@
             type: String
           }
         };
-      }
-
-      connectedCallback() {
-        super.connectedCallback();
-        // console.log('cb casper-wizard-page:', this.title);
       }
 
     }
