@@ -436,7 +436,7 @@
       }
 
       _closePage (event) {
-        this.close(this);
+        this.close();
       }
 
       _submitJobResponse (response) {
@@ -463,12 +463,16 @@
             this._progressPage.updateProgress(notification.index, this.i18n.apply(this, notification.message), notification.progress);
             break;
           case 'completed':
+            this._updateWizardButtons();
             if ( typeof this['jobCompletedOnPage' + this._pageIndex] === 'function' ) {
               this['jobCompletedOnPage' + this._pageIndex].apply(this, [notification.message, notification.response]);
             } else {
-              // TODO auto close on last page??
+              if ( this._pageIndex === this._pages.length - 1) {
+                this.close();
+              } else {
+                this._gotoNextPage();
+              }
             }
-            //this._onUploadCompletedCallbackData = { link: notification.link };
             break;
           case 'failed':
           case 'error':
