@@ -244,11 +244,6 @@
         this.socket.submitJob(job, this._submitJobResponse.bind(this), { validity: timeout, ttr: timeout, timeout: timeout});
       }
 
-<<<<<<< HEAD
-      setOptions (options) {
-        console.log(this.is, options);
-        this.options = JSON.parse(JSON.stringify(options));
-=======
       showProgressPage () {
         if ( this._statusPage !== undefined ) {
           this._statusPage.style.display = 'none';
@@ -296,7 +291,6 @@
         this._statusPage.style.opacity = 1.0;
         this._prevButton.disabled = false;
         this._nextButton.disabled = true;
->>>>>>> 6e123a5b0dcaee5e339a77358dc8aeef065613fa
       }
 
       //***************************************************************************************//
@@ -443,54 +437,6 @@
 
       _closePage (event) {
         this.close(this);
-<<<<<<< HEAD
-      }
-
-      showProgressPage () {
-        if ( this._statusPage !== undefined ) {
-          this._statusPage.style.display = 'none';
-        }  
-        // ... create page if needed ...
-        if ( this._progressPage === undefined ) {
-          this._progressPage = document.createElement('casper-wizard-progress-page');
-          this._progressPage.title = 'Progresso em curso';
-          this._pageContainer.appendChild(this._progressPage);
-        }
-
-        // ... show progress page
-        this._progressPage.style.zIndex = '3';
-        this._progressPage.style.display = 'flex';
-        this._prevButton.disabled = false;
-        this._nextButton.disabled = true;
-      }
-
-      showStatusPage (notification) {
-        // ... hide current pages ...
-        if ( this._progressPage !== undefined ) {
-          this._progressPage.style.display = 'none';
-        }        
-        // ... create page if needed ...
-        if ( this._statusPage === undefined ) {
-          this._statusPage  = document.createElement('casper-wizard-status-page');
-          this._pageContainer.appendChild(this._statusPage);
-        }
-
-        // ... set message and or icon ...
-        this._statusPage.message = this.i18n.apply(this, notification.message);
-        if ( notification.title !== undefined ) {
-          this._statusPage.title = notification.title;
-        }
-        if ( notification.response !== undefined && notification.response.stash_icon !== undefined ) {
-          this._statusPage.icon = notification.response.stash_icon;
-        }
-
-        // show status page
-        this._statusPage.style.zIndex = '3';
-        this._statusPage.style.display = 'flex';
-        this._prevButton.disabled = false;
-        this._nextButton.disabled = true;
-=======
->>>>>>> 6e123a5b0dcaee5e339a77358dc8aeef065613fa
       }
 
       _submitJobResponse (response) {
