@@ -141,6 +141,27 @@
               -o-transition: transform 1s ease-in-out;
               transition: transform 1s ease-in-out;
             }
+            .tabslide {
+              -moz-transform: translateZ(0);
+              -ms-transform: translateZ(0);
+              -o-transform: translateZ(0);
+              transform: translateZ(0);
+              -moz-transition: left 0.5s ease-in-out;
+              -webkit-transition: left 0.5s ease-in-out;
+              -o-transition: left 0.5s ease-in-out;
+              transition: left 0.5s ease-in-out;
+            }
+            .fadein {
+              -moz-transform: translateZ(0);
+              -ms-transform: translateZ(0);
+              -o-transform: translateZ(0);
+              transform: translateZ(0);
+              -moz-transition: opacity 2s ease-in-out;
+              -webkit-transition: opacity 2s ease-in-out;
+              -o-transition: opacity 2s ease-in-out;
+              transition: opacity 2s ease-in-out;
+              opacity: 0.5;
+            }
             .left {
               transform: translate3d(-100%, 0, 0);
             }
@@ -151,6 +172,7 @@
 
         this._pageTabs = document.createElement('div');
         this._pageTabs.classList.add('page-tabs');
+        this._pageTabs.classList.add('tabslide');
         this.shadowRoot.appendChild(this._pageTabs);
 
         this._pageContainer = document.createElement('div');
@@ -190,7 +212,6 @@
       }
 
       setOptions (options) {
-        console.log(this.is, options);
         this.options = JSON.parse(JSON.stringify(options));
       }
 
@@ -231,12 +252,14 @@
         if ( this._progressPage === undefined ) {
           this._progressPage = document.createElement('casper-wizard-progress-page');
           this._progressPage.title = 'Progresso em curso';
+          this._progressPage.classList.add('fadein');
           this._pageContainer.appendChild(this._progressPage);
         }
 
         // ... show progress page
         this._progressPage.style.zIndex = '3';
         this._progressPage.style.display = 'flex';
+        this._progressPage.style.opacity = 1.0;
         this._prevButton.disabled = false;
         this._nextButton.disabled = true;
       }
@@ -249,6 +272,7 @@
         // ... create page if needed ...
         if ( this._statusPage === undefined ) {
           this._statusPage  = document.createElement('casper-wizard-status-page');
+          this._statusPage.classList.add('fadein');
           this._pageContainer.appendChild(this._statusPage);
         }
 
@@ -264,6 +288,7 @@
         // show status page
         this._statusPage.style.zIndex = '3';
         this._statusPage.style.display = 'flex';
+        this._statusPage.style.opacity = 1.0;
         this._prevButton.disabled = false;
         this._nextButton.disabled = true;
       }
@@ -358,8 +383,8 @@
         let opa = 0.4;
         let r   = 0;
 
-        this._pageTabs.style.width = 800 + 30 * this._pages.length + 'px';
-        for ( let idx = this._pages.length; idx >= 1; idx-- ) {
+        this._pageTabs.style.width = 800 + 30 * (this._pages.length - 1) + 'px';
+        for ( let idx = this._pages.length; idx > 1; idx-- ) {
           let tab = document.createElement('div');
           let lbl = document.createElement('span');
 
@@ -380,7 +405,7 @@
         opa = 0.4;
         r   = 0;
 
-        for ( let idx = this._pages.length; idx >= 1; idx-- ) {
+        for ( let idx = this._pages.length; idx > 1; idx-- ) {
           let tab = document.createElement('div');
           let lbl = document.createElement('span');
 
