@@ -199,6 +199,11 @@
         this.socket.submitJob(job, this._submitJobResponse.bind(this), { validity: timeout, ttr: timeout, timeout: timeout});
       }
 
+      setOptions (options) {
+        console.log(this.is, options);
+        this.options = JSON.parse(JSON.stringify(options));
+      }
+
       //***************************************************************************************//
       //                                                                                       //
       //                    ~~~ Internals of the underworld implementaion ~~~                  //
@@ -290,9 +295,9 @@
         this._nextButton.icon = (this._pageIndex === this._pages.length - 1) ? 'casper-icons:check-circle' : 'casper-icons:arrow-right';
       }
 
-      /*_closePage (event) {
+      _closePage (event) {
         this.close(this);
-      }*/
+      }
 
       showProgressPage () {
         if ( this._statusPage !== undefined ) {
@@ -353,10 +358,6 @@
         this._updateUI(event.detail);
       }
 
-      _cancelProgress (event) {
-        console.log('Cancel progress!');
-      }
-
       _updateUI (notification) {
 
         console.log(notification);
@@ -365,7 +366,6 @@
           case 'in-progress':
             this.showProgressPage();
             this._progressPage.updateProgress(notification.index, this.i18n.apply(this, notification.message), notification.progress);
-            this._prevButton.addEventListener('tap', e => this._cancelProgress(e));
             break;
           case 'completed':
             if ( typeof this['jobCompletedOnPage' + this._pageIndex] === 'function' ) {
