@@ -208,7 +208,7 @@
         this.shadowRoot.appendChild(this._closeButton);
 
         this._createTabs();
-        this._adjustSlideClasses();
+        this._adjustPageClasses();
       }
 
       setOptions (options) {
@@ -329,7 +329,11 @@
             this._activatePage(this._pageIndex + 1);
           }
         } else {
-          this.close();
+          if ( typeof this['nextOnPage' + (this._pages.length - 1)] === 'function' ) {
+            this['nextOnPage' + (this._pages.length - 1)].apply(this);
+          } else {
+            this.close();
+          }
         }
       }
 
@@ -358,11 +362,11 @@
 
       _pageSlideTimer (event) {
         this._slideTimeout = undefined;
-        this._adjustSlideClasses();
+        this._adjustPageClasses();
         this._updateWizardButtons();
       }
 
-      _adjustSlideClasses () {
+      _adjustPageClasses () {
         for ( let idx = 0; idx < this._pages.length; idx++ ) {
           const page = this._pages[idx];
             
