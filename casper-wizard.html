@@ -77,6 +77,30 @@
               height: 520px;
               background-color: black;
               position: relative;
+              border-radius: 10px;
+            }
+            .page-tabs {
+              top: 0px;
+              left: 0px;
+              height: 100%;
+              position: absolute;
+            }
+            .page-tab {
+              top: 0px;
+              position: absolute;
+              width: 30px;
+              height: 520px;
+              background-color: black;
+              color: white;
+              font-size: 20px;
+              font-weight: bold;
+            }
+            .tab-label {
+              position: absolute;
+              bottom: 26px;
+              color: white;
+              font-weight: bold;
+              font-size: 20px;
             }
             .wizard-next-button {
               position: absolute; 
@@ -117,6 +141,27 @@
               -o-transition: transform 1s ease-in-out;
               transition: transform 1s ease-in-out;
             }
+            .tabslide {
+              -moz-transform: translateZ(0);
+              -ms-transform: translateZ(0);
+              -o-transform: translateZ(0);
+              transform: translateZ(0);
+              -moz-transition: left 0.5s ease-in-out;
+              -webkit-transition: left 0.5s ease-in-out;
+              -o-transition: left 0.5s ease-in-out;
+              transition: left 0.5s ease-in-out;
+            }
+            .fadein {
+              -moz-transform: translateZ(0);
+              -ms-transform: translateZ(0);
+              -o-transform: translateZ(0);
+              transform: translateZ(0);
+              -moz-transition: opacity 2s ease-in-out;
+              -webkit-transition: opacity 2s ease-in-out;
+              -o-transition: opacity 2s ease-in-out;
+              transition: opacity 2s ease-in-out;
+              opacity: 0.5;
+            }
             .left {
               transform: translate3d(-100%, 0, 0);
             }
@@ -124,6 +169,11 @@
               transform: translate3d(100%, 0, 0);
             }`;
         this.shadowRoot.appendChild(style);
+
+        this._pageTabs = document.createElement('div');
+        this._pageTabs.classList.add('page-tabs');
+        this._pageTabs.classList.add('tabslide');
+        this.shadowRoot.appendChild(this._pageTabs);
 
         this._pageContainer = document.createElement('div');
         this._pageContainer.classList.add('page-container');
@@ -157,16 +207,11 @@
         this._closeButton.classList = 'wizard-close-button';
         this.shadowRoot.appendChild(this._closeButton);
 
+        this._createTabs();
         this._adjustSlideClasses();
       }
 
-      connectedCallback () {
-        super.connectedCallback();
-        // console.log("wizard connectedCallback", this);
-      }
-
       setOptions (options) {
-        console.log(this.is, options);
         this.options = JSON.parse(JSON.stringify(options));
       }
 
@@ -199,9 +244,59 @@
         this.socket.submitJob(job, this._submitJobResponse.bind(this), { validity: timeout, ttr: timeout, timeout: timeout});
       }
 
+<<<<<<< HEAD
       setOptions (options) {
         console.log(this.is, options);
         this.options = JSON.parse(JSON.stringify(options));
+=======
+      showProgressPage () {
+        if ( this._statusPage !== undefined ) {
+          this._statusPage.style.display = 'none';
+        }  
+        // ... create page if needed ...
+        if ( this._progressPage === undefined ) {
+          this._progressPage = document.createElement('casper-wizard-progress-page');
+          this._progressPage.title = 'Progresso em curso';
+          this._progressPage.classList.add('fadein');
+          this._pageContainer.appendChild(this._progressPage);
+        }
+
+        // ... show progress page
+        this._progressPage.style.zIndex = '3';
+        this._progressPage.style.display = 'flex';
+        this._progressPage.style.opacity = 1.0;
+        this._prevButton.disabled = false;
+        this._nextButton.disabled = true;
+      }
+
+      showStatusPage (notification) {
+        // ... hide current pages ...
+        if ( this._progressPage !== undefined ) {
+          this._progressPage.style.display = 'none';
+        }        
+        // ... create page if needed ...
+        if ( this._statusPage === undefined ) {
+          this._statusPage  = document.createElement('casper-wizard-status-page');
+          this._statusPage.classList.add('fadein');
+          this._pageContainer.appendChild(this._statusPage);
+        }
+
+        // ... set message and or icon ...
+        this._statusPage.message = this.i18n.apply(this, notification.message);
+        if ( notification.title !== undefined ) {
+          this._statusPage.title = notification.title;
+        }
+        if ( notification.response !== undefined && notification.response.stash_icon !== undefined ) {
+          this._statusPage.icon = notification.response.stash_icon;
+        }
+
+        // show status page
+        this._statusPage.style.zIndex = '3';
+        this._statusPage.style.display = 'flex';
+        this._statusPage.style.opacity = 1.0;
+        this._prevButton.disabled = false;
+        this._nextButton.disabled = true;
+>>>>>>> 6e123a5b0dcaee5e339a77358dc8aeef065613fa
       }
 
       //***************************************************************************************//
@@ -263,6 +358,7 @@
         page.classList.remove('right');
         this._pageIndex = pageIndex;
         this._updateWizardButtons();
+        this._pageTabs.style.left = -30 * this._pageIndex + 'px';
         this._slideTimeout = setTimeout(() => this._pageSlideTimer(), 1 * 1000);
       }
 
@@ -289,6 +385,52 @@
         }
       }
 
+      _createTabs () {
+        let opa = 0.4;
+        let r   = 0;
+
+        this._pageTabs.style.width = 800 + 30 * (this._pages.length - 1) + 'px';
+        for ( let idx = this._pages.length; idx > 1; idx-- ) {
+          let tab = document.createElement('div');
+          let lbl = document.createElement('span');
+
+          lbl.textContent = idx;
+          lbl.style.right = '10px';
+          lbl.classList.add('tab-label');
+          tab.appendChild(lbl);
+          tab.style.right = r + 'px';
+          tab.classList.add('page-tab');
+          tab.style.width = 15 + (idx * 30) + 'px';
+          tab.style.opacity = opa;
+          tab.style.borderRadius = '0px 10px 10px 0px';
+          this._pageTabs.appendChild(tab);
+          opa += 0.03;
+          r += 30;
+        }
+
+        opa = 0.4;
+        r   = 0;
+
+        for ( let idx = this._pages.length; idx > 1; idx-- ) {
+          let tab = document.createElement('div');
+          let lbl = document.createElement('span');
+
+          lbl.textContent = (this._pages.length + 1) - idx;
+          lbl.style.left = '10px';
+          lbl.classList.add('tab-label');
+          tab.appendChild(lbl);
+          tab.style.left = r + 'px';
+          tab.classList.add('page-tab');
+          tab.style.width = 15 + (idx * 30) + 'px';
+          tab.style.opacity = opa;
+          tab.style.borderRadius = '10px 0px 0px 10px';
+          this._pageTabs.appendChild(tab);
+          opa += 0.03;
+          r += 30;
+        }
+
+      }
+
       _updateWizardButtons () {
         this._prevButton.disabled = this._pageIndex === 0;
         this._nextButton.disabled = false;
@@ -297,6 +439,7 @@
 
       _closePage (event) {
         this.close(this);
+<<<<<<< HEAD
       }
 
       showProgressPage () {
@@ -342,6 +485,8 @@
         this._statusPage.style.display = 'flex';
         this._prevButton.disabled = false;
         this._nextButton.disabled = true;
+=======
+>>>>>>> 6e123a5b0dcaee5e339a77358dc8aeef065613fa
       }
 
       _submitJobResponse (response) {
