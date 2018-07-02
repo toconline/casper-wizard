@@ -186,7 +186,6 @@
 
         this._title = document.createElement('div');
         this._title.classList.add('title');
-        this._title.textContent = this.wizard_title;
         this.shadowRoot.appendChild(this._title);
 
         this._pageContainer = document.createElement('div');
@@ -234,6 +233,14 @@
 
       setOptions (options) {
         this.options = JSON.parse(JSON.stringify(options));
+      }
+
+      setTitle (title) {
+        this._title.textContent = title;
+      }
+
+      setPageTitle (idx, title) {
+        this._pages[idx].pageTitle = title;
       }
 
       nextPage () {
