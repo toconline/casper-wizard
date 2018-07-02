@@ -67,7 +67,7 @@
               height: 60px;
             }
             paper-icon-button[disabled] {
-              color: #ccc;
+              color: #888;
             }
             .page-container {
               overflow-x: hidden;
@@ -167,15 +167,8 @@
               transition: left 0.5s ease-in-out;
             }
             .fadein {
-              -moz-transform: translateZ(0);
-              -ms-transform: translateZ(0);
-              -o-transform: translateZ(0);
-              transform: translateZ(0);
-              -moz-transition: opacity 2s ease-in-out;
-              -webkit-transition: opacity 2s ease-in-out;
-              -o-transition: opacity 2s ease-in-out;
+              opacity: 0;
               transition: opacity 2s ease-in-out;
-              opacity: 0.5;
             }
             .left {
               transform: translate3d(-100%, 0, 0);
@@ -230,6 +223,7 @@
 
         this._createTabs();
         this._adjustPageClasses();
+        this._updateWizardButtons();
       }
 
       //***************************************************************************************//
@@ -269,6 +263,7 @@
       showProgressPage () {
         if ( this._statusPage !== undefined ) {
           this._statusPage.style.display = 'none';
+          this._statusPage.style.opacity = 0.0;
         }  
         // ... create page if needed ...
         if ( this._progressPage === undefined ) {
@@ -290,6 +285,7 @@
         // ... hide current pages ...
         if ( this._progressPage !== undefined ) {
           this._progressPage.style.display = 'none';
+          this._progressPage.style.opacity = 0.0;
         }        
         // ... create page if needed ...
         if ( this._statusPage === undefined ) {
@@ -308,7 +304,7 @@
         }
 
         // show status page
-        this._statusPage.style.zIndex = '3';
+        this._statusPage.style.zIndex  = '3';
         this._statusPage.style.display = 'flex';
         this._statusPage.style.opacity = 1.0;
         this._prevButton.disabled = false;
@@ -379,7 +375,6 @@
         page.classList.remove('left');
         page.classList.remove('right');
         this._pageIndex = pageIndex;
-        this._updateWizardButtons();
         this._pageTabs.style.left = -30 * this._pageIndex + 'px';
         this._slideTimeout = setTimeout(() => this._pageSlideTimer(), 1 * 1000);
       }
