@@ -151,20 +151,20 @@
               background-color: #fff;
             }
             .slidein {
-              -moz-transition: transform 1s ease-in-out;
-              -webkit-transition: transform 1s ease-in-out;
-              -o-transition: transform 1s ease-in-out;
-              transition: transform 1s ease-in-out;
+              -moz-transition: transform 0.5s ease-in-out;
+              -webkit-transition: transform 0.5s ease-in-out;
+              -o-transition: transform 0.5s ease-in-out;
+              transition: transform 0.5s ease-in-out;
             }
             .tabslide {
               -moz-transform: translateZ(0);
               -ms-transform: translateZ(0);
               -o-transform: translateZ(0);
               transform: translateZ(0);
-              -moz-transition: left 0.5s ease-in-out;
-              -webkit-transition: left 0.5s ease-in-out;
-              -o-transition: left 0.5s ease-in-out;
-              transition: left 0.5s ease-in-out;
+              -moz-transition: left 0.3s ease-in-out;
+              -webkit-transition: left 0.3s ease-in-out;
+              -o-transition: left 0.3s ease-in-out;
+              transition: left 0.3s ease-in-out;
             }
             .fadein {
               opacity: 0;
@@ -383,7 +383,7 @@
         page.classList.remove('right');
         this._pageIndex = pageIndex;
         this._pageTabs.style.left = -30 * this._pageIndex + 'px';
-        this._slideTimeout = setTimeout(() => this._pageSlideTimer(), 1 * 1000);
+        this._slideTimeout = setTimeout(() => this._pageSlideTimer(), 0.5 * 1000);
       }
 
       _pageSlideTimer (event) {
