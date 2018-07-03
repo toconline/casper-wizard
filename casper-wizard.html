@@ -57,7 +57,6 @@
 
       ready () {
         super.ready();
-        // console.log("wizard ready", this);
 
         let style = document.createElement('style');
         style.type = 'text/css';
@@ -286,13 +285,9 @@
         // ... show progress page
         this._progressPage.style.zIndex = '3';
         this._progressPage.style.display = 'flex';
-        this._fadeInTimer = setTimeout(() => this._revealProgressPage(), 0.3 * 1000);
+        this._fadeInTimer = setTimeout(() => this._progressPage.style.opacity = 1.0, 0.3 * 1000);
         this._prevButton.disabled = false;
         this._nextButton.disabled = true;
-      }
-
-      _revealProgressPage () {
-        this._progressPage.style.opacity = 1.0;
       }
 
       showStatusPage (notification) {
@@ -322,7 +317,7 @@
         // show status page
         this._statusPage.style.zIndex  = '3';
         this._statusPage.style.display = 'flex';
-        this._fadeInTimer = setTimeout(() => this._revealStatusPage(), 0.3 * 1000);
+        this._fadeInTimer = setTimeout(() => this._statusPage.style.opacity = 1.0, 0.3 * 1000);
         this._prevButton.disabled = false;
         this._nextButton.disabled = true;
       }
