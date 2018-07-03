@@ -168,7 +168,7 @@
             }
             .fadein {
               opacity: 0;
-              transition: opacity 2s ease-in-out;
+              transition: opacity 0.5s ease-in-out;
             }
             .left {
               transform: translate3d(-100%, 0, 0);
@@ -268,10 +268,13 @@
       }
 
       showProgressPage () {
+        clearTimeout(this._fadeInTimer);
+
         if ( this._statusPage !== undefined ) {
           this._statusPage.style.display = 'none';
           this._statusPage.style.opacity = 0.0;
         }  
+
         // ... create page if needed ...
         if ( this._progressPage === undefined ) {
           this._progressPage = document.createElement('casper-wizard-progress-page');
@@ -283,12 +286,18 @@
         // ... show progress page
         this._progressPage.style.zIndex = '3';
         this._progressPage.style.display = 'flex';
-        this._progressPage.style.opacity = 1.0;
+        this._fadeInTimer = setTimeout(() => this._revealProgressPage(), 0.3 * 1000);
         this._prevButton.disabled = false;
         this._nextButton.disabled = true;
       }
 
+      _revealProgressPage () {
+        this._progressPage.style.opacity = 1.0;
+      }
+
       showStatusPage (notification) {
+        clearTimeout(this._fadeInTimer);
+
         // ... hide current pages ...
         if ( this._progressPage !== undefined ) {
           this._progressPage.style.display = 'none';
@@ -313,9 +322,13 @@
         // show status page
         this._statusPage.style.zIndex  = '3';
         this._statusPage.style.display = 'flex';
-        this._statusPage.style.opacity = 1.0;
+        this._fadeInTimer = setTimeout(() => this._revealStatusPage(), 0.3 * 1000);
         this._prevButton.disabled = false;
         this._nextButton.disabled = true;
+      }
+
+      _revealStatusPage () {
+        this._statusPage.style.opacity = 1.0;
       }
 
       //***************************************************************************************//
@@ -330,16 +343,14 @@
           return;
         }
 
-        if ( this._statusPage !== undefined && this._statusPage.style.display !== 'none' ) {
-          this._activatePage(this._pageIndex);
+        let page = this._pageIndex
+        if ( page >= 1 ) {
+          page -= 1;
+        }
+        if ( typeof this['previousOnPage' + this._pageIndex] === 'function' ) {
+          this['previousOnPage' + this._pageIndex].apply(this);
         } else {
-          if ( this._pageIndex >= 1 ) {
-            if ( typeof this['previousOnPage' + this._pageIndex] === 'function' ) {
-              this['previousOnPage' + this._pageIndex].apply(this);
-            } else {
-              this._activatePage(this._pageIndex - 1);
-            }
-          }
+          this._activatePage(page);
         }
       }
 
@@ -366,11 +377,15 @@
 
       _activatePage (pageIndex) {
 
+        clearTimeout(this._fadeInTimer);
+
         if ( this._progressPage !== undefined ) {
           this._progressPage.style.display = 'none';
+          this._progressPage.style.opacity = 0;          
         }
         if ( this._statusPage !== undefined ) {
           this._statusPage.style.display = 'none';
+          this._statusPage.style.opacity = 0;
         }
 
         this._pages[this._pageIndex].style.opacity = 0.8;
