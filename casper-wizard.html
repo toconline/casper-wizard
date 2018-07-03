@@ -191,7 +191,6 @@
         this._pageContainer.classList.add('page-container');
         this.shadowRoot.appendChild(this._pageContainer);
 
-        this._pageIndex = 0;
         this._boundJobNotification = this._onJobNotification.bind(this);
 
         this._pages = this.shadowRoot.querySelectorAll('casper-wizard-page');
@@ -220,9 +219,10 @@
         this.shadowRoot.appendChild(this._closeButton);
 
         this._createTabs();
-        this._adjustPageClasses();
-        this._updateWizardButtons();
+        this.gotoPage(0);
       }
+
+
 
       //***************************************************************************************//
       //                                                                                       //
@@ -254,6 +254,12 @@
         }
       }
 
+      gotoPage (pageIndex) {
+        this._pageIndex = pageIndex;
+        this._adjustPageClasses();
+        this._updateWizardButtons();
+      }
+      
       submitJob (job, timeout) {
         this.showProgressPage();
         job.validity          = timeout;
@@ -322,10 +328,6 @@
         this._nextButton.disabled = true;
       }
 
-      _revealStatusPage () {
-        this._statusPage.style.opacity = 1.0;
-      }
-
       //***************************************************************************************//
       //                                                                                       //
       //                    ~~~ Internals of the underworld implementaion ~~~                  //
@@ -369,6 +371,7 @@
           }
         }
       }
+
 
       _activatePage (pageIndex) {
 
