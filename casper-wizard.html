@@ -103,7 +103,7 @@
               top: 0px;
               position: absolute;
               width: 30px;
-              height: 520px;
+              height: 100%;
               background-color: black;
               color: white;
               font-size: 20px;
@@ -258,6 +258,7 @@
         this._pageIndex = pageIndex;
         this._adjustPageClasses();
         this._updateWizardButtons();
+        this._hideStatusAndProgress();
       }
       
       submitJob (job, timeout) {
@@ -372,9 +373,7 @@
         }
       }
 
-
-      _activatePage (pageIndex) {
-
+      _hideStatusAndProgress () {
         clearTimeout(this._fadeInTimer);
 
         if ( this._progressPage !== undefined ) {
@@ -384,7 +383,12 @@
         if ( this._statusPage !== undefined ) {
           this._statusPage.style.display = 'none';
           this._statusPage.style.opacity = 0;
-        }
+        }        
+      }
+
+      _activatePage (pageIndex) {
+
+        this._hideStatusAndProgress();
 
         this._pages[this._pageIndex].style.opacity = 0.8;
 
@@ -417,6 +421,8 @@
             page.classList.add('right'); 
             page.style.zIndex = '0';
           } else {
+            page.classList.remove('left'); 
+            page.classList.remove('right');
             page.style.zIndex = '1';
           }
         }
