@@ -258,7 +258,7 @@
         this._pageIndex = pageIndex;
         this._adjustPageClasses();
         this._updateWizardButtons();
-        this._hideStatusAndProgress();
+        this.hideStatusAndProgress();
       }
       
       submitJob (job, timeout) {
@@ -373,7 +373,7 @@
         }
       }
 
-      _hideStatusAndProgress () {
+      hideStatusAndProgress () {
         clearTimeout(this._fadeInTimer);
 
         if ( this._progressPage !== undefined ) {
@@ -388,7 +388,7 @@
 
       _activatePage (pageIndex) {
 
-        this._hideStatusAndProgress();
+        this.hideStatusAndProgress();
 
         this._pages[this._pageIndex].style.opacity = 0.8;
 
