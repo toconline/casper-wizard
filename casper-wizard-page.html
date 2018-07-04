@@ -49,26 +49,11 @@
         white-space: nowrap; 
         overflow: hidden;
       }
-
-      .print-button {
-        position: absolute;
-        top: 5px;
-        right: 0;
-        background-color: var(--primary-color);
-        font-weight: normal;
-        font-size: 14px;
-        -webkit-font-smoothing: antialiased;
-        color: white;
-        margin: 0 12px 12px 12px;
-        height: 30px;
-        box-shadow: none;
-        display: none;
-      }
+      
     </style>
 
     <h1 class="pagetitle">[[pageTitle]]</h1>
     <div class="content">
-      <paper-button id="button" class="print-button" on-tap="_printDocument" raised>Imprimir</paper-button>
       <slot></slot>
     </div>
 

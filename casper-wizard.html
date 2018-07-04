@@ -170,6 +170,13 @@
         transform: translate3d(100%, 0, 0);
       }
     </style>
+
+    <div class="page-tabs tabslide"></div>
+    <div class="title"></div>
+    <div class="page-container"></div>
+    <paper-icon-button class="wizard-previous-button" icon="casper-icons:arrow-left"></paper-icon-button>
+    <paper-icon-button class="wizard-next-button"     icon="casper-icons:arrow-right"></paper-icon-button>
+    <paper-icon-button class="wizard-close-button"    icon="casper-icons:close"></paper-icon-button>
   </template>
 
   <script>
@@ -190,8 +197,10 @@
       ready () {
         super.ready();
 
+        // ... inject the base class template into the component ...
         this.shadowRoot.appendChild(CasperWizard.template.content.cloneNode(true));
 
+        // ... grab all children that extend casper-wizard-page, these are the wizard pages ...
         this._pages = [];
         for ( let page of this.shadowRoot.children ) {
           if ( page instanceof CasperWizardPage ) {
@@ -200,48 +209,33 @@
           }
         }
 
-        this._pageTabs = document.createElement('div');
-        this._pageTabs.classList.add('page-tabs');
-        this._pageTabs.classList.add('tabslide');
-        this.shadowRoot.appendChild(this._pageTabs);
+        // ... keep handdy pointers to the template elements ...
+        this._pageTabs = this.shadowRoot.querySelector('.page-tabs');
+        this._title = this.shadowRoot.querySelector('.title');
+        this._pageContainer = this.shadowRoot.querySelector('.page-container');
+        this._prevButton  = this.shadowRoot.querySelector('.wizard-previous-button');
+        this._nextButton  = this.shadowRoot.querySelector('.wizard-next-button');
+        this._closeButton = this.shadowRoot.querySelector('.wizard-close-button');
 
-        this._title = document.createElement('div');
-        this._title.classList.add('title');
-        this.shadowRoot.appendChild(this._title);
-
-        this._pageContainer = document.createElement('div');
-        this._pageContainer.classList.add('page-container');
+        // ... move the wizard pages from the wizard into the page container ...
         for ( let page of this._pages ) {
           this._pageContainer.appendChild(page);
         }
-        this.shadowRoot.appendChild(this._pageContainer);
 
+        // ... install event handlers ...
         this._boundJobNotification = this._onJobNotification.bind(this);
-
-        this._prevButton = document.createElement('paper-icon-button');
-        this._prevButton.icon = 'casper-icons:arrow-left';
         this._prevButton.addEventListener('tap', e => this._gotoPreviousPage(e));
-        this._prevButton.classList = 'wizard-previous-button';
-        this.shadowRoot.appendChild(this._prevButton);
-
-        this._nextButton = document.createElement('paper-icon-button');
-        this._nextButton.icon = 'casper-icons:arrow-right';
         this._nextButton.addEventListener('tap', e => this._gotoNextPage(e));
-        this._nextButton.classList = 'wizard-next-button';
-        this.shadowRoot.appendChild(this._nextButton);
-
-        this._closeButton = document.createElement('paper-icon-button');
-        this._closeButton.icon = 'casper-icons:close';
         this._closeButton.addEventListener('tap', e => this._closePage(e));
-        this._closeButton.classList = 'wizard-close-button';
-        this.shadowRoot.appendChild(this._closeButton);
 
-        debugger;
+        // ... grab constants from CSS ...
         let style = window.getComputedStyle(this);
         this._slideTime = parseFloat(style.getPropertyValue('--slide-time')) * 1000;
         this._tabWidth = parseFloat(style.getPropertyValue('--tab-width'));
 
-        this._createTabs();
+        if ( this.notabs == false ) {
+          this._createTabs();
+        }
         this.gotoPage(0);
       }
 
