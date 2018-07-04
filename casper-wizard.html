@@ -25,6 +25,7 @@
 <link rel="import" href="../casper-wizard/casper-wizard-upload-page.html">
 <link rel="import" href="../casper-wizard/casper-wizard-progress-page.html">
 <link rel="import" href="../casper-wizard/casper-wizard-status-page.html">
+<link rel="import" href="../casper-wizard/casper-wizard-iframe-page.html">
 <link rel="import" href="../iron-overlay-behavior/iron-overlay-behavior.html">
 <link rel="import" href="../iron-fit-behavior/iron-fit-behavior.html">
 <link rel="import" href="../paper-icon-button/paper-icon-button.html">
@@ -177,11 +178,18 @@
             }`;
         this.shadowRoot.appendChild(style);
 
+        this._pages = [];
+        for ( let page of this.shadowRoot.children ) {
+          if ( page instanceof CasperWizardPage ) {
+            page.classList.add('page');
+            this._pages.push(page);
+          }
+        }
+
         this._pageTabs = document.createElement('div');
         this._pageTabs.classList.add('page-tabs');
         this._pageTabs.classList.add('tabslide');
         this.shadowRoot.appendChild(this._pageTabs);
-
 
         this._title = document.createElement('div');
         this._title.classList.add('title');
@@ -189,16 +197,12 @@
 
         this._pageContainer = document.createElement('div');
         this._pageContainer.classList.add('page-container');
+        for ( let page of this._pages ) {
+          this._pageContainer.appendChild(page);
+        }
         this.shadowRoot.appendChild(this._pageContainer);
 
         this._boundJobNotification = this._onJobNotification.bind(this);
-
-        this._pages = this.shadowRoot.querySelectorAll('casper-wizard-page');
-        for ( let idx = 0; idx < this._pages.length; idx++ ) {
-          const page = this._pages[idx];
-          page.classList.add('page');
-          this._pageContainer.appendChild(page);
-        }
 
         this._prevButton = document.createElement('paper-icon-button');
         this._prevButton.icon = 'casper-icons:arrow-left';
@@ -328,6 +332,7 @@
         this._prevButton.disabled = false;
         this._nextButton.disabled = true;
       }
+
 
       //***************************************************************************************//
       //                                                                                       //

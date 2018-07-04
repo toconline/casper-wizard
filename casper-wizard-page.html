@@ -93,29 +93,8 @@
         return {
           pageTitle: {
             type: String
-          },
-          printable: {
-            type: Boolean,
-            value: false,
-            observer: '_printableChanged'
           }
         };
-      }
-
-      _printableChanged (newValue, oldValue) {
-        // console.log('_printableChanged', newValue);
-        if(newValue == true){
-          this.$.button.style.display = 'flex';
-        }
-      }
-      
-
-      _printDocument () {
-        var frm = this.querySelector('iframe').contentWindow;
-        
-        frm.focus();
-        frm.print();
-        return false;
       }
 
     }
