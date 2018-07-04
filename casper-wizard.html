@@ -31,11 +31,142 @@
 <link rel="import" href="../casper-icons/casper-icons.html">
 
 <dom-module id="casper-wizard">
-  <template>
+  <template id="wizard-base-template">
     <style>
       :host {
-        display: block;
+        --roundie: var(--radius-primary, 10px);
+        --slide-time: 0.5s;
+        --tab-width: 30px;
+      }
+      
+      paper-icon-button {
+        width: 60px;
+        height: 60px;
+      }
+
+      paper-icon-button[disabled] {
+        color: #888;
+      }
+
+      .page-container {
+        overflow-x: hidden;
+        width: 800px;
+        height: 478px;
+        background-color: black;
         position: relative;
+        border-radius: 0px 0px var(--roundie) var(--roundie);
+      }
+
+      .title {
+        top: 0px;
+        left: 0px;
+        background-color: var(--primary-color);
+        border-radius: var(--roundie) var(--roundie) 0px 0px;
+        color: white;
+        line-height: 42px;
+        height: 42px;
+        font-size: 18px;
+        font-weight: bold;
+        padding: 0px 48px 0px 12px;
+        margin: 0px;
+        text-overflow: ellipsis;
+        position: relative;
+        white-space: nowrap;
+        overflow: hidden;
+      }
+
+      .page-tabs {
+        top: 0px;
+        left: 0px;
+        height: 100%;
+        position: absolute;
+      }
+
+      .page-tab {
+        top: 0px;
+        position: absolute;
+        width: var(--tab-width);
+        height: 100%;
+        background-color: black;
+        color: white;
+        font-size: 20px;
+        font-weight: bold;
+      }
+
+      .tab-label {
+        position: absolute;
+        bottom: 20px;
+        color: white;
+        font-weight: bold;
+        font-size: 18px;
+      }
+
+      .wizard-next-button {
+        position: absolute; 
+        right: 0px; 
+        bottom: 0px;
+        color: var(--primary-color);
+        z-index: 4;
+      }
+
+      .wizard-previous-button {
+        position: absolute; 
+        right: 50px;
+        bottom: 0px;
+        color: var(--primary-color);
+        z-index: 4;
+      }
+
+      .wizard-close-button {
+        width: 50px;
+        height: 50px;
+        position: absolute;
+        top: -4px;
+        right: 0px;
+        color: #FFF;
+        z-index: 4;
+      }
+
+      .page  {
+        top: 0px;
+        height: 100%;
+        position: absolute;
+        -moz-transform: translateZ(0);
+        -ms-transform: translateZ(0);
+        -o-transform: translateZ(0);
+        transform: translateZ(0);
+        background-color: #fff;
+      }
+
+      .slidein {
+        -moz-transition: transform var(--slide-anim) ease-in-out;
+        -webkit-transition: transform var(--slide-time) ease-in-out;
+        -o-transition: transform var(--slide-time) ease-in-out;
+        transition: transform var(--slide-time) ease-in-out;
+      }
+
+      .tabslide {
+        -moz-transform: translateZ(0);
+        -ms-transform: translateZ(0);
+        -o-transform: translateZ(0);
+        transform: translateZ(0);
+        -moz-transition: left 0.3s ease-in-out;
+        -webkit-transition: left 0.3s ease-in-out;
+        -o-transition: left 0.3s ease-in-out;
+        transition: left 0.3s ease-in-out;
+      }
+
+      .fadein {
+        opacity: 0;
+        transition: opacity 0.5s ease-in-out;
+      }
+
+      .left {
+        transform: translate3d(-100%, 0, 0);
+      }
+
+      .right {
+        transform: translate3d(100%, 0, 0);
       }
     </style>
   </template>
@@ -58,124 +189,7 @@
       ready () {
         super.ready();
 
-        let style = document.createElement('style');
-        style.type = 'text/css';
-        style.innerHTML = `
-            paper-icon-button {
-              width: 60px;
-              height: 60px;
-            }
-            paper-icon-button[disabled] {
-              color: #888;
-            }
-            .page-container {
-              overflow-x: hidden;
-              width: 800px;
-              height: 478px;
-              background-color: black;
-              position: relative;
-              border-radius: 0px 0px 10px 10px;
-            }
-            .title {
-              top: 0px;
-              left: 0px;
-              background-color: var(--primary-color);
-              border-radius: 10px 10px 0px 0px;
-              color: white;
-              line-height: 42px;
-              height: 42px;
-              font-size: 18px;
-              font-weight: bold;
-              padding: 0px 48px 0px 12px;
-              margin: 0px;
-              text-overflow: ellipsis;
-              position: relative;
-              white-space: nowrap;
-              overflow: hidden;
-            }
-            .page-tabs {
-              top: 0px;
-              left: 0px;
-              height: 100%;
-              position: absolute;
-            }
-            .page-tab {
-              top: 0px;
-              position: absolute;
-              width: 30px;
-              height: 100%;
-              background-color: black;
-              color: white;
-              font-size: 20px;
-              font-weight: bold;
-            }
-            .tab-label {
-              position: absolute;
-              bottom: 20px;
-              color: white;
-              font-weight: bold;
-              font-size: 18px;
-            }
-            .wizard-next-button {
-              position: absolute; 
-              right: 0px; 
-              bottom: 0px;
-              color: var(--primary-color);
-              z-index: 4;
-            }
-            .wizard-previous-button {
-              position: absolute; 
-              right: 50px;
-              bottom: 0px;
-              color: var(--primary-color);
-              z-index: 4;
-            }
-            .wizard-close-button {
-              width: 50px;
-              height: 50px;
-              position: absolute;
-              top: -4px;
-              right: 0px;
-              color: #FFF;
-              z-index: 4;
-            }
-            .page  {
-              top: 0px;
-              height: 100%;
-              position: absolute;
-              -moz-transform: translateZ(0);
-              -ms-transform: translateZ(0);
-              -o-transform: translateZ(0);
-              transform: translateZ(0);
-              background-color: #fff;
-            }
-            .slidein {
-              -moz-transition: transform 0.5s ease-in-out;
-              -webkit-transition: transform 0.5s ease-in-out;
-              -o-transition: transform 0.5s ease-in-out;
-              transition: transform 0.5s ease-in-out;
-            }
-            .tabslide {
-              -moz-transform: translateZ(0);
-              -ms-transform: translateZ(0);
-              -o-transform: translateZ(0);
-              transform: translateZ(0);
-              -moz-transition: left 0.3s ease-in-out;
-              -webkit-transition: left 0.3s ease-in-out;
-              -o-transition: left 0.3s ease-in-out;
-              transition: left 0.3s ease-in-out;
-            }
-            .fadein {
-              opacity: 0;
-              transition: opacity 0.5s ease-in-out;
-            }
-            .left {
-              transform: translate3d(-100%, 0, 0);
-            }
-            .right {
-              transform: translate3d(100%, 0, 0);
-            }`;
-        this.shadowRoot.appendChild(style);
+        this.shadowRoot.appendChild(CasperWizard.template.content.cloneNode(true));
 
         this._pageTabs = document.createElement('div');
         this._pageTabs.classList.add('page-tabs');
@@ -218,10 +232,14 @@
         this._closeButton.classList = 'wizard-close-button';
         this.shadowRoot.appendChild(this._closeButton);
 
+        debugger;
+        let style = window.getComputedStyle(this);
+        this._slideTime = parseFloat(style.getPropertyValue('--slide-time')) * 1000;
+        this._tabWidth = parseFloat(style.getPropertyValue('--tab-width'));
+
         this._createTabs();
         this.gotoPage(0);
       }
-
 
 
       //***************************************************************************************//
@@ -399,8 +417,8 @@
         page.classList.remove('left');
         page.classList.remove('right');
         this._pageIndex = pageIndex;
-        this._pageTabs.style.left = -30 * this._pageIndex + 'px';
-        this._slideTimeout = setTimeout(() => this._pageSlideTimer(), 0.5 * 1000);
+        this._pageTabs.style.left = - this._tabWidth * this._pageIndex + 'px';
+        this._slideTimeout = setTimeout(() => this._pageSlideTimer(), this._slideTime);
       }
 
       _pageSlideTimer (event) {
@@ -432,7 +450,11 @@
         let opa = 0.4;
         let r   = 0;
 
-        this._pageTabs.style.width = 800 + 30 * (this._pages.length - 1) + 'px';
+        '0px 10px 10px 0px';
+        '10px 0px 0px 10px';
+
+
+        this._pageTabs.style.width = 800 + this._tabWidth * (this._pages.length - 1) + 'px';
         for ( let idx = this._pages.length; idx > 1; idx-- ) {
           let tab = document.createElement('div');
           let lbl = document.createElement('span');
@@ -443,12 +465,12 @@
           tab.appendChild(lbl);
           tab.style.right = r + 'px';
           tab.classList.add('page-tab');
-          tab.style.width = 15 + (idx * 30) + 'px';
+          tab.style.width = 15 + (idx * this._tabWidth) + 'px';
           tab.style.opacity = opa;
           tab.style.borderRadius = '0px 10px 10px 0px';
           this._pageTabs.appendChild(tab);
           opa -= 0.1;
-          r += 30;
+          r += this._tabWidth;
         }
 
         opa = 0.4;
@@ -464,12 +486,12 @@
           tab.appendChild(lbl);
           tab.style.left = r + 'px';
           tab.classList.add('page-tab');
-          tab.style.width = 15 + (idx * 30) + 'px';
+          tab.style.width = 15 + (idx * this._tabWidth) + 'px';
           tab.style.opacity = opa;
           tab.style.borderRadius = '10px 0px 0px 10px';
           this._pageTabs.appendChild(tab);
           opa -= 0.1;
-          r += 30;
+          r += this._tabWidth;
         }
 
       }
@@ -499,8 +521,6 @@
       }
 
       _updateUI (notification) {
-
-        console.log(notification);
 
         switch (notification.status) {
           case 'in-progress':
