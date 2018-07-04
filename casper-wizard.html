@@ -35,11 +35,12 @@
   <template id="wizard-base-template">
     <style>
       :host {
+        --background-modal-color: var(--modal-header-color, red);
         --roundie: var(--radius-primary, 10px);
         --slide-time: 0.5s;
         --tab-width: 30px;
       }
-      
+
       paper-icon-button {
         width: 60px;
         height: 60px;
@@ -57,12 +58,11 @@
         position: relative;
         border-radius: 0px 0px var(--roundie) var(--roundie);
       }
-
       .title {
         top: 0px;
         left: 0px;
-        background-color: var(--primary-color);
-        border-radius: var(--roundie) var(--roundie) 0px 0px;
+        background-color: var(--background-modal-color);
+        border-radius: var(--radius-primary, 10px) var(--radius-primary, 10px) 0px 0px;
         color: white;
         line-height: 42px;
         height: 42px;
@@ -103,15 +103,15 @@
       }
 
       .wizard-next-button {
-        position: absolute; 
-        right: 0px; 
+        position: absolute;
+        right: 0px;
         bottom: 0px;
         color: var(--primary-color);
         z-index: 4;
       }
 
       .wizard-previous-button {
-        position: absolute; 
+        position: absolute;
         right: 50px;
         bottom: 0px;
         color: var(--primary-color);
@@ -136,7 +136,7 @@
         -ms-transform: translateZ(0);
         -o-transform: translateZ(0);
         transform: translateZ(0);
-        background-color: #fff;
+        background-color: var(--surface-color, #000);
       }
 
       .slidein {
@@ -182,9 +182,9 @@
      * @demo demo/index.html
      */
     class CasperWizard extends Polymer.mixinBehaviors([Polymer.IronOverlayBehavior, Polymer.IronFitBehavior], Casper.I18n(Polymer.Element)) {
-      
-      static get is () { 
-        return 'casper-wizard'; 
+
+      static get is () {
+        return 'casper-wizard';
       }
 
       ready () {
@@ -267,7 +267,7 @@
       nextPage () {
         if ( this._pageIndex < this._pages.length - 1 ) {
           this._activatePage(this._pageIndex + 1);
-        }  
+        }
       }
 
       previousPage () {
@@ -282,7 +282,7 @@
         this._updateWizardButtons();
         this.hideStatusAndProgress();
       }
-      
+
       submitJob (job, timeout) {
         this.showProgressPage();
         job.validity          = timeout;
@@ -290,7 +290,7 @@
         job.user_id           = null;
         job.sharded_schema    = null;   // TODO move this to socket
         job.company_schema    = null;
-        job.accounting_schema = null; 
+        job.accounting_schema = null;
         job.accounting_prefix = null;
         this.socket.submitJob(job, this._submitJobResponse.bind(this), { validity: timeout, ttr: timeout, timeout: timeout});
       }
@@ -301,7 +301,7 @@
         if ( this._statusPage !== undefined ) {
           this._statusPage.style.display = 'none';
           this._statusPage.style.opacity = 0.0;
-        }  
+        }
 
         // ... create page if needed ...
         if ( this._progressPage === undefined ) {
@@ -326,7 +326,7 @@
         if ( this._progressPage !== undefined ) {
           this._progressPage.style.display = 'none';
           this._progressPage.style.opacity = 0.0;
-        }        
+        }
         // ... create page if needed ...
         if ( this._statusPage === undefined ) {
           this._statusPage  = document.createElement('casper-wizard-status-page');
@@ -359,7 +359,7 @@
       //***************************************************************************************//
 
       _gotoPreviousPage (event) {
-        
+
         if ( this._slideTimeout !== undefined ) {
           return;
         }
@@ -401,12 +401,12 @@
 
         if ( this._progressPage !== undefined ) {
           this._progressPage.style.display = 'none';
-          this._progressPage.style.opacity = 0;          
+          this._progressPage.style.opacity = 0;
         }
         if ( this._statusPage !== undefined ) {
           this._statusPage.style.display = 'none';
           this._statusPage.style.opacity = 0;
-        }        
+        }
       }
 
       _activatePage (pageIndex) {
@@ -435,16 +435,16 @@
       _adjustPageClasses () {
         for ( let idx = 0; idx < this._pages.length; idx++ ) {
           const page = this._pages[idx];
-            
+
           page.classList.remove('slidein');
           if ( idx <  this._pageIndex ) {
-            page.classList.add('left'); 
+            page.classList.add('left');
             page.style.zIndex = '0';
           } else if ( idx > this._pageIndex ) {
-            page.classList.add('right'); 
+            page.classList.add('right');
             page.style.zIndex = '0';
           } else {
-            page.classList.remove('left'); 
+            page.classList.remove('left');
             page.classList.remove('right');
             page.style.zIndex = '1';
           }
@@ -472,7 +472,7 @@
           tab.classList.add('page-tab');
           tab.style.width = 15 + (idx * this._tabWidth) + 'px';
           tab.style.opacity = opa;
-          tab.style.borderRadius = '0px 10px 10px 0px';
+          tab.style.borderRadius = '0px var(--radius-primary, 10px) var(--radius-primary, 10px) 0px';
           this._pageTabs.appendChild(tab);
           opa -= 0.1;
           r += this._tabWidth;
@@ -493,7 +493,7 @@
           tab.classList.add('page-tab');
           tab.style.width = 15 + (idx * this._tabWidth) + 'px';
           tab.style.opacity = opa;
-          tab.style.borderRadius = '10px 0px 0px 10px';
+          tab.style.borderRadius = 'var(--radius-primary, 10px) 0px 0px var(--radius-primary, 10px)';
           this._pageTabs.appendChild(tab);
           opa -= 0.1;
           r += this._tabWidth;
