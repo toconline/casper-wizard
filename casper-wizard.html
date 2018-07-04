@@ -233,7 +233,7 @@
         this._slideTime = parseFloat(style.getPropertyValue('--slide-time')) * 1000;
         this._tabWidth = parseFloat(style.getPropertyValue('--tab-width'));
 
-        if ( this.notabs == false ) {
+        if ( this.notabs === undefined || this.notabs === false ) {
           this._createTabs();
         }
         this.gotoPage(0);
