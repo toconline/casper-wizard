@@ -123,6 +123,9 @@
             type: Object,
             value: undefined
           },
+          pageTitle: {
+            type: String
+          },
           printable: {
             type: Boolean,
             value: true,
@@ -131,13 +134,12 @@
         };
       }
 
-     _printableChanged (newValue, oldValue) {
+      _printableChanged (newValue, oldValue) {
         if ( newValue == true ) {
           this.$.button.style.display = 'flex';
         }
       }
       
-
       _printDocument () {
         var frm = this.shadowRoot.querySelector('iframe').contentWindow;
         
