@@ -52,7 +52,7 @@
       }
 
       .iframe {
-        overflow: scroll;
+        overflow: auto;
         border: none;
         flex-grow: 2.0;
         background-color: #f2f2f2;
@@ -81,14 +81,22 @@
         box-shadow: none;
         display: none;
       }
+  
+      .default_footer {
+        height: 42px;
+      }
 
     </style>
 
     <h1 class="pagetitle">[[pageTitle]]</h1>
     <div class="content">
-      <slot name="header"></slot>
+      <slot name="header">
+        <paper-button id="button" class="print-button" on-tap="_printDocument" raised>Imprimir</paper-button>
+      </slot>
       <iframe class="iframe" id="iframe" srcdoc$="[[srcdoc]]"></iframe>
-      <slot name="footer"></slot>
+      <slot name="footer">
+        <span class="default_footer"> </span>
+      </slot>
     </div>
 
 
@@ -114,8 +122,28 @@
           srcdoc: {
             type: Object,
             value: undefined
-          } 
+          },
+          printable: {
+            type: Boolean,
+            value: true,
+            observer: '_printableChanged'
+          }
         };
+      }
+
+     _printableChanged (newValue, oldValue) {
+        if ( newValue == true ) {
+          this.$.button.style.display = 'flex';
+        }
+      }
+      
+
+      _printDocument () {
+        var frm = this.shadowRoot.querySelector('iframe').contentWindow;
+        
+        frm.focus();
+        frm.print();
+        return false;
       }
 
     }
