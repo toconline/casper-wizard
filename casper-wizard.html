@@ -58,6 +58,7 @@
         position: relative;
         border-radius: 0px 0px var(--roundie) var(--roundie);
       }
+
       .title {
         top: 0px;
         left: 0px;
@@ -81,6 +82,9 @@
         left: 0px;
         height: 100%;
         position: absolute;
+        background-color: #858585;
+        opacity: 0.8;
+        border-radius: var(--roundie) var(--roundie) var(--roundie) var(--roundie);
       }
 
       .page-tab {
@@ -89,7 +93,6 @@
         width: var(--tab-width);
         height: 100%;
         background-color: black;
-        color: white;
         font-size: 20px;
         font-weight: bold;
       }
@@ -97,9 +100,10 @@
       .tab-label {
         position: absolute;
         bottom: 20px;
-        color: white;
+        color: #cbcbcb;
         font-weight: bold;
         font-size: 18px;
+        z-index: 1;
       }
 
       .wizard-next-button {
@@ -194,6 +198,13 @@
         return 'casper-wizard';
       }
 
+      static get initial_opacity () {
+        return 0.2;
+      }
+
+      /**
+       *
+       */
       ready () {
         super.ready();
 
@@ -232,7 +243,9 @@
         let style = window.getComputedStyle(this);
         this._slideTime = parseFloat(style.getPropertyValue('--slide-time')) * 1000;
         this._tabWidth = parseFloat(style.getPropertyValue('--tab-width'));
+        this._roundie = parseFloat(style.getPropertyValue('--roundie'));
 
+        // ... build tabs if they are not surpressed ...
         if ( this.notabs === undefined || this.notabs === false ) {
           this._createTabs();
         }
@@ -275,6 +288,19 @@
         this._adjustPageClasses();
         this._updateWizardButtons();
         this.hideStatusAndProgress();
+      }
+
+      hideStatusAndProgress () {
+        clearTimeout(this._fadeInTimer);
+
+        if ( this._progressPage !== undefined ) {
+          this._progressPage.style.display = 'none';
+          this._progressPage.style.opacity = 0;
+        }
+        if ( this._statusPage !== undefined ) {
+          this._statusPage.style.display = 'none';
+          this._statusPage.style.opacity = 0;
+        }
       }
 
       submitJob (job, timeout) {
@@ -390,19 +416,6 @@
         }
       }
 
-      hideStatusAndProgress () {
-        clearTimeout(this._fadeInTimer);
-
-        if ( this._progressPage !== undefined ) {
-          this._progressPage.style.display = 'none';
-          this._progressPage.style.opacity = 0;
-        }
-        if ( this._statusPage !== undefined ) {
-          this._statusPage.style.display = 'none';
-          this._statusPage.style.opacity = 0;
-        }
-      }
-
       _activatePage (pageIndex) {
 
         this.hideStatusAndProgress();
@@ -446,51 +459,45 @@
       }
 
       _createTabs () {
-        let opa = 0.4;
-        let r   = 0;
+        let off  = 0;
+        let w    = parseFloat(window.getComputedStyle(this._pageContainer).getPropertyValue('width')) - 2;
 
-        '0px 10px 10px 0px';
-        '10px 0px 0px 10px';
-
-
-        this._pageTabs.style.width = 800 + this._tabWidth * (this._pages.length - 1) + 'px';
+        // ... right side tabs ...
+        this._pageTabs.style.width =  w + this._tabWidth * (this._pages.length - 1) + 'px';
         for ( let idx = this._pages.length; idx > 1; idx-- ) {
           let tab = document.createElement('div');
           let lbl = document.createElement('span');
 
           lbl.textContent = idx;
-          lbl.style.right = '10px';
+          lbl.style.right = off + 10 + 'px';
           lbl.classList.add('tab-label');
-          tab.appendChild(lbl);
-          tab.style.right = r + 'px';
+          this._pageTabs.appendChild(lbl);
+          tab.style.right = off + 'px';
           tab.classList.add('page-tab');
-          tab.style.width = 15 + (idx * this._tabWidth) + 'px';
-          tab.style.opacity = opa;
-          tab.style.borderRadius = '0px var(--radius-primary, 10px) var(--radius-primary, 10px) 0px';
+          tab.style.width = this._tabWidth / 2 + (idx * this._tabWidth) + 'px';
+          tab.style.opacity = CasperWizard.initial_opacity;
+          tab.style.borderRadius = '0px var(--roundie) var(--roundie) 0px';
           this._pageTabs.appendChild(tab);
-          opa -= 0.1;
-          r += this._tabWidth;
+          off += this._tabWidth;
         }
 
-        opa = 0.4;
-        r   = 0;
-
+        // ... left side tabs ...
+        off = 0;
         for ( let idx = this._pages.length; idx > 1; idx-- ) {
           let tab = document.createElement('div');
           let lbl = document.createElement('span');
 
           lbl.textContent = (this._pages.length + 1) - idx;
-          lbl.style.left = '10px';
+          lbl.style.left = off + 10 + 'px';
           lbl.classList.add('tab-label');
-          tab.appendChild(lbl);
-          tab.style.left = r + 'px';
+          this._pageTabs.appendChild(lbl);
+          tab.style.left = off + 'px';
           tab.classList.add('page-tab');
-          tab.style.width = 15 + (idx * this._tabWidth) + 'px';
-          tab.style.opacity = opa;
-          tab.style.borderRadius = 'var(--radius-primary, 10px) 0px 0px var(--radius-primary, 10px)';
+          tab.style.width = this._tabWidth/2 + (idx * this._tabWidth) + 'px';
+          tab.style.opacity = CasperWizard.initial_opacity;
+          tab.style.borderRadius = 'var(--roundie) 0px 0px var(--roundie)';
           this._pageTabs.appendChild(tab);
-          opa -= 0.1;
-          r += this._tabWidth;
+          off += this._tabWidth;
         }
 
       }
