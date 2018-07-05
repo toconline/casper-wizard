@@ -198,8 +198,8 @@
         return 'casper-wizard';
       }
 
-      static get initial_opacity () {
-        return 0.2;
+      static get tab_opacity () {
+        return 0.3;
       }
 
       /**
@@ -461,8 +461,9 @@
       _createTabs () {
         let off  = 0;
         let w    = parseFloat(window.getComputedStyle(this._pageContainer).getPropertyValue('width')) - 2;
+        let opa  = CasperWizard.tab_opacity;
 
-        // ... right side tabs ...
+        // ... right side tabs ...  
         this._pageTabs.style.width =  w + this._tabWidth * (this._pages.length - 1) + 'px';
         for ( let idx = this._pages.length; idx > 1; idx-- ) {
           let tab = document.createElement('div');
@@ -475,7 +476,7 @@
           tab.style.right = off + 'px';
           tab.classList.add('page-tab');
           tab.style.width = this._tabWidth / 2 + (idx * this._tabWidth) + 'px';
-          tab.style.opacity = CasperWizard.initial_opacity;
+          tab.style.opacity = opa;
           tab.style.borderRadius = '0px var(--roundie) var(--roundie) 0px';
           this._pageTabs.appendChild(tab);
           off += this._tabWidth;
@@ -494,7 +495,7 @@
           tab.style.left = off + 'px';
           tab.classList.add('page-tab');
           tab.style.width = this._tabWidth/2 + (idx * this._tabWidth) + 'px';
-          tab.style.opacity = CasperWizard.initial_opacity;
+          tab.style.opacity = opa;
           tab.style.borderRadius = 'var(--roundie) 0px 0px var(--roundie)';
           this._pageTabs.appendChild(tab);
           off += this._tabWidth;
