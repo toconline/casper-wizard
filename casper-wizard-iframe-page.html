@@ -91,7 +91,7 @@
     <h1 class="pagetitle">[[pageTitle]]</h1>
     <div class="content">
       <slot name="header">
-        <paper-button id="button" class="print-button" on-tap="_printDocument" raised>Imprimir</paper-button>
+        <paper-button id="button" class="print-button" on-tap="_printDocument" raised>Imprimir Relatório</paper-button>
       </slot>
       <iframe class="iframe" id="iframe" srcdoc$="[[srcdoc]]"></iframe>
       <slot name="footer">
@@ -128,7 +128,7 @@
           },
           printable: {
             type: Boolean,
-            value: true,
+            value: false,
             observer: '_printableChanged'
           }
         };
