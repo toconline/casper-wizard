@@ -285,6 +285,7 @@
 
       gotoPage (pageIndex) {
         this._pageIndex = pageIndex;
+        this._pageTabs.style.left = - this._tabWidth * this._pageIndex + 'px';
         this._adjustPageClasses();
         this._updateWizardButtons();
         this.hideStatusAndProgress();
@@ -500,7 +501,6 @@
           this._pageTabs.appendChild(tab);
           off += this._tabWidth;
         }
-
       }
 
       _updateWizardButtons () {
