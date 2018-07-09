@@ -537,7 +537,7 @@
           case 'completed':
             this._updateWizardButtons();
             if ( typeof this['jobCompletedOnPage' + this._pageIndex] === 'function' ) {
-              this['jobCompletedOnPage' + this._pageIndex].apply(this, [notification.message, notification.response]);
+              this['jobCompletedOnPage' + this._pageIndex].apply(this, [notification.status_code, notification.message, notification.response]);
             } else {
               if ( this._pageIndex === this._pages.length - 1) {
                 this.close();
