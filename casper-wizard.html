@@ -211,12 +211,30 @@
         // ... inject the base class template into the component ...
         this.shadowRoot.appendChild(CasperWizard.template.content.cloneNode(true));
 
-        // ... grab all children that extend casper-wizard-page, these are the wizard pages ...
-        this._pages = [];
+        // ... make sure all existing pages get the 'page' class
         for ( let page of this.shadowRoot.children ) {
           if ( page instanceof CasperWizardPage ) {
             page.classList.add('page');
-            this._pages.push(page);
+          }
+        }
+
+        // ... collect the active wizard pages ...
+        this._pages = [];
+        let pageIdList = null;
+        if ( typeof this.activePagesIds === 'function' ) {
+          pageIdList = this.activePagesIds();
+        }
+        if ( pageIdList ) {
+          // ... use the explict page list ...
+          for ( let id of pageIdList ) {
+            this._pages.push(this.$[id]);
+          }
+        } else {
+          // ... grab all children that extend casper-wizard-page ...
+          for ( let page of this.shadowRoot.children ) {
+            if ( page instanceof CasperWizardPage ) {
+              this._pages.push(page);
+            }
           }
         }
 
@@ -249,9 +267,8 @@
         if ( this.notabs === undefined || this.notabs === false ) {
           this._createTabs();
         }
-        this.gotoPage(0);
+        this._gotoPage(0);
       }
-
 
       //***************************************************************************************//
       //                                                                                       //
@@ -267,8 +284,27 @@
         this._title.textContent = title;
       }
 
-      setPageTitle (idx, title) {
-        this._pages[idx].pageTitle = title;
+      setPageTitle (pageId, title) {
+        let pageIndex = this._getIndexOf(pageId);
+        if ( pageIndex ) {
+          this._pages[pageIndex].pageTitle = title;
+        }
+      }
+
+      enablePrevious () {
+        this._prevButton.disabled = false;
+      }
+
+      disablePrevious () {
+        this._prevButton.disabled = true;
+      }
+
+      enableNext () {
+        this._nextButton.disabled = false;
+      }
+
+      disableNext () {
+        this._nextButton.disabled = true;
       }
 
       nextPage () {
@@ -283,12 +319,11 @@
         }
       }
 
-      gotoPage (pageIndex) {
-        this._pageIndex = pageIndex;
-        this._pageTabs.style.left = - this._tabWidth * this._pageIndex + 'px';
-        this._adjustPageClasses();
-        this._updateWizardButtons();
-        this.hideStatusAndProgress();
+      gotoPage (pageId) {
+        let pageIndex = this._getIndexOf(pageId);
+        if ( pageIndex ) {
+          this._gotoPage(pageIndex);
+        }
       }
 
       hideStatusAndProgress () {
@@ -389,8 +424,8 @@
         if ( page >= 1 ) {
           page -= 1;
         }
-        if ( typeof this['previousOnPage' + this._pageIndex] === 'function' ) {
-          this['previousOnPage' + this._pageIndex].apply(this);
+        if ( typeof this['previousOn' + this._pages[this._pageIndex].id] === 'function' ) {
+          this['previousOn' + this._pages[this._pageIndex].id].apply(this);
         } else {
           this._activatePage(page);
         }
@@ -403,18 +438,34 @@
         }
 
         if ( this._pageIndex < this._pages.length - 1 ) {
-          if ( typeof this['nextOnPage' + this._pageIndex] === 'function' ) {
-            this['nextOnPage' + this._pageIndex].apply(this);
+          if ( typeof this['nextOn' + this._pages[this._pageIndex].id] === 'function' ) {
+            this['nextOn' + this._pages[this._pageIndex].id].apply(this);
           } else {
             this._activatePage(this._pageIndex + 1);
           }
         } else {
-          if ( typeof this['nextOnPage' + (this._pages.length - 1)] === 'function' ) {
-            this['nextOnPage' + (this._pages.length - 1)].apply(this);
+          if ( typeof this['nextOn' + this._pages[this._pages.length - 1].id] === 'function' ) {
+            this['nextOn' + this._pages[this._pages.length - 1].id].apply(this);
           } else {
             this.close();
           }
         }
+      }
+
+      _gotoPage (pageIndex) {
+        this._pageIndex = pageIndex;
+        this._pageTabs.style.left = - this._tabWidth * this._pageIndex + 'px';
+        this._adjustPageClasses();
+        this._updateWizardButtons();
+        this.hideStatusAndProgress();
+      }
+
+      _getIndexOf (pageId) {
+        let page = this._pageContainer.querySelector('#' + pageId);
+        if ( ! page ) {
+          return undefined;
+        }
+        return Array.prototype.indexOf.call(this._pageContainer.children, page);
       }
 
       _activatePage (pageIndex) {
@@ -536,8 +587,8 @@
             break;
           case 'completed':
             this._updateWizardButtons();
-            if ( typeof this['jobCompletedOnPage' + this._pageIndex] === 'function' ) {
-              this['jobCompletedOnPage' + this._pageIndex].apply(this, [notification.status_code, notification.message, notification.response]);
+            if ( typeof this['jobCompletedOn' + this._pages[this._pageIndex].id] === 'function' ) {
+              this['jobCompletedOn' + this._pages[this._pageIndex].id].apply(this, [notification.status_code, notification.message, notification.response]);
             } else {
               if ( this._pageIndex === this._pages.length - 1) {
                 this.close();
@@ -548,8 +599,8 @@
             break;
           case 'failed':
           case 'error':
-            if ( typeof this['errorOnPage' + this._pageIndex] === 'function' ) {
-              this['errorOnPage' + this._pageIndex].apply(this, [notification]);
+            if ( typeof this['errorOn' + this._pages[this._pageIndex].id] === 'function' ) {
+              this['errorOn' + this._pages[this._pageIndex].id].apply(this, [notification]);
             } else {
               this.showStatusPage(notification);
             }
