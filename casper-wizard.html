@@ -407,6 +407,34 @@
         this._nextButton.disabled = true;
       }
 
+      showMessagePage (notification) {
+        clearTimeout(this._fadeInTimer);
+
+        // ... hide current pages ...
+        this.hideStatusAndProgress();
+
+        // ... create page if needed ...
+        if ( this._messagePage === undefined ) {
+          this._messagePage  = document.createElement('casper-wizard-status-page');
+          this._messagePage.classList.add('fadein');
+          this._pageContainer.appendChild(this._messagePage);
+        }
+
+        // ... set message and or icon ...
+        this._messagePage.message = this.i18n.apply(this, notification.message);
+        if ( notification.title !== undefined ) {
+          this._messagePage.title = notification.title;
+        }
+        if ( notification.response !== undefined && notification.response.stash_icon !== undefined ) {
+          this._messagePage.icon = notification.response.stash_icon;
+        }
+
+        // show status page
+        this._messagePage.style.zIndex  = '3';
+        this._messagePage.style.display = 'flex';
+        this._fadeInTimer = setTimeout(() => this._messagePage.style.opacity = 1.0, 0.3 * 1000);
+      }
+
 
       //***************************************************************************************//
       //                                                                                       //
