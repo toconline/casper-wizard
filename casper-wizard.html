@@ -429,6 +429,8 @@
           this._messagePage.icon = notification.response.stash_icon;
         }
 
+        this.shadowRoot.querySelector('casper-wizard-status-page').$.StatusIcon.style.fill = '#009900';
+        
         // show status page
         this._messagePage.style.zIndex  = '3';
         this._messagePage.style.display = 'flex';
@@ -478,6 +480,21 @@
             this.close();
           }
         }
+      }
+
+      _showSubmitButton () {
+        this._prevButton.style.right = '100px';
+        this._submitButton = document.createElement('paper-button');
+        this._submitButton.classList.add('wizard-submit-button');
+        this._submitButton.textContent = 'Submeter';
+        this._pageContainer.appendChild(this._submitButton);
+        this._submitButton.addEventListener('tap', e => this._gotoNextPage(e));
+      }
+
+      _hideSubmitButton () {
+        this._prevButton.style.right = '50px';
+        this._submitButton.style.display = 'none';
+        this._nextButton.style.display = 'flex';
       }
 
       _gotoPage (pageIndex) {
