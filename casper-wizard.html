@@ -483,10 +483,8 @@
       }
 
       _showSubmitButton () {
-        this._prevButton.style.right = '100px';
         this._submitButton = document.createElement('paper-button');
         this._submitButton.classList.add('wizard-submit-button');
-        this._submitButton.textContent = 'Submeter';
         this._pageContainer.appendChild(this._submitButton);
         this._submitButton.addEventListener('tap', e => this._gotoNextPage(e));
       }
