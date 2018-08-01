@@ -30,6 +30,7 @@
 <link rel="import" href="../iron-fit-behavior/iron-fit-behavior.html">
 <link rel="import" href="../paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../casper-icons/casper-icons.html">
+<link rel="import" href="../paper-button/paper-button.html">
 
 <dom-module id="casper-wizard">
   <template id="wizard-base-template">
@@ -46,8 +47,8 @@
         height: 60px;
       }
 
-      paper-icon-button[disabled] {
-        color: #888;
+      .wizard-next-button[disabled] {
+        background-color: #888;
       }
 
       .page-container {
@@ -106,20 +107,66 @@
         z-index: 1;
       }
 
+      .buttons-container {
+        display: flex;
+        justify-content: flex-end;
+        position: relative;
+        bottom: 50px;
+        right: 7px;
+        height: 0;
+      }
+
       .wizard-next-button {
-        position: absolute;
-        right: 0px;
-        bottom: 0px;
-        color: var(--primary-color);
         z-index: 4;
+        min-width: 40px;
+        padding: 0;
+        border-radius: 25px;
+        background-color: var(--primary-color);
+        font-size: 14px;
+        font-weight: bold;
+        -webkit-font-smoothing: antialiased;
+        color: white;
+      }
+
+      .wizard-icon-next-button {
+        width: 40px;
+        height: 40px;
+        fill: #fff;
+      }
+
+      .button-animation {
+        width: 40px;
+        height: 40px;
+        -webkit-transition: width 0.5s; /* For Safari 3.1 to 6.0 */
+        transition: width 0.5s;
+      }
+
+      .wizard-text {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
       }
 
       .wizard-previous-button {
-        position: absolute;
-        right: 50px;
-        bottom: 0px;
-        color: var(--primary-color);
         z-index: 4;
+        border-radius: 25px;
+        border: 2px solid var(--primary-color);
+        min-width: 40px;
+        min-width: 40px;
+        padding: 0;
+        border-radius: 25px;
+        background-color: #fff;
+        font-size: 14px;
+        font-weight: bold;
+        -webkit-font-smoothing: antialiased;
+        color: white;
+        border: 2px solid var(--primary-color);
+      }
+
+      .wizard-icon-previous-button {
+        width: 40px;
+        height: 40px;
+        fill: var(--primary-color);
       }
 
       .wizard-close-button {
@@ -178,9 +225,21 @@
     <div class="page-tabs tabslide"></div>
     <div class="title"></div>
     <div class="page-container"></div>
-    <paper-icon-button class="wizard-previous-button" icon="casper-icons:arrow-left"></paper-icon-button>
-    <paper-icon-button class="wizard-next-button"     icon="casper-icons:arrow-right"></paper-icon-button>
+    <!-- <paper-icon-button class="wizard-previous-button" icon="casper-icons:arrow-left"></paper-icon-button>
+    <paper-icon-button class="wizard-next-button"     icon="casper-icons:arrow-right"></paper-icon-button> -->
+    
     <paper-icon-button class="wizard-close-button"    icon="casper-icons:close"></paper-icon-button>
+
+    <div class="buttons-container">
+      <paper-button id="wizardPrevButton" class="wizard-previous-button button-animation">
+        <iron-icon id="wizardPreviousIcon" class="wizard-icon-previous-button" icon="casper-icons:arrow-left"></iron-icon>
+      </paper-button>
+
+      <paper-button id="wizardNextButton" class="wizard-next-button button-animation">
+        <iron-icon id="wizardNextIcon" class="wizard-icon-next-button" icon="casper-icons:arrow-right"></iron-icon>
+        <span id="wizardText" class="wizard-text"></span>
+      </paper-button>
+    </div>
   </template>
 
   <script>
@@ -317,6 +376,27 @@
         if ( this._pageIndex >= 1 ) {
           this._activatePage(this._pageIndex - 1);
         }
+      }
+
+      changeIconToText () {
+        this.wizardNextIcon = this.shadowRoot.querySelector('.wizard-icon-next-button');
+        this.wizardText = this.shadowRoot.querySelector('.wizard-text');
+        this._nextButton  = this.shadowRoot.querySelector('.wizard-next-button');
+
+        this.wizardNextIcon.style.display = 'none';
+        this.wizardText.style.display = 'flex';
+        // this.wizardText.textContent = 'Obter guia';
+        setTimeout(() => this._nextButton.style.width = '120px', 1);
+      }
+
+      changeTextToIcon () {
+        this.wizardNextIcon = this.shadowRoot.querySelector('.wizard-icon-next-button');
+        this.wizardText = this.shadowRoot.querySelector('.wizard-text');
+        this._nextButton  = this.shadowRoot.querySelector('.wizard-next-button');
+
+        this.wizardText.style.display = 'none';
+        this.wizardNextIcon.style.display = 'flex';
+        setTimeout(() => this._nextButton.style.width = '40px', 1);
       }
 
       gotoPage (pageId) {
@@ -482,18 +562,18 @@
         }
       }
 
-      _showSubmitButton () {
-        this._submitButton = document.createElement('paper-button');
-        this._submitButton.classList.add('wizard-submit-button');
-        this._pageContainer.appendChild(this._submitButton);
-        this._submitButton.addEventListener('tap', e => this._gotoNextPage(e));
-      }
+      // _showSubmitButton () {
+      //   this._submitButton = document.createElement('paper-button');
+      //   this._submitButton.classList.add('wizard-submit-button');
+      //   this._pageContainer.appendChild(this._submitButton);
+      //   this._submitButton.addEventListener('tap', e => this._gotoNextPage(e));
+      // }
 
-      _hideSubmitButton () {
-        this._prevButton.style.right = '50px';
-        this._submitButton.style.display = 'none';
-        this._nextButton.style.display = 'flex';
-      }
+      // _hideSubmitButton () {
+      //   this._prevButton.style.right = '40px';
+      //   this._submitButton.style.display = 'none';
+      //   this._nextButton.style.display = 'flex';
+      // }
 
       _gotoPage (pageIndex) {
         this._pageIndex = pageIndex;
