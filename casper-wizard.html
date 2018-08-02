@@ -42,11 +42,6 @@
         --tab-width: 30px;
       }
 
-      paper-icon-button {
-        width: 60px;
-        height: 60px;
-      }
-
       .wizard-next-button[disabled] {
         background-color: #888;
       }
@@ -220,15 +215,22 @@
       .right {
         transform: translate3d(100%, 0, 0);
       }
+
+      .hide-button {
+        margin-left: 50%;
+        z-index: -1;
+      }
     </style>
 
-    <div class="page-tabs tabslide"></div>
+    <div class="page-tabs tabslide">
+      <paper-button id="f4button" class="wizard-next-button hide-button"></paper-button>
+    </div>
     <div class="title"></div>
     <div class="page-container"></div>
     <!-- <paper-icon-button class="wizard-previous-button" icon="casper-icons:arrow-left"></paper-icon-button>
     <paper-icon-button class="wizard-next-button"     icon="casper-icons:arrow-right"></paper-icon-button> -->
-    
-    <paper-icon-button class="wizard-close-button"    icon="casper-icons:close"></paper-icon-button>
+
+    <paper-icon-button class="wizard-close-button" icon="casper-icons:close"></paper-icon-button>
 
     <div class="buttons-container">
       <paper-button id="wizardPrevButton" class="wizard-previous-button button-animation">
@@ -301,8 +303,8 @@
         this._pageTabs = this.shadowRoot.querySelector('.page-tabs');
         this._title = this.shadowRoot.querySelector('.title');
         this._pageContainer = this.shadowRoot.querySelector('.page-container');
-        this._prevButton  = this.shadowRoot.querySelector('.wizard-previous-button');
-        this._nextButton  = this.shadowRoot.querySelector('.wizard-next-button');
+        this._prevButton  = this.shadowRoot.querySelector('#wizardPrevButton');
+        this._nextButton  = this.shadowRoot.querySelector('#wizardNextButton');
         this._closeButton = this.shadowRoot.querySelector('.wizard-close-button');
 
         // ... move the wizard pages from the wizard into the page container ...
@@ -378,24 +380,27 @@
         }
       }
 
-      changeIconToText () {
+      _changeNextButtonToText (text) {
         this.wizardNextIcon = this.shadowRoot.querySelector('.wizard-icon-next-button');
         this.wizardText = this.shadowRoot.querySelector('.wizard-text');
-        this._nextButton  = this.shadowRoot.querySelector('.wizard-next-button');
 
         this.wizardNextIcon.style.display = 'none';
         this.wizardText.style.display = 'flex';
-        // this.wizardText.textContent = 'Obter guia';
-        setTimeout(() => this._nextButton.style.width = '120px', 1);
+        this.wizardText.textContent = text;
+        this.f4button = this.shadowRoot.querySelector('#f4button');
+        this.f4button.textContent = text;
+        let w = this.f4button.getBoundingClientRect().width + 40;
+        setTimeout(() => this._nextButton.style.width = w + 'px', 1);
       }
 
-      changeTextToIcon () {
+      _changeNextButtonToIcon () {
         this.wizardNextIcon = this.shadowRoot.querySelector('.wizard-icon-next-button');
         this.wizardText = this.shadowRoot.querySelector('.wizard-text');
-        this._nextButton  = this.shadowRoot.querySelector('.wizard-next-button');
 
         this.wizardText.style.display = 'none';
         this.wizardNextIcon.style.display = 'flex';
+        this.wizardText.textContent = '';
+
         setTimeout(() => this._nextButton.style.width = '40px', 1);
       }
 
@@ -421,13 +426,7 @@
 
       submitJob (job, timeout) {
         this.showProgressPage();
-        job.validity          = timeout;
-        job.entity_id         = null;
-        job.user_id           = null;
-        job.sharded_schema    = null;   // TODO move this to socket
-        job.company_schema    = null;
-        job.accounting_schema = null;
-        job.accounting_prefix = null;
+        job.validity = timeout;
         this.socket.submitJob(job, this._submitJobResponse.bind(this), { validity: timeout, ttr: timeout, timeout: timeout});
       }
 
@@ -510,7 +509,7 @@
         }
 
         this.shadowRoot.querySelector('casper-wizard-status-page').$.StatusIcon.style.fill = '#009900';
-        
+
         // show status page
         this._messagePage.style.zIndex  = '3';
         this._messagePage.style.display = 'flex';
@@ -606,6 +605,11 @@
         this._pageIndex = pageIndex;
         this._pageTabs.style.left = - this._tabWidth * this._pageIndex + 'px';
         this._slideTimeout = setTimeout(() => this._pageSlideTimer(), this._slideTime);
+        if (page.hasAttribute('next')) {
+          this._changeNextButtonToText(page.getAttribute('next'));
+        } else {
+          this._changeNextButtonToIcon();
+        }
       }
 
       _pageSlideTimer (event) {
@@ -638,7 +642,7 @@
         let w    = parseFloat(window.getComputedStyle(this._pageContainer).getPropertyValue('width')) - 2;
         let opa  = CasperWizard.tab_opacity;
 
-        // ... right side tabs ...  
+        // ... right side tabs ...
         this._pageTabs.style.width =  w + this._tabWidth * (this._pages.length - 1) + 'px';
         for ( let idx = this._pages.length; idx > 1; idx-- ) {
           let tab = document.createElement('div');
