@@ -42,8 +42,13 @@
         --tab-width: 30px;
       }
 
-      .wizard-next-button[disabled] {
+      paper-button {
+        background-color: var(--primary-color);
+      }
+
+      paper-button[disabled] {
         background-color: #888;
+        opacity: 0.2;
       }
 
       .page-container {
@@ -380,30 +385,6 @@
         }
       }
 
-      _changeNextButtonToText (text) {
-        this.wizardNextIcon = this.shadowRoot.querySelector('.wizard-icon-next-button');
-        this.wizardText = this.shadowRoot.querySelector('.wizard-text');
-
-        this.wizardNextIcon.style.display = 'none';
-        this.wizardText.style.display = 'flex';
-        this.wizardText.textContent = text;
-        this.f4button = this.shadowRoot.querySelector('#f4button');
-        this.f4button.textContent = text;
-        let w = this.f4button.getBoundingClientRect().width + 40;
-        setTimeout(() => this._nextButton.style.width = w + 'px', 1);
-      }
-
-      _changeNextButtonToIcon () {
-        this.wizardNextIcon = this.shadowRoot.querySelector('.wizard-icon-next-button');
-        this.wizardText = this.shadowRoot.querySelector('.wizard-text');
-
-        this.wizardText.style.display = 'none';
-        this.wizardNextIcon.style.display = 'flex';
-        this.wizardText.textContent = '';
-
-        setTimeout(() => this._nextButton.style.width = '40px', 1);
-      }
-
       gotoPage (pageId) {
         let pageIndex = this._getIndexOf(pageId);
         if ( pageIndex ) {
@@ -574,6 +555,30 @@
         }
       }
 
+      _changeNextButtonToText (text) {
+        this.wizardNextIcon = this.shadowRoot.querySelector('.wizard-icon-next-button');
+        this.wizardText = this.shadowRoot.querySelector('.wizard-text');
+
+        this.wizardNextIcon.style.display = 'none';
+        this.wizardText.style.display = 'flex';
+        this.wizardText.textContent = text;
+        this.f4button = this.shadowRoot.querySelector('#f4button');
+        this.f4button.textContent = text;
+        let w = this.f4button.getBoundingClientRect().width + 40;
+        setTimeout(() => this._nextButton.style.width = w + 'px', 1);
+      }
+
+      _changeNextButtonToIcon () {
+        this.wizardNextIcon = this.shadowRoot.querySelector('.wizard-icon-next-button');
+        this.wizardText = this.shadowRoot.querySelector('.wizard-text');
+
+        this.wizardText.style.display = 'none';
+        this.wizardNextIcon.style.display = 'flex';
+        this.wizardText.textContent = '';
+
+        setTimeout(() => this._nextButton.style.width = '40px', 1);
+      }
+
       _gotoPage (pageIndex) {
         this._pageIndex = pageIndex;
         this._pageTabs.style.left = - this._tabWidth * this._pageIndex + 'px';
@@ -682,9 +687,9 @@
       }
 
       _updateWizardButtons () {
-        this._prevButton.disabled = this._pageIndex === 0;
-        this._nextButton.disabled = false;
-        this._nextButton.icon = (this._pageIndex === this._pages.length - 1) ? 'casper-icons:check-circle' : 'casper-icons:arrow-right';
+        // this._prevButton.disabled = this._pageIndex === 0;
+        // this._nextButton.disabled = false;
+        // this._nextButton.icon = (this._pageIndex === this._pages.length - 1) ? 'casper-icons:check-circle' : 'casper-icons:arrow-right';
       }
 
       _closePage (event) {
