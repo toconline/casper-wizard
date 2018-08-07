@@ -19,8 +19,9 @@
   -
  -->
 <link rel="import" href="../polymer/polymer-element.html">
-<link rel="import" href="/bower_components/vaadin-upload/vaadin-upload.html">
-<link rel="import" href="/bower_components/paper-ripple/paper-ripple.html">
+<link rel="import" href="../casper-common-ui/casper-i18n-behavior.html">
+<link rel="import" href="../vaadin-upload/vaadin-upload.html">
+<link rel="import" href="../paper-ripple/paper-ripple.html">
 
 <dom-module id="casper-vaadin-upload" theme-for="vaadin-upload">
   <template>
@@ -29,8 +30,8 @@
         border: dashed 2px gray;
         border-radius: var(--radius-primary, 6px)
         padding: 12px;
-        color: gray;        
-      } 
+        color: gray;
+      }
 
       :host([dragover]) {
         color: var(--primary-color);
@@ -44,8 +45,8 @@
 
       [part="drop-label"] {
         align-items: center;
-      }      
- 
+      }
+
       [part="drop-label-icon"] {
         margin: 6px;
       }
@@ -60,28 +61,50 @@
       :host {
         display: flex;
         flex-direction: column;
+        width: 100%;
+      }
+
+      .content {
         padding: 12px;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 2.0;
       }
 
-      .container-uploader {
-        margin-top: 110px;
+      .pagetitle {
+        background-color: var(--secondary-color, #ccc);
+        color: var(--on-secondary-color, #444);
+        line-height: 42px;
+        height: 42px;
+        font-size: 16px;
+        padding: 0px 48px 0px 12px;
+        margin: 0px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
       }
 
+      vaadin-upload  {
+        flex-grow: 2.0;
+      }
     </style>
-    
-    <slot name="before"></slot>
-    <div id="upload_panel" class="container-uploader">
+
+    <h1 class="pagetitle">[[pageTitle]]</h1>
+    <div class="content">
+      <slot name="before"></slot>
       <vaadin-upload  id="upload"
-                      accept="image/jpeg, image/png"
+                      accept="[[accept]]"
                       target="[[uploadUrl]]"
                       max-files="1"
                       method="POST"
                       timeout="300000"
                       form-data-name="my-attachment">
-      <paper-ripple id="ripple" style="pointer-events: none;"></paper-ripple>
+        <paper-ripple id="ripple" style="pointer-events: none;"></paper-ripple>
       </vaadin-upload>
+      <slot name="after">
+        <div style="height: 48px;"></div>
+      </slot>
     </div>
-    <slot name="after"></slot>
   </template>
 
   <script>
@@ -93,25 +116,72 @@
      * @polymer
      * @demo demo/index.html
      */
-    class CasperWizardUploadPage extends CasperWizardPage {
-      
-      static get is () { 
+    class CasperWizardUploadPage extends Casper.I18n(CasperWizardPage) {
+
+      static get is () {
         return 'casper-wizard-upload-page';
       }
-      
+
       static get properties() {
         return {
-          uploadUrl: String
+          uploadUrl: String,
+          uploadedFilePath: {
+            type: String,
+            notify: true
+          },
+          accept: {
+            type: String,
+            value: "image/jpeg, image/png"
+          }
         };
       }
 
       ready () {
         super.ready();
+        this.i18nUpdateUpload(this.$.upload);
+        this.$.upload.addEventListener('upload-success', e => this._uploadSuccess(e));
+        this.$.upload.addEventListener('upload-request', e => this._uploadRequest(e));
+        this.$.upload.addEventListener('dragenter',      e => this._onDragEnter(e));
+        this.$.upload.addEventListener('dragleave',      e => this._onDragLeave(e));
       }
 
-      connectedCallback () {
-        super.connectedCallback();
-        console.log('cb casper-wizard-upload-page:', this.title);
+      showUpload () {
+        this.$.upload.style.display = 'block';
+      }
+
+      hideUpload () {
+        this.$.upload.style.display = 'none';
+      }
+
+      _uploadRequest (event) {
+        this.uploadedFilePath = undefined;
+        event.preventDefault();
+        this.$.ripple.upAction();
+        event.detail.xhr.setRequestHeader('Content-Type', 'application/octet-stream');
+        event.detail.xhr.setRequestHeader('Content-Disposition', 'form-data; name="'+event.detail.file.formDataName+'"; filename="uploaded_file";');
+        event.detail.xhr.send(event.detail.file);
+      }
+
+      _uploadSuccess (event) {
+        if ( event.detail.xhr.status == 200 ) {
+          try {
+            let response = JSON.parse(event.detail.xhr.responseText);
+            this.uploadedFilePath = response.file;
+            console.log(response);
+          } catch (exception) {
+            console.log(exception);
+          }
+        }
+      }
+
+      _onDragEnter (event) {
+        this.$.ripple.downAction(event);
+        event.preventDefault();
+      }
+
+      _onDragLeave (event) {
+        this.$.ripple.upAction();
+        event.preventDefault();
       }
 
     }
