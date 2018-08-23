@@ -167,10 +167,14 @@
           try {
             let response = JSON.parse(event.detail.xhr.responseText);
             this.uploadedFilePath = response.file;
-            console.log(response);
+            if ( typeof this.wizard['uploadSuccessOn' + this.wizard._pages[this.wizard._pageIndex].id] === 'function' ) {
+              this.wizard['uploadSuccessOn' + this.wizard._pages[this.wizard._pageIndex].id].apply(this.wizard, [response.file]);
+            }
           } catch (exception) {
             console.log(exception);
           }
+        } else {
+          // TODO report error to Wizard ?? 
         }
       }
 

@@ -293,13 +293,16 @@
         if ( pageIdList ) {
           // ... use the explict page list ...
           for ( let id of pageIdList ) {
-            this._pages.push(this.$[id]);
+            let page = this.$[id];
+            this._pages.push(page);
+            page.wizard = this;
           }
         } else {
           // ... grab all children that extend casper-wizard-page ...
           for ( let page of this.shadowRoot.children ) {
             if ( page instanceof CasperWizardPage ) {
               this._pages.push(page);
+              page.wizard = this;
             }
           }
         }
@@ -513,11 +516,15 @@
         let page = this._pageIndex
         if ( page >= 1 ) {
           page -= 1;
-        }
-        if ( typeof this['previousOn' + this._pages[this._pageIndex].id] === 'function' ) {
-          this['previousOn' + this._pages[this._pageIndex].id].apply(this);
+          if ( typeof this['previousOn' + this._pages[this._pageIndex].id] === 'function' ) {
+            this['previousOn' + this._pages[this._pageIndex].id].apply(this);
+          } else {
+            this._activatePage(page);
+          }
         } else {
-          this._activatePage(page);
+          if ( typeof this['previousOn' + this._pages[this._pageIndex].id] === 'function' ) {
+            this['previousOn' + this._pages[this._pageIndex].id].apply(this);
+          }
         }
       }
 
@@ -687,9 +694,8 @@
       }
 
       _updateWizardButtons () {
-        // this._prevButton.disabled = this._pageIndex === 0;
-        // this._nextButton.disabled = false;
-        // this._nextButton.icon = (this._pageIndex === this._pages.length - 1) ? 'casper-icons:check-circle' : 'casper-icons:arrow-right';
+        this._nextButton.disabled = false;
+        this._nextButton.icon = (this._pageIndex === this._pages.length - 1) ? 'casper-icons:check-circle' : 'casper-icons:arrow-right';
       }
 
       _closePage (event) {
