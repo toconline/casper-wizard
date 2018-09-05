@@ -119,8 +119,9 @@
       .wizard-next-button {
         z-index: 4;
         min-width: 40px;
+        min-height: 40px;
         padding: 0;
-        border-radius: 25px;
+        border-radius: 20px;
         background-color: var(--primary-color);
         font-size: 14px;
         font-weight: bold;
@@ -135,8 +136,6 @@
       }
 
       .button-animation {
-        width: 40px;
-        height: 40px;
         -webkit-transition: width 0.5s; /* For Safari 3.1 to 6.0 */
         transition: width 0.5s;
       }
@@ -149,23 +148,23 @@
 
       .wizard-previous-button {
         z-index: 4;
-        border-radius: 25px;
-        border: 2px solid var(--primary-color);
         min-width: 40px;
-        min-width: 40px;
+        min-height: 40px;
         padding: 0;
-        border-radius: 25px;
-        background-color: #fff;
+        border-radius: 20px;
         font-size: 14px;
         font-weight: bold;
         -webkit-font-smoothing: antialiased;
+        background-color: white;
         color: white;
-        border: 2px solid var(--primary-color);
       }
 
       .wizard-icon-previous-button {
         width: 40px;
         height: 40px;
+        border: 2px solid var(--primary-color);
+        border-radius: 20px;
+        box-sizing: border-box;
         fill: var(--primary-color);
       }
 
@@ -335,6 +334,12 @@
           this._createTabs();
         }
         this._gotoPage(0);
+        if ( this._pages[0].hasAttribute('next')) {
+          this._nextButton.style.padding = '0px 20px';
+          this._nextButton.textContent = this._pages[0].getAttribute('next');
+        }
+        this.noCancelOnOutsideClick = true;
+        this.noCancelOnEscKey = true;
       }
 
       //***************************************************************************************//
