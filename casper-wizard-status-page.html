@@ -22,7 +22,7 @@
 <link rel="import" href="../polymer/polymer-element.html">
 <link rel="import" href="../iron-icon/iron-icon.html">
 <link rel="import" href="../casper-icons/casper-icons.html">
-<link rel="import" href="../casper-wizard/casper-wizard-page.html">
+<link rel="import" href="casper-wizard-page.html">
 
 <dom-module id="casper-wizard-status-page">
   <template>
@@ -82,7 +82,7 @@
         </div>
       </div>
     </casper-wizard-page>
-      
+
   </template>
 
   <script>
@@ -95,11 +95,11 @@
      * @demo demo/index.html
      */
     class CasperWizardStatusPage extends CasperWizardPage {
-      
-      static get is () { 
-        return 'casper-wizard-status-page'; 
+
+      static get is () {
+        return 'casper-wizard-status-page';
       }
-      
+
       static get properties () {
         return {
           pageTitle: {
@@ -111,7 +111,7 @@
           },
           message: {
             type: String,
-            value: '\xA0' 
+            value: '\xA0'
           },
           icon: {
             type: String,

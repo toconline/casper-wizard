@@ -24,7 +24,7 @@
 <dom-module id="casper-wizard-iframe-page">
   <template>
     <style>
-      
+
       :host {
         width: 100%;
         display: flex;
@@ -47,7 +47,7 @@
         padding: 0px 48px 0px 12px;
         margin: 0px;
         text-overflow: ellipsis;
-        white-space: nowrap; 
+        white-space: nowrap;
         overflow: hidden;
       }
 
@@ -81,7 +81,7 @@
         box-shadow: none;
         display: none;
       }
-  
+
       .default_footer {
         height: 42px;
       }
@@ -113,10 +113,10 @@
      */
     class CasperWizardIframePage extends CasperWizardPage {
 
-      static get is () { 
-        return 'casper-wizard-iframe-page'; 
+      static get is () {
+        return 'casper-wizard-iframe-page';
       }
-      
+
       static get properties() {
         return {
           srcdoc: {
@@ -139,10 +139,10 @@
           this.$.button.style.display = 'flex';
         }
       }
-      
+
       _printDocument () {
         var frm = this.shadowRoot.querySelector('iframe').contentWindow;
-        
+
         frm.focus();
         frm.print();
         return false;
