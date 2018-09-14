@@ -261,12 +261,16 @@
         return 'casper-wizard';
       }
 
-      static get tab_opacity () {
+      static get tabOpacity () {
         return 0.3;
       }
 
+      static get fadeInTimeout () {
+        return 300;
+      }
+
       /**
-       *
+       * Constructor, grabs the pages that will be displays and moves them in the DOM
        */
       ready () {
         super.ready();
@@ -311,6 +315,7 @@
         this._prevButton  = this.shadowRoot.querySelector('#wizardPrevButton');
         this._nextButton  = this.shadowRoot.querySelector('#wizardNextButton');
         this._closeButton = this.shadowRoot.querySelector('.wizard-close-button');
+        this._state = 'normal';
 
         // ... move the wizard pages from the wizard into the page container ...
         for ( let page of this._pages ) {
@@ -358,7 +363,7 @@
 
       setPageTitle (pageId, title) {
         let pageIndex = this._getIndexOf(pageId);
-        if ( pageIndex ) {
+        if ( pageIndex === undefined ) {
           this._pages[pageIndex].pageTitle = title;
         }
       }
@@ -409,6 +414,7 @@
           this._statusPage.style.display = 'none';
           this._statusPage.style.opacity = 0;
         }
+        this._state = 'normal';
       }
 
       submitJob (job, timeout) {
@@ -417,7 +423,16 @@
         this.socket.submitJob(job, this._submitJobResponse.bind(this), { validity: timeout, ttr: timeout, timeout: timeout});
       }
 
+      subscribeJob (jobId, timeout) {
+        this.showProgressPage();
+        this.socket.subscribeJob(jobId, this._subscribeJobResponse.bind(this), timeout);
+      }
+
       showProgressPage () {
+        if ( this._state === 'show-progress') {
+          return;
+        }
+
         clearTimeout(this._fadeInTimer);
 
         if ( this._statusPage !== undefined ) {
@@ -434,6 +449,8 @@
         }
 
         // ... show progress page
+        this._state = 'show-progress';
+        this._progressPage.style.opacity = 0;
         this._progressPage.style.zIndex = '3';
         this._progressPage.style.display = 'flex';
         this._fadeInTimer = setTimeout(() => this._progressPage.style.opacity = 1.0, 0.3 * 1000);
@@ -441,7 +458,12 @@
         this._nextButton.disabled = true;
       }
 
+
       showStatusPage (notification) {
+        if ( this._state === 'show-status') {
+          return;
+        }
+
         clearTimeout(this._fadeInTimer);
 
         // ... hide current pages ...
@@ -466,6 +488,8 @@
         }
 
         // show status page
+        this._state = 'show-progress';
+        this._statusPage.style.opacity = 0;
         this._statusPage.style.zIndex  = '3';
         this._statusPage.style.display = 'flex';
         this._fadeInTimer = setTimeout(() => this._statusPage.style.opacity = 1.0, 0.3 * 1000);
@@ -473,7 +497,9 @@
         this._nextButton.disabled = true;
       }
 
+      // TODO Delete this method replace with calls to showStatusPage!!!!!!
       showMessagePage (notification) {
+        console.log("###V showMessagePage");
         clearTimeout(this._fadeInTimer);
 
         // ... hide current pages ...
@@ -655,7 +681,7 @@
       _createTabs () {
         let off  = 0;
         let w    = parseFloat(window.getComputedStyle(this._pageContainer).getPropertyValue('width')) - 2;
-        let opa  = CasperWizard.tab_opacity;
+        let opa  = CasperWizard.tabOpacity;
 
         // ... right side tabs ...
         this._pageTabs.style.width =  w + this._tabWidth * (this._pages.length - 1) + 'px';
@@ -715,7 +741,63 @@
         }
       }
 
+
+      _subscribeJobResponse (response) {
+
+        if ( this._jobId !== undefined ) {
+          this.socket.removeEventListener(this._jobId, this._boundJobNotification);
+          this._jobId = undefined;
+        }
+        CasperWizard._normalizeServerResponse(response);
+        if ( response.success === true && typeof response.status === 'object' ) {
+          if ( (response.status.status_code === undefined || response.status.status_code === 200) && response.status.status === 'in-progress' ) {
+            this._jobId = response.channel;
+            this.socket.addEventListener(this._jobId, this._boundJobNotification);
+            console.log("*** listening to ", this._jobId);
+          }
+        }
+        this._updateUI(response);
+      }
+
+      static _normalizeServerResponse (response) {
+        let status;
+
+        if ( response.success === undefined ) {
+          response.success = true;
+        } else if ( response.success === false ) {
+          response.status  = 'error';
+          response.message = ['Erro desconhecido, por favor tente mais tarde'];
+          return;
+        }
+
+        if ( typeof response.status === 'object' ) {
+          status = response.status;
+        } else {
+          status = response;
+        }
+
+        if ( status.status_code === undefined ) {
+          response.status_code = response.success ? 200 : 500;
+        }
+
+        if ( response.status_code !== 200 && !status.message ) {
+          response.status = response.status || {};
+          if ( status.response ) {
+            response.status.message = ['Erro serviço, detalhe técnico: ' + JSON.stringify(status.response) ];
+          } else {
+            response.status.message = [`Erro desconhecido status ${status.status_code} por favor tente mais tarde` ];
+          }
+        }
+
+        if ( status.action === 'redirect' && status.status === 'completed' && status.response === undefined ) {
+          response.response  = status;
+          response.message   = 'redirect';
+          response.status    = 'completed';
+        }
+      }
+
       _onJobNotification (event) {
+        CasperWizard._normalizeServerResponse(event.detail)
         this._updateUI(event.detail);
       }
 
