@@ -363,7 +363,7 @@
 
       setPageTitle (pageId, title) {
         let pageIndex = this._getIndexOf(pageId);
-        if ( pageIndex === undefined ) {
+        if ( pageIndex !== undefined ) {
           this._pages[pageIndex].pageTitle = title;
         }
       }
@@ -764,16 +764,15 @@
 
         if ( response.success === undefined ) {
           response.success = true;
-        } else if ( response.success === false ) {
-          response.status  = 'error';
-          response.message = ['Erro desconhecido, por favor tente mais tarde'];
-          return;
         }
 
         if ( typeof response.status === 'object' ) {
           status = response.status;
         } else {
           status = response;
+          if ( response.channel !== undefined && response.status === undefined ) {
+            status.status = 'in-progress';
+          }
         }
 
         if ( status.status_code === undefined ) {
