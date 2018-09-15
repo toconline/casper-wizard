@@ -745,17 +745,17 @@
       _subscribeJobResponse (response) {
 
         if ( this._jobId !== undefined ) {
+          console.log("--- Removing listener to ", this._jobId);
           this.socket.removeEventListener(this._jobId, this._boundJobNotification);
           this._jobId = undefined;
         }
-        CasperWizard._normalizeServerResponse(response);
-        if ( response.success === true && typeof response.status === 'object' ) {
-          if ( (response.status.status_code === undefined || response.status.status_code === 200) && response.status.status === 'in-progress' ) {
-            this._jobId = response.channel;
-            this.socket.addEventListener(this._jobId, this._boundJobNotification);
-            console.log("*** listening to ", this._jobId);
-          }
+
+        if ( response.channel && (response.status === undefined || response.status.status === 'in-progress')) {
+          this._jobId = response.channel;
+          this.socket.addEventListener(this._jobId, this._boundJobNotification);
+          console.log("+++ Listening to ", this._jobId);
         }
+        CasperWizard._normalizeServerResponse(response);
         this._updateUI(response);
       }
 
@@ -770,9 +770,6 @@
           status = response.status;
         } else {
           status = response;
-          if ( response.channel !== undefined && response.status === undefined ) {
-            status.status = 'in-progress';
-          }
         }
 
         if ( status.status_code === undefined ) {
@@ -780,18 +777,23 @@
         }
 
         if ( response.status_code !== 200 && !status.message ) {
-          response.status = response.status || {};
           if ( status.response ) {
-            response.status.message = ['Erro serviço, detalhe técnico: ' + JSON.stringify(status.response) ];
+            response.message = ['Erro serviço, detalhe técnico: ' + JSON.stringify(status.response) ];
+            response.status = 'error';
           } else {
-            response.status.message = [`Erro desconhecido status ${status.status_code} por favor tente mais tarde` ];
+            response.message = ['Erro desconhecido status por favor tente mais tarde'];
+            response.status = 'error';
           }
         }
 
-        if ( status.action === 'redirect' && status.status === 'completed' && status.response === undefined ) {
-          response.response  = status;
-          response.message   = 'redirect';
-          response.status    = 'completed';
+        if ( status.action === 'redirect' && status.status === 'completed' && response.response === undefined ) {
+          response.response = {
+            public_link: status.public_link,
+            redirect:    status.redirect
+          };
+          response.message = [ 'Redirect' ];
+          response.status = 'completed';
+          response.status_code = 200;
         }
       }
 
@@ -801,7 +803,6 @@
       }
 
       _updateUI (notification) {
-
         switch (notification.status) {
           case 'in-progress':
             this.showProgressPage();
