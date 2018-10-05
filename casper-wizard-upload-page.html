@@ -157,6 +157,10 @@
         this.$.upload.style.display = 'none';
       }
 
+      clear () {
+        this.$.upload.files = [];
+      }
+
       _uploadRequest (event) {
         this.originalFilePath = event.detail.file.name;
         this.uploadedFilePath = undefined;
@@ -179,7 +183,7 @@
             console.log(exception);
           }
         } else {
-          // TODO report error to Wizard ?? 
+          // TODO report error to Wizard ??
         }
       }
 
