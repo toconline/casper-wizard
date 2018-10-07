@@ -409,10 +409,13 @@
         if ( this._progressPage !== undefined ) {
           this._progressPage.style.display = 'none';
           this._progressPage.style.opacity = 0;
+          this._progressPage.setProgressCount(1, true);
         }
         if ( this._statusPage !== undefined ) {
           this._statusPage.style.display = 'none';
           this._statusPage.style.opacity = 0;
+          this._statusPage.icon = CasperWizardStatusPage.properties.icon.value;
+          this._statusPage.message = CasperWizardStatusPage.properties.message.value;
         }
         this._state = 'normal';
       }
@@ -458,7 +461,6 @@
         this._nextButton.disabled = true;
       }
 
-
       showStatusPage (notification) {
         if ( this._state === 'show-status') {
           return;
@@ -496,39 +498,6 @@
         this._prevButton.disabled = false;
         this._nextButton.disabled = true;
       }
-
-      // TODO Delete this method replace with calls to showStatusPage!!!!!!
-      showMessagePage (notification) {
-        console.log("###V showMessagePage");
-        clearTimeout(this._fadeInTimer);
-
-        // ... hide current pages ...
-        this.hideStatusAndProgress();
-
-        // ... create page if needed ...
-        if ( this._messagePage === undefined ) {
-          this._messagePage  = document.createElement('casper-wizard-status-page');
-          this._messagePage.classList.add('fadein');
-          this._pageContainer.appendChild(this._messagePage);
-        }
-
-        // ... set message and or icon ...
-        this._messagePage.message = this.i18n.apply(this, notification.message);
-        if ( notification.title !== undefined ) {
-          this._messagePage.title = notification.title;
-        }
-        if ( notification.response !== undefined && notification.response.stash_icon !== undefined ) {
-          this._messagePage.icon = notification.response.stash_icon;
-        }
-
-        this.shadowRoot.querySelector('casper-wizard-status-page').$.StatusIcon.style.fill = '#009900';
-
-        // show status page
-        this._messagePage.style.zIndex  = '3';
-        this._messagePage.style.display = 'flex';
-        this._fadeInTimer = setTimeout(() => this._messagePage.style.opacity = 1.0, 0.3 * 1000);
-      }
-
 
       //***************************************************************************************//
       //                                                                                       //
