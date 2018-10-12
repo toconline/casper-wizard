@@ -47,8 +47,12 @@
       }
 
       paper-button[disabled] {
-        background-color: #888;
-        opacity: 0.2;
+        background-color: #e0e0e0;
+      }
+
+      paper-button[disabled] iron-icon {
+        border: 0px solid #e0e0e0;
+        fill: #ffffff;
       }
 
       .page-container {
@@ -482,11 +486,12 @@
 
         // ... set message and or icon ...
         this._statusPage.message = this.i18n.apply(this, notification.message);
-        if ( notification.title !== undefined ) {
-          this._statusPage.title = notification.title;
-        }
-        if ( notification.response !== undefined && notification.response.stash_icon !== undefined ) {
-          this._statusPage.icon = notification.response.stash_icon;
+        // if ( notification.title !== undefined ) {
+        //   this._statusPage.title = notification.title;
+        // }
+        if ( notification.response !== undefined && notification.response.message_icon !== undefined ) {
+          this._statusPage.icon = notification.response.message_icon;
+          this._statusPage.$.statusIcon.style.fill = notification.response.color_icon;
         }
 
         // show status page

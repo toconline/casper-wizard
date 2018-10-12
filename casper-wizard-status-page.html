@@ -65,7 +65,6 @@
       }
 
       .error_message h2 {
-        margin-top: 0px;
         color: grey;
       }
 
@@ -74,11 +73,11 @@
     <casper-wizard-page page-title="Resultado operação">
       <div id="error_panel" class="container-error">
         <div class="error_pad">
-          <iron-icon icon="[[icon]]" class="error_icon" id="StatusIcon"></iron-icon>
+          <iron-icon icon="[[icon]]" class="error_icon" id="statusIcon"></iron-icon>
         </div>
         <div class="error_message">
-          <h2>[[title]]</h2>
-          <span id="error_message">[[message]]</span>
+          <h2>[[message]]</h2>
+          <!-- <span id="error_message">[[message]]</span> -->
         </div>
       </div>
     </casper-wizard-page>
@@ -105,10 +104,10 @@
           pageTitle: {
             type: String
           },
-          title: {
-            type: String,
-            value: 'Erro'
-          },
+          // title: {
+          //   type: String,
+          //   value: 'Erro'
+          // },
           message: {
             type: String,
             value: '\xA0'
