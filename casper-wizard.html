@@ -486,9 +486,9 @@
 
         // ... set message and or icon ...
         this._statusPage.message = this.i18n.apply(this, notification.message);
-        // if ( notification.title !== undefined ) {
-        //   this._statusPage.title = notification.title;
-        // }
+        if ( notification.title !== undefined ) {
+          this._statusPage.title = notification.title;
+        }
         if ( notification.response !== undefined && notification.response.message_icon !== undefined ) {
           this._statusPage.icon = notification.response.message_icon;
           this._statusPage.$.statusIcon.style.fill = notification.response.color_icon;
