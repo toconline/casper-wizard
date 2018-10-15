@@ -194,6 +194,7 @@
       }
 
       .slidein {
+        visibility: visible;
         -moz-transition: transform var(--slide-anim) ease-in-out;
         -webkit-transition: transform var(--slide-time) ease-in-out;
         -o-transition: transform var(--slide-time) ease-in-out;
@@ -217,10 +218,12 @@
       }
 
       .left {
+        visibility: hidden;
         transform: translate3d(-100%, 0, 0);
       }
 
       .right {
+        visibility: hidden;
         transform: translate3d(100%, 0, 0);
       }
 
