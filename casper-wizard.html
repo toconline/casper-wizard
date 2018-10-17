@@ -37,9 +37,6 @@
     <style>
       :host {
         --background-modal-color: var(--modal-header-color, red);
-        --roundie: var(--radius-primary, 10px);
-        --slide-time: 0.5s;
-        --tab-width: 30px;
       }
 
       paper-button {
@@ -284,6 +281,10 @@
 
         // ... inject the base class template into the component ...
         this.shadowRoot.appendChild(CasperWizard.template.content.cloneNode(true));
+
+        this.style.setProperty('--tab-width', '30px');
+        this.style.setProperty('--roundie', 'var(--radius-primary, 10px)');
+        this.style.setProperty('--slide-time', '0.5s');
 
         // ... make sure all existing pages get the 'page' class
         for ( let page of this.shadowRoot.children ) {
