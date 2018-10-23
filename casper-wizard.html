@@ -434,8 +434,14 @@
 
       gotoPage (pageId) {
         let pageIndex = this._getIndexOf(pageId);
-        if ( pageIndex ) {
+        if ( pageIndex !== undefined ) {
           this._gotoPage(pageIndex);
+          let page = this._pages[pageIndex];
+          if (page.hasAttribute('next')) {
+            this._changeNextButtonToText(page.getAttribute('next'));
+          } else {
+            this._changeNextButtonToIcon();
+          }
         }
       }
 
