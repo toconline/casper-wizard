@@ -331,7 +331,6 @@
         }
 
         // ... install event handlers ...
-        this._boundJobNotification = this._onJobNotification.bind(this);
         this._prevButton.addEventListener('tap', e => this._gotoPreviousPage(e));
         this._nextButton.addEventListener('tap', e => this._gotoNextPage(e));
         this._closeButton.addEventListener('tap', e => this._closePage(e));
@@ -709,30 +708,19 @@
         this.close();
       }
 
-      _submitJobResponse (response) {
-        if ( response.success === true ) {
-          if ( this._jobId ) {
-            this.socket.removeEventListener(this._jobId, this._boundJobNotification);
-          }
-          this._jobId = response.channel;
-          this.socket.addEventListener(this._jobId, this._boundJobNotification);
-        }
-      }
-
-
       _subscribeJobResponse (response) {
 
-        if ( this._jobId !== undefined ) {
-          console.log("--- Removing listener to ", this._jobId);
-          this.socket.removeEventListener(this._jobId, this._boundJobNotification);
-          this._jobId = undefined;
-        }
+        //if ( this._jobId !== undefined ) {
+        //  console.log("--- Removing listener to ", this._jobId);
+        //  this.socket.removeEventListener(this._jobId, this._boundJobNotification);
+        //  this._jobId = undefined;
+        //}
 
-        if ( response.channel && (response.status === undefined || response.status.status === 'in-progress')) {
-          this._jobId = response.channel;
-          this.socket.addEventListener(this._jobId, this._boundJobNotification);
-          console.log("+++ Listening to ", this._jobId);
-        }
+        //if ( response.channel && (response.status === undefined || response.status.status === 'in-progress')) {
+        //  this._jobId = response.channel;
+        //  this.socket.addEventListener(this._jobId, this._boundJobNotification);
+        //  console.log("+++ Listening to ", this._jobId);
+        //}
         CasperWizard._normalizeServerResponse(response);
         this._updateUI(response);
       }
@@ -775,9 +763,9 @@
         }
       }
 
-      _onJobNotification (event) {
-        CasperWizard._normalizeServerResponse(event.detail)
-        this._updateUI(event.detail);
+      _submitJobResponse (notification) {
+        CasperWizard._normalizeServerResponse(notification)
+        this._updateUI(notification);
       }
 
       _updateUI (notification) {
