@@ -60,14 +60,16 @@
         height: 478px;
         background-color: black;
         position: relative;
-        border-radius: 0px 0px var(--roundie) var(--roundie);
+        border-radius: 0px 0px var(--roundie, 10px) var(--roundie, 10px);
+        -webkit-border-radius: 0px 0px var(--roundie, 10px) var(--roundie, 10px);
       }
 
       .title {
         top: 0px;
         left: 0px;
         background-color: var(--primary-color);
-        border-radius: var(--radius-primary, 10px) var(--radius-primary, 10px) 0px 0px;
+        border-radius: var(--roundie, 10px) var(--roundie, 10px) 0px 0px;
+        -webkit-border-radius: var(--roundie, 10px) var(--roundie, 10px) 0px 0px;
         color: white;
         line-height: 42px;
         height: 42px;
@@ -88,7 +90,8 @@
         position: absolute;
         background-color: #858585;
         opacity: 0.8;
-        border-radius: var(--roundie) var(--roundie) var(--roundie) var(--roundie);
+        border-radius: var(--roundie, 10px) var(--roundie, 10px) var(--roundie, 10px) var(--roundie, 10px);
+        -webkit-border-radius: var(--roundie, 10px) var(--roundie, 10px) var(--roundie, 10px) var(--roundie, 10px);
       }
 
       .page-tab {
@@ -139,7 +142,10 @@
       }
 
       .button-animation {
+        -moz-transition: width 0.5s;
         -webkit-transition: width 0.5s; /* For Safari 3.1 to 6.0 */
+        -o-transition: width 0.5s;
+        -ms-transition: width 0.5s;
         transition: width 0.5s;
       }
 
@@ -186,10 +192,14 @@
         height: 100%;
         position: absolute;
         -moz-transform: translateZ(0);
-        -ms-transform: translateZ(0);
+        -webkit-transform: translateZ(0);
         -o-transform: translateZ(0);
+        -ms-transform: translateZ(0);
         transform: translateZ(0);
-        background-color: var(--surface-color, #000);
+        background-color: var(--surface-color, #FFF);
+        overflow: auto;
+        border-radius: 0px 0px var(--roundie, 10px) var(--roundie, 10px);
+        -webkit-border-radius: 0px 0px var(--roundie, 10px) var(--roundie, 10px);
       }
 
       .slidein {
@@ -197,32 +207,47 @@
         -moz-transition: transform var(--slide-anim) ease-in-out;
         -webkit-transition: transform var(--slide-time) ease-in-out;
         -o-transition: transform var(--slide-time) ease-in-out;
+        -ms-transition: transform var(--slide-time) ease-in-out;
         transition: transform var(--slide-time) ease-in-out;
       }
 
       .tabslide {
         -moz-transform: translateZ(0);
-        -ms-transform: translateZ(0);
+        -webkit-transform: translateZ(0);
         -o-transform: translateZ(0);
+        -ms-transform: translateZ(0);
         transform: translateZ(0);
         -moz-transition: left 0.3s ease-in-out;
         -webkit-transition: left 0.3s ease-in-out;
         -o-transition: left 0.3s ease-in-out;
+        -ms-transition: left 0.3s ease-in-out;
         transition: left 0.3s ease-in-out;
       }
 
       .fadein {
         opacity: 0;
         transition: opacity 0.5s ease-in-out;
+        -moz-transition: opacity 0.5s ease-in-out;
+        -webkit-transition: opacity 0.5s ease-in-out;
+        -o-transition: opacity 0.5s ease-in-out;
+        -ms-transition: opacity 0.5s ease-in-out;
       }
 
       .left {
         visibility: hidden;
         transform: translate3d(-100%, 0, 0);
+        -moz-transform: translate3d(-100%, 0, 0);
+        -webkit-transform: translate3d(-100%, 0, 0);
+        -o-transform: translate3d(-100%, 0, 0);
+        -ms-transform: translate3d(-100%, 0, 0);
       }
 
       .right {
         visibility: hidden;
+        -moz-transform: translate3d(100%, 0, 0);
+        -webkit-transform: translate3d(100%, 0, 0);
+        -o-transform: translate3d(100%, 0, 0);
+        -ms-transform: translate3d(100%, 0, 0);
         transform: translate3d(100%, 0, 0);
       }
 
@@ -250,7 +275,7 @@
     </style>
 
     <div class="page-tabs tabslide">
-      <paper-button id="f4button" class="wizard-next-button hide-button"></paper-button>
+      <praper-button id="f4button" class="wizard-next-button hide-button"></paper-button>
     </div>
     <div class="title"></div>
     <div class="page-container"></div>
