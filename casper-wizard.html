@@ -23,8 +23,10 @@
 <link rel="import" href="../casper-common-ui/casper-i18n-behavior.html">
 <link rel="import" href="../iron-overlay-behavior/iron-overlay-behavior.html">
 <link rel="import" href="../iron-fit-behavior/iron-fit-behavior.html">
+<link rel="import" href="../iron-icon/iron-icon.html">
 <link rel="import" href="../paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../casper-icons/casper-icons.html">
+<link rel="import" href="../paper-toast/paper-toast.html">
 <link rel="import" href="../paper-button/paper-button.html">
 <link rel="import" href="casper-wizard-page.html">
 <link rel="import" href="casper-wizard-upload-page.html">
@@ -228,6 +230,23 @@
         margin-left: 50%;
         z-index: -1;
       }
+
+      #toast {
+        /* TODO get color from scheme */
+        --paper-toast-background-color: #f12424;
+        --paper-toast-color: white;
+        width: 100%;
+        font-weight: bold;
+        display: inline-flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      #toast[success]{
+        --paper-toast-background-color: #4a9a4a;
+        --paper-toast-color: white;
+      }
+
     </style>
 
     <div class="page-tabs tabslide">
@@ -248,6 +267,9 @@
         <span id="wizardText" class="wizard-text"></span>
       </paper-button>
     </div>
+    <paper-toast id="toast" duration="5000">
+      <iron-icon id="closeToast" icon="casper-icons:cancel"/></iron-icon>
+    </paper-toast>
   </template>
 
   <script>
@@ -350,6 +372,13 @@
           this._nextButton.style.padding = '0px 20px';
           this._nextButton.textContent = this._pages[0].getAttribute('next');
         }
+
+        // ... some options ...
+        this.toast = this.shadowRoot.querySelector('#toast');
+        this.toast.fitInto = this._pageContainer;
+        this.toast.onclick = () => this.toast.close();
+        this.closeToastButton = this.shadowRoot.querySelector('#closeToast');
+        this.closeToastButton.onclick = () => this.toast.close();
         this.noCancelOnOutsideClick = true;
         this.noCancelOnEscKey = true;
       }
@@ -505,6 +534,24 @@
         this._fadeInTimer = setTimeout(() => this._statusPage.style.opacity = 1.0, 0.3 * 1000);
         this._prevButton.disabled = false;
         this._nextButton.disabled = true;
+      }
+
+      /**
+       * Show toast at the bottow of the wizard
+       *
+       * @param {String} message the text to display
+       * @param {Boolean} success controls the style, false for errors, true for positive messages
+       */
+      openToast (message, success) {
+        if ( success !== undefined ) {
+          if ( success ) {
+            this.toast.setAttribute('success', '');
+          } else {
+            this.toast.removeAttribute('success');
+          }
+        }
+        this.toast.text = message;
+        this.toast.open();
       }
 
       //***************************************************************************************//
@@ -709,18 +756,6 @@
       }
 
       _subscribeJobResponse (response) {
-
-        //if ( this._jobId !== undefined ) {
-        //  console.log("--- Removing listener to ", this._jobId);
-        //  this.socket.removeEventListener(this._jobId, this._boundJobNotification);
-        //  this._jobId = undefined;
-        //}
-
-        //if ( response.channel && (response.status === undefined || response.status.status === 'in-progress')) {
-        //  this._jobId = response.channel;
-        //  this.socket.addEventListener(this._jobId, this._boundJobNotification);
-        //  console.log("+++ Listening to ", this._jobId);
-        //}
         CasperWizard._normalizeServerResponse(response);
         this._updateUI(response);
       }
@@ -797,6 +832,11 @@
           default:
             break;
         }
+      }
+
+      _hideToast () {
+        debugger;
+        this.toast.close();
       }
 
     }
