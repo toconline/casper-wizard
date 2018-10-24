@@ -199,10 +199,16 @@
         transform: translateZ(0);
         background-color: var(--surface-color, #FFF);
         overflow: auto;
-        /*border-radius: 0px 0px var(--roundie, 10px) var(--roundie, 10px);*/
-        /*-webkit-border-radius: 0px 0px var(--roundie, 10px) var(--roundie, 10px);*/
-        border-radius: 8px;
+        border-radius: 0px 0px var(--roundie, 10px) var(--roundie, 10px);
+        -webkit-border-radius: 0px 0px var(--roundie, 10px) var(--roundie, 10px);
+        /*border-radius: 8px;*/
       }
+
+      @supports (-ms-ime-align: auto) {
+        .page {
+          border-radius: 10px
+        }
+
 
       .slidein {
         visibility: visible;
