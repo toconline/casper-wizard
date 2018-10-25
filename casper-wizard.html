@@ -144,7 +144,7 @@
 
       .button-animation {
         -moz-transition: width 0.5s;
-        -webkit-transition: width 0.5s; /* For Safari 3.1 to 6.0 */
+        -webkit-transition: width 0.5s;
         -o-transition: width 0.5s;
         -ms-transition: width 0.5s;
         transition: width 0.5s;
@@ -201,12 +201,11 @@
         overflow: auto;
         border-radius: 0px 0px var(--roundie, 10px) var(--roundie, 10px);
         -webkit-border-radius: 0px 0px var(--roundie, 10px) var(--roundie, 10px);
-        /*border-radius: 8px;*/
       }
 
       @supports (-ms-ime-align: auto) {
         .page {
-          border-radius: 10px
+          border-radius: 0px 0px 8px 8px;
         }
       }
 
