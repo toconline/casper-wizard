@@ -41,15 +41,15 @@
         --background-modal-color: var(--modal-header-color, red);
       }
 
-      paper-button {
+      .wizard-button {
         background-color: var(--primary-color);
       }
 
-      paper-button[disabled] {
+      .wizard-button[disabled] {
         background-color: #e0e0e0;
       }
 
-      paper-button[disabled] iron-icon {
+      .wizard-button[disabled] iron-icon {
         border: 0px solid #e0e0e0;
         fill: #ffffff;
       }
@@ -291,11 +291,11 @@
     <paper-icon-button class="wizard-close-button" icon="casper-icons:close"></paper-icon-button>
 
     <div class="buttons-container">
-      <paper-button id="wizardPrevButton" class="wizard-previous-button button-animation">
+      <paper-button id="wizardPrevButton" class="wizard-button wizard-previous-button button-animation">
         <iron-icon id="wizardPreviousIcon" class="wizard-icon-previous-button" icon="casper-icons:arrow-left"></iron-icon>
       </paper-button>
 
-      <paper-button id="wizardNextButton" class="wizard-next-button button-animation">
+      <paper-button id="wizardNextButton" class="wizard-button wizard-next-button button-animation">
         <iron-icon id="wizardNextIcon" class="wizard-icon-next-button" icon="casper-icons:arrow-right"></iron-icon>
         <span id="wizardText" class="wizard-text"></span>
       </paper-button>
