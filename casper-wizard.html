@@ -37,9 +37,6 @@
 <dom-module id="casper-wizard">
   <template id="wizard-base-template">
     <style>
-      :host {
-        --background-modal-color: var(--modal-header-color, red);
-      }
 
       .wizard-button {
         background-color: var(--primary-color);
@@ -61,7 +58,6 @@
         background-color: black;
         position: relative;
         border-radius: 0px 0px var(--roundie, 10px) var(--roundie, 10px);
-        -webkit-border-radius: 0px 0px var(--roundie, 10px) var(--roundie, 10px);
         overflow: hidden;
       }
 
@@ -70,7 +66,6 @@
         left: 0px;
         background-color: var(--primary-color);
         border-radius: var(--roundie, 10px) var(--roundie, 10px) 0px 0px;
-        -webkit-border-radius: var(--roundie, 10px) var(--roundie, 10px) 0px 0px;
         color: white;
         line-height: 42px;
         height: 42px;
@@ -92,7 +87,6 @@
         background-color: #858585;
         opacity: 0.8;
         border-radius: var(--roundie, 10px) var(--roundie, 10px) var(--roundie, 10px) var(--roundie, 10px);
-        -webkit-border-radius: var(--roundie, 10px) var(--roundie, 10px) var(--roundie, 10px) var(--roundie, 10px);
       }
 
       .page-tab {
@@ -200,7 +194,6 @@
         background-color: var(--surface-color, #FFF);
         overflow: auto;
         border-radius: 0px 0px var(--roundie, 10px) var(--roundie, 10px);
-        -webkit-border-radius: 0px 0px var(--roundie, 10px) var(--roundie, 10px);
       }
 
       @supports (-ms-ime-align: auto) {
@@ -208,7 +201,6 @@
           border-radius: 0px 0px 8px 8px;
         }
       }
-
 
       .slidein {
         visibility: visible;
