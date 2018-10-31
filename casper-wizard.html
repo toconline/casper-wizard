@@ -359,6 +359,14 @@
           pageIdList = this.activePagesIds();
         }
         if ( pageIdList ) {
+          // If the page is not in the list hide it
+          for ( let page of this.shadowRoot.children ) {
+            if ( page instanceof CasperWizardPage ) {
+              if ( ! pageIdList.includes(page.id) ) {
+                page.style.display = 'none';
+              }
+            }
+          }
           // ... use the explict page list ...
           for ( let id of pageIdList ) {
             let page = this.$[id];
