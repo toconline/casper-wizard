@@ -320,6 +320,10 @@
         return 300;
       }
 
+      get channel () {
+        return this._jobChannel;
+      }
+
       /**
        * Constructor, grabs the pages that will be displays and moves them in the DOM
        */
@@ -406,6 +410,7 @@
         this.closeToastButton.onclick = () => this.toast.close();
         this.noCancelOnOutsideClick = true;
         this.noCancelOnEscKey = true;
+        this._jobId = this._jobChannel = undefined;
       }
 
       //***************************************************************************************//
@@ -583,6 +588,15 @@
         }
         this.toast.text = message;
         this.toast.open();
+      }
+
+      close () {
+        if ( this._jobId !== undefined ) {
+          this.socket.cancelJob(this._jobChannel);
+          this._jobId      = undefined;
+          this._jobChannel = undefined;
+        }
+        super.close();
       }
 
       //***************************************************************************************//
@@ -830,7 +844,11 @@
       }
 
       _submitJobResponse (notification) {
-        CasperWizard._normalizeServerResponse(notification)
+        if ( notification.success === true && this._jobId === undefined && notification.id !== undefined ) {
+          this._jobId      = notification.id;
+          this._jobChannel = notification.channel;
+        }
+        CasperWizard._normalizeServerResponse(notification);
         this._updateUI(notification);
       }
 
@@ -851,6 +869,8 @@
                 this._gotoNextPageNoHandlers();
               }
             }
+            this._jobId      = undefined;
+            this._jobChannel = undefined;
             break;
           case 'failed':
           case 'error':
@@ -859,6 +879,8 @@
             } else {
               this.showStatusPage(notification);
             }
+            this._jobId      = undefined;
+            this._jobChannel = undefined;
             break;
           default:
             break;
@@ -866,7 +888,6 @@
       }
 
       _hideToast () {
-        debugger;
         this.toast.close();
       }
 
