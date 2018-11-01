@@ -416,9 +416,11 @@
         this.toast.onclick = () => this.toast.close();
         this.closeToastButton = this.shadowRoot.querySelector('#closeToast');
         this.closeToastButton.onclick = () => this.toast.close();
-        this.noCancelOnOutsideClick = true;
-        this.noCancelOnEscKey = true;
+        this.noCancelOnEscKey = this.noCancelOnOutsideClick = false;
         this._jobId = this._jobChannel = undefined;
+
+        // listen to close event
+        this.addEventListener('opened-changed', e => this.___onOpenedChanged(e));
       }
 
       //***************************************************************************************//
@@ -596,15 +598,6 @@
         }
         this.toast.text = message;
         this.toast.open();
-      }
-
-      close () {
-        if ( this._jobId !== undefined ) {
-          this.socket.cancelJob(this._jobChannel);
-          this._jobId      = undefined;
-          this._jobChannel = undefined;
-        }
-        super.close();
       }
 
       //***************************************************************************************//
@@ -855,6 +848,7 @@
         if ( notification.success === true && this._jobId === undefined && notification.id !== undefined ) {
           this._jobId      = notification.id;
           this._jobChannel = notification.channel;
+          this.noCancelOnEscKey = this.noCancelOnOutsideClick = true;
         }
         CasperWizard._normalizeServerResponse(notification);
         this._updateUI(notification);
@@ -877,8 +871,7 @@
                 this._gotoNextPageNoHandlers();
               }
             }
-            this._jobId      = undefined;
-            this._jobChannel = undefined;
+            this._clearJob();
             break;
           case 'failed':
           case 'error':
@@ -887,8 +880,7 @@
             } else {
               this.showStatusPage(notification);
             }
-            this._jobId      = undefined;
-            this._jobChannel = undefined;
+            this._clearJob();
             break;
           default:
             break;
@@ -897,6 +889,28 @@
 
       _hideToast () {
         this.toast.close();
+      }
+
+      _clearJob () {
+        this._jobId     = undefined;
+        this._jobChannel = undefined;
+        this.noCancelOnEscKey = this.noCancelOnOutsideClick = false;
+      }
+
+      ___onOpenedChanged (event) {
+        if ( event.detail.value === false ) {
+          for ( let page of this._pages ) {
+            if ( page instanceof CasperWizardUploadPage ) {
+              page.clear();
+            }
+          }
+          this.hideStatusAndProgress();
+          this._gotoPage(0);
+          if ( this._jobId !== undefined ) {
+            this.socket.cancelJob(this._jobChannel);
+          }
+          this._clearJob();
+        }
       }
 
     }
