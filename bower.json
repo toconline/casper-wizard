@@ -10,7 +10,7 @@
     "vaadin-upload": "^4.1.0",
     "paper-icon-button": "^2.2.0",
     "casper-icons": "casper2020/casper-icons#^0.2.6",
-    "casper-socket": "casper2020/casper-socket#^0.1.25",
+    "casper-socket": "casper2020/casper-socket#^0.1.26",
     "paper-ripple": "PolymerElements/paper-ripple#^2.1.1",
     "iron-icon": "v2.1.0",
     "paper-toast": "v2.1.2"
