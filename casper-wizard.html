@@ -416,7 +416,8 @@
         this.toast.onclick = () => this.toast.close();
         this.closeToastButton = this.shadowRoot.querySelector('#closeToast');
         this.closeToastButton.onclick = () => this.toast.close();
-        this.noCancelOnEscKey = this.noCancelOnOutsideClick = false;
+        this.noCancelOnEscKey = false;
+        this.noCancelOnOutsideClick = true;
         this._jobId = this._jobChannel = undefined;
 
         // listen to close event
@@ -848,7 +849,7 @@
         if ( notification.success === true && this._jobId === undefined && notification.id !== undefined ) {
           this._jobId      = notification.id;
           this._jobChannel = notification.channel;
-          this.noCancelOnEscKey = this.noCancelOnOutsideClick = true;
+          this.noCancelOnEscKey = true;
         }
         CasperWizard._normalizeServerResponse(notification);
         this._updateUI(notification);
@@ -894,7 +895,7 @@
       _clearJob () {
         this._jobId     = undefined;
         this._jobChannel = undefined;
-        this.noCancelOnEscKey = this.noCancelOnOutsideClick = false;
+        this.noCancelOnEscKey = false;
       }
 
       ___onOpenedChanged (event) {
