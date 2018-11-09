@@ -85,44 +85,6 @@
         height: 42px;
       }
 
-      #print-dialog-overlay-holder {        
-        width: 100%;
-        flex-grow: 2.0;
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        margin-bottom: 20px;
-      }
-
-      #print-dialog-overlay {
-        position:absolute;
-        top:0;
-        left:0;
-        width:100%;
-        height:100%;
-        background: transparent;
-        display: flex;
-        justify-content: center;
-        align-items: center;        
-      }
-
-      #print-dialog-overlay-message {
-        height: 100%;
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-color: rgba(0, 0, 0, 0.73);
-        color: white;
-        font-weight: bold;
-      }
-
-      .download_icon {
-        fill: #ff2f2f;
-        --iron-icon-height: 72px;
-        --iron-icon-width: 72px;
-      }
-
     </style>
 
     <h1 class="pagetitle">[[pageTitle]]</h1>
@@ -131,17 +93,7 @@
         <paper-button id="button" class="print-button" on-tap="_printDocument" raised>Imprimir Relatório</paper-button>
       </slot>
 
-      <div id="print-dialog-overlay-holder">
-        <template is="dom-if" if="[[iframeOverlay]]">
-          <div id="print-dialog-overlay">
-            <div id="print-dialog-overlay-message" on-click="_printDocument">
-            <iron-icon icon="casper-icons:file-pdf" class="download_icon"></iron-icon>
-              Carregue aqui para ver o seu PDF
-            </div>
-          </div>
-        </template>
-        <iframe class="iframe" id="iframe" srcdoc$="[[srcdoc]]"></iframe>
-      </div>
+      <iframe class="iframe" id="iframe" srcdoc$="[[srcdoc]]"></iframe>
 
       <slot name="footer">
         <span class="default_footer"> </span>
@@ -205,7 +157,7 @@
         return 'casper-wizard-iframe-page';
       }
 
-      static get properties() {
+      static get properties () {
         return {
           srcdoc: {
             type: Object,
@@ -218,10 +170,6 @@
             type: Boolean,
             value: false,
             observer: '_printableChanged'
-          },
-          iframeOverlay: {
-            type: Boolean,
-            value: false
           }
         };
       }
@@ -234,7 +182,7 @@
 
       _printDocument () {
         var frm = this.shadowRoot.querySelector('iframe');
-        if (Browser.isIos) {
+        if ( Browser.isIos ) {
           window.open(frm.src, "_blank");
         } else {
           frm.contentWindow.focus();
