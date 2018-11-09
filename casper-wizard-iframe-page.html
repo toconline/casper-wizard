@@ -112,7 +112,9 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        background-color: rgba(255, 255, 255, 0.91);
+        background-color: rgba(0, 0, 0, 0.83);
+        color: white;
+        font-weight: bold;
       }
 
       .download_icon {
@@ -233,7 +235,6 @@
       _printDocument () {
         var frm = this.shadowRoot.querySelector('iframe');
         if (Browser.isIos) {
-          // check if this works in iPad (window.open might have to be hacked)
           window.open(frm.src, "_blank");
         } else {
           frm.contentWindow.focus();
