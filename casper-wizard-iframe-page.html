@@ -85,6 +85,42 @@
         height: 42px;
       }
 
+      #print-dialog-overlay-holder {        
+        width: 100%;
+        flex-grow: 2.0;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 20px;
+      }
+
+      #print-dialog-overlay {
+        position:absolute;
+        top:0;
+        left:0;
+        width:100%;
+        height:100%;
+        background: transparent;
+        display: flex;
+        justify-content: center;
+        align-items: center;        
+      }
+
+      #print-dialog-overlay-message {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: rgba(255, 255, 255, 0.91);
+      }
+
+      .download_icon {
+        fill: #B94F4F;
+        --iron-icon-height: 72px;
+        --iron-icon-width: 72px;
+      }
+
     </style>
 
     <h1 class="pagetitle">[[pageTitle]]</h1>
@@ -92,7 +128,19 @@
       <slot name="header">
         <paper-button id="button" class="print-button" on-tap="_printDocument" raised>Imprimir Relatório</paper-button>
       </slot>
-      <iframe class="iframe" id="iframe" srcdoc$="[[srcdoc]]"></iframe>
+
+      <div id="print-dialog-overlay-holder">
+        <template is="dom-if" if="[[iframeOverlay]]">
+          <div id="print-dialog-overlay">
+            <div id="print-dialog-overlay-message" on-click="_printDocument">
+            <iron-icon icon="casper-icons:file-pdf" class="download_icon"></iron-icon>
+              Carregue aqui para ver o seu PDF
+            </div>
+          </div>
+        </template>
+        <iframe class="iframe" id="iframe" srcdoc$="[[srcdoc]]"></iframe>
+      </div>
+
       <slot name="footer">
         <span class="default_footer"> </span>
       </slot>
@@ -102,6 +150,45 @@
   </template>
 
   <script>
+    'use strict';
+
+
+    class Browser {
+      // Firefox 1.0+
+      static get isFirefox () {
+        return typeof InstallTrigger !== 'undefined';
+      }
+
+      // Internet Explorer 6-11
+      static get isIE () {
+        return navigator.userAgent.indexOf('MSIE') !== -1 || !!document.documentMode;
+      }
+
+      // Edge 20+
+      static get isEdge () {
+        return !Browser.isIE && !!window.StyleMedia;
+      }
+
+      // Chrome 1+
+      static get isChrome () {
+        return !!window.chrome;
+      }
+
+      // At least Safari 3+: "[object HTMLElementConstructor]"
+      static get isSafari ()  {
+        return navigator.vendor && navigator.vendor.indexOf('Apple') > -1 &&
+               navigator.userAgent &&
+               navigator.userAgent.indexOf('CriOS') == -1 &&
+               navigator.userAgent.indexOf('FxiOS') == -1 &&
+               navigator.userAgent.indexOf('Chrome') == -1;
+      }
+
+      static get isIos () {
+        return navigator && ( (navigator.platform === 'iPad' || navigator.platform === 'iPhone') || new RegExp('\\biPhone\\b|\\biPod\\b').test(window.navigator.userAgent) );
+      }
+
+    }
+
     /**
      * `casper-wizard-iframe-page`
      * Wizard a container for simple dialogs with the infamous prev-next buttons
@@ -129,6 +216,10 @@
             type: Boolean,
             value: false,
             observer: '_printableChanged'
+          },
+          iframeOverlay: {
+            type: Boolean,
+            value: false
           }
         };
       }
@@ -140,10 +231,14 @@
       }
 
       _printDocument () {
-        var frm = this.shadowRoot.querySelector('iframe').contentWindow;
-
-        frm.focus();
-        frm.print();
+        var frm = this.shadowRoot.querySelector('iframe');
+        if (Browser.isIos) {
+          // check if this works in iPad (window.open might have to be hacked)
+          window.open(frm.src, "_blank");
+        } else {
+          frm.contentWindow.focus();
+          frm.contentWindow.print();
+        }
         return false;
       }
 
