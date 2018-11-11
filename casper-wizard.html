@@ -717,7 +717,7 @@
         this._pageIndex = pageIndex;
         this._pageTabs.style.left = - this._tabWidth * this._pageIndex + 'px';
         this._slideTimeout = setTimeout(() => this._pageSlideTimer(), this._slideTime);
-        if (page.hasAttribute('next')) {
+        if ( page.hasAttribute('next') ) {
           this._changeNextButtonToText(page.getAttribute('next'));
         } else {
           this._changeNextButtonToIcon();
