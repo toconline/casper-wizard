@@ -424,6 +424,18 @@
         this.addEventListener('opened-changed', e => this.___onOpenedChanged(e));
       }
 
+      connectedCallback () {
+        super.connectedCallback();
+
+        if (this.options && this.options.job_id) {
+          this.subscribeJob(this.options.job_id, 86400);
+          if (this.options.progress_count) {
+            this._progressPage.setProgressCount(this.options.progress_count, true);
+          }
+          this._progressPage.updateProgress(0, "Em progresso", NaN);
+        }
+      }
+
       //***************************************************************************************//
       //                                                                                       //
       //                      ~~~ API to be used by the Wizards of Oz ~~~                      //
