@@ -20,6 +20,7 @@
  -->
 
 <link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../casper-utils/casper-utils.html">
 
 <dom-module id="casper-wizard-iframe-page">
   <template>
@@ -104,44 +105,7 @@
   </template>
 
   <script>
-    'use strict';
-
-
-    class Browser {
-      // Firefox 1.0+
-      static get isFirefox () {
-        return typeof InstallTrigger !== 'undefined';
-      }
-
-      // Internet Explorer 6-11
-      static get isIE () {
-        return navigator.userAgent.indexOf('MSIE') !== -1 || !!document.documentMode;
-      }
-
-      // Edge 20+
-      static get isEdge () {
-        return !Browser.isIE && !!window.StyleMedia;
-      }
-
-      // Chrome 1+
-      static get isChrome () {
-        return !!window.chrome;
-      }
-
-      // At least Safari 3+: "[object HTMLElementConstructor]"
-      static get isSafari ()  {
-        return navigator.vendor && navigator.vendor.indexOf('Apple') > -1 &&
-               navigator.userAgent &&
-               navigator.userAgent.indexOf('CriOS') == -1 &&
-               navigator.userAgent.indexOf('FxiOS') == -1 &&
-               navigator.userAgent.indexOf('Chrome') == -1;
-      }
-
-      static get isIos () {
-        return navigator && ( (navigator.platform === 'iPad' || navigator.platform === 'iPhone') || new RegExp('\\biPhone\\b|\\biPod\\b').test(window.navigator.userAgent) );
-      }
-
-    }
+    "use strict";
 
     /**
      * `casper-wizard-iframe-page`
@@ -182,7 +146,7 @@
 
       _printDocument () {
         var frm = this.shadowRoot.querySelector('iframe');
-        if ( Browser.isIos ) {
+        if ( CasperBrowser.isIos ) {
           window.open(frm.src, "_blank");
         } else {
           frm.contentWindow.focus();
