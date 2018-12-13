@@ -265,7 +265,7 @@
         align-items: center;
       }
 
-      #toast[success]{
+      #toast[success] {
         --paper-toast-background-color: #4a9a4a;
         --paper-toast-color: white;
       }
@@ -323,6 +323,10 @@
 
       static get defaultMaximumHeight() {
         return '90vh';
+      }
+
+      static get defaultMaximumWidth() {
+        return '90vw';
       }
 
       static get fixedDefaultDimensions() {
@@ -643,6 +647,8 @@
       }
 
       overrideWizardDimensions(dimensions) {
+        this._hasCustomDimensions = true;
+
         this._wizardContainer.style.minHeight = '';
         this._wizardContainer.style.maxHeight = '';
 
@@ -982,28 +988,31 @@
       }
 
       _setWizardDefaultDimensions() {
-         const defaultWidth = window.innerWidth > CasperWizard.fixedDefaultDimensions.width
-           ? `${CasperWizard.fixedDefaultDimensions.width}px`
-           : `${CasperWizard.dynamicDefaultDimensions.width}px`;
+        // On resize don't override the wizard dimensions if they were overwritten.
+        if (!this._hasCustomDimensions) {
+          const defaultWidth = window.innerWidth > CasperWizard.fixedDefaultDimensions.width
+            ? `${CasperWizard.fixedDefaultDimensions.width}px`
+            : CasperWizard.dynamicDefaultDimensions.width;
 
-         const defaultHeight = window.innerHeight > CasperWizard.fixedDefaultDimensions.height
-           ? `${CasperWizard.fixedDefaultDimensions.height}px`
-           : `${CasperWizard.dynamicDefaultDimensions.height}px`;
+          const defaultHeight = window.innerHeight > CasperWizard.fixedDefaultDimensions.height
+            ? `${CasperWizard.fixedDefaultDimensions.height}px`
+            : CasperWizard.dynamicDefaultDimensions.height;
 
+          if (this._pages.length > 1) {
+            // If the wizard has more than one page fix the dimensions to avoid jumping between pages with different sizes.
+            this._wizardContainer.style.width = defaultWidth;
+            this._wizardContainer.style.height = defaultHeight;
 
-        if (this._pages.length > 1) {
-          // If the wizard has more than one page fix the dimensions to avoid jumping between pages with different sizes.
-          this._wizardContainer.style.width = defaultWidth;
-          this._wizardContainer.style.height = defaultHeight;
+            this._pageContainer.style.height = `calc(${defaultHeight} - 42px - 60px)`;
+          } else {
+            // In a single page scenario allow the the page container to grow until a maximum size.
+            this._wizardContainer.style.minWidth = defaultWidth;
+            this._wizardContainer.style.minHeight = defaultHeight;
+            this._wizardContainer.style.maxWidth = CasperWizard.defaultMaximumWidth;
+            this._wizardContainer.style.maxHeight = CasperWizard.defaultMaximumHeight;
 
-          this._pageContainer.style.height = `calc(${defaultHeight} - 42px - 60px)`;
-        } else {
-          // In a single page scenario allow the the page container to grow until a maximum size.
-          this._wizardContainer.style.width = defaultWidth;
-          this._wizardContainer.style.minHeight = defaultHeight;
-          this._wizardContainer.style.maxHeight = CasperWizard.defaultMaximumHeight;
-
-          this._pageContainer.style.maxHeight = `calc(${CasperWizard.defaultMaximumHeight} - 42px - 60px)`;
+            this._pageContainer.style.maxHeight = `calc(${CasperWizard.defaultMaximumHeight} - 42px - 60px)`;
+          }
         }
 
         this._setWizardTabsDimensions();
