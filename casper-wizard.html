@@ -51,45 +51,65 @@
         fill: #ffffff;
       }
 
-      .page-container {
-        overflow-x: hidden;
-        width: 800px;
-        height: 478px;
-        background-color: black;
-        position: relative;
-        border-radius: 0px 0px var(--roundie, 10px) var(--roundie, 10px);
+      .wizard-container {
+        display: flex;
         overflow: hidden;
+        flex-direction: column;
+        background-color: white;
+        border-radius: var(--roundie, 10px);
       }
 
-      .title {
-        top: 0px;
-        left: 0px;
-        background-color: var(--primary-color);
-        border-radius: var(--roundie, 10px) var(--roundie, 10px) 0px 0px;
+      .wizard-container .header {
+        margin: 0;
         color: white;
-        line-height: 42px;
         height: 42px;
+        display: flex;
+        padding: 0 12px;
         font-size: 18px;
-        font-weight: bold;
-        padding: 0px 48px 0px 12px;
-        margin: 0px;
-        text-overflow: ellipsis;
-        position: relative;
-        white-space: nowrap;
         overflow: hidden;
+        font-weight: bold;
+        flex-direction: row;
+        align-items: center;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        justify-content: space-between;
+        background-color: var(--primary-color);
       }
 
-      .page-tabs {
+      .wizard-container .header .wizard-close-button {
+        padding: 0;
+        z-index: 4;
+        color: #FFF;
+        width: 35px;
+        height: 35px;
+      }
+
+      .wizard-container .page-container {
+        width: 100%;
+        flex: auto;
+        overflow-y: auto;
+        overflow-x: hidden;
+      }
+
+      .wizard-container .footer-container {
+        padding: 10px;
+        display: flex;
+        justify-content: flex-end;
+      }
+
+      .wizard-container .wizard-tabs {
         top: 0px;
         left: 0px;
+        width: 100%;
         height: 100%;
         position: absolute;
         background-color: #858585;
         opacity: 0.8;
-        border-radius: var(--roundie, 10px) var(--roundie, 10px) var(--roundie, 10px) var(--roundie, 10px);
+        z-index: -1;
+        border-radius: var(--roundie, 10px);
       }
 
-      .page-tab {
+      .wizard-container .wizard-tabs .wizard-tab {
         top: 0px;
         position: absolute;
         width: var(--tab-width);
@@ -97,24 +117,16 @@
         background-color: black;
         font-size: 20px;
         font-weight: bold;
+        z-index: -1;
       }
 
-      .tab-label {
+      .wizard-container .wizard-tabs .wizard-tab-label {
         position: absolute;
         bottom: 20px;
         color: #cbcbcb;
         font-weight: bold;
         font-size: 18px;
         z-index: 1;
-      }
-
-      .buttons-container {
-        display: flex;
-        justify-content: flex-end;
-        position: relative;
-        bottom: 50px;
-        right: 7px;
-        height: 0;
       }
 
       .wizard-next-button {
@@ -172,20 +184,7 @@
         fill: var(--primary-color);
       }
 
-      .wizard-close-button {
-        width: 50px;
-        height: 50px;
-        position: absolute;
-        top: -4px;
-        right: 0px;
-        color: #FFF;
-        z-index: 4;
-      }
-
       .page  {
-        top: 0px;
-        height: 100%;
-        position: absolute;
         -moz-transform: translateZ(0);
         -webkit-transform: translateZ(0);
         -o-transform: translateZ(0);
@@ -257,8 +256,7 @@
       }
 
       #toast {
-        /* TODO get color from scheme */
-        --paper-toast-background-color: #f12424;
+        --paper-toast-background-color: var(--primary-color);
         --paper-toast-color: white;
         width: 100%;
         font-weight: bold;
@@ -274,23 +272,26 @@
 
     </style>
 
-    <div class="page-tabs tabslide">
-      <paper-button id="f4button" class="wizard-next-button hide-button"></paper-button>
-    </div>
-    <div class="title"></div>
-    <div class="page-container"></div>
+    <div class="wizard-container">
+      <div class="wizard-tabs tabslide"></div>
+      <div class="header">
+        <div class="title"></div>
+        <paper-icon-button class="wizard-close-button" icon="casper-icons:close"></paper-icon-button>
+      </div>
+      <div class="page-container"></div>
 
-    <paper-icon-button class="wizard-close-button" icon="casper-icons:close"></paper-icon-button>
+      <div class="footer-container">
 
-    <div class="buttons-container">
-      <paper-button id="wizardPrevButton" class="wizard-button wizard-previous-button button-animation">
-        <iron-icon id="wizardPreviousIcon" class="wizard-icon-previous-button" icon="casper-icons:arrow-left"></iron-icon>
-      </paper-button>
+        <paper-button id="wizardPrevButton" class="wizard-button wizard-previous-button button-animation">
+          <iron-icon id="wizardPreviousIcon" class="wizard-icon-previous-button" icon="casper-icons:arrow-left"></iron-icon>
+        </paper-button>
 
-      <paper-button id="wizardNextButton" class="wizard-button wizard-next-button button-animation">
-        <iron-icon id="wizardNextIcon" class="wizard-icon-next-button" icon="casper-icons:arrow-right"></iron-icon>
-        <span id="wizardText" class="wizard-text"></span>
-      </paper-button>
+        <paper-button id="wizardNextButton" class="wizard-button wizard-next-button button-animation">
+          <iron-icon id="wizardNextIcon" class="wizard-icon-next-button" icon="casper-icons:arrow-right"></iron-icon>
+          <span id="wizardText" class="wizard-text"></span>
+        </paper-button>
+
+      </div>
     </div>
     <paper-toast id="toast" duration="5000">
       <iron-icon id="closeToast" icon="casper-icons:cancel"/></iron-icon>
@@ -320,6 +321,24 @@
         return 300;
       }
 
+      static get defaultMaximumHeight() {
+        return '90vh';
+      }
+
+      static get fixedDefaultDimensions() {
+        return {
+          width: 800,
+          height: 520
+        };
+      }
+
+      static get dynamicDefaultDimensions() {
+        return {
+          width: '90vw',
+          height: '90vh'
+        };
+      }
+
       get channel () {
         return this._jobChannel;
       }
@@ -334,8 +353,8 @@
         this.shadowRoot.appendChild(CasperWizard.template.content.cloneNode(true));
 
         this.style.setProperty('--tab-width', '30px');
-        this.style.setProperty('--roundie', 'var(--radius-primary, 10px)');
         this.style.setProperty('--slide-time', '0.5s');
+        this.style.setProperty('--roundie', 'var(--radius-primary, 10px)');
 
         // ... make sure all existing pages get the 'page' class
         for ( let page of this.shadowRoot.children ) {
@@ -376,12 +395,13 @@
         }
 
         // ... keep handdy pointers to the template elements ...
-        this._pageTabs = this.shadowRoot.querySelector('.page-tabs');
-        this._title = this.shadowRoot.querySelector('.title');
-        this._pageContainer = this.shadowRoot.querySelector('.page-container');
-        this._prevButton  = this.shadowRoot.querySelector('#wizardPrevButton');
-        this._nextButton  = this.shadowRoot.querySelector('#wizardNextButton');
-        this._closeButton = this.shadowRoot.querySelector('.wizard-close-button');
+        this._title           = this.shadowRoot.querySelector('.title');
+        this._wizardTabs      = this.shadowRoot.querySelector('.wizard-tabs');
+        this._wizardContainer = this.shadowRoot.querySelector('.wizard-container');
+        this._prevButton      = this.shadowRoot.querySelector('#wizardPrevButton');
+        this._nextButton      = this.shadowRoot.querySelector('#wizardNextButton');
+        this._closeButton     = this.shadowRoot.querySelector('.wizard-close-button');
+        this._pageContainer   = this.shadowRoot.querySelector('.wizard-container .page-container');
         this._state = 'normal';
 
         // ... move the wizard pages from the wizard into the page container ...
@@ -390,9 +410,12 @@
         }
 
         // ... install event handlers ...
+        window.addEventListener('resize', e => this._setWizardDefaultDimensions(e));
         this._prevButton.addEventListener('tap', e => this._gotoPreviousPage(e));
         this._nextButton.addEventListener('tap', e => this._gotoNextPage(e));
         this._closeButton.addEventListener('tap', e => this._closePage(e));
+
+        this._setWizardDefaultDimensions();
 
         // ... grab constants from CSS ...
         let style = window.getComputedStyle(this);
@@ -404,11 +427,8 @@
         if ( this.notabs === undefined || this.notabs === false ) {
           this._createTabs();
         }
+
         this._gotoPage(0);
-        if ( this._pages[0].hasAttribute('next')) {
-          this._nextButton.style.padding = '0px 20px';
-          this._nextButton.textContent = this._pages[0].getAttribute('next');
-        }
 
         // ... some options ...
         this.toast = this.shadowRoot.querySelector('#toast');
@@ -513,6 +533,9 @@
           this._statusPage.message = CasperWizardStatusPage.properties.message.value;
         }
         this._state = 'normal';
+
+        // Display the current active page again.
+        this._getCurrentPage().style.height = 'auto';
       }
 
       submitJob (job, timeout) {
@@ -545,6 +568,9 @@
           this._progressPage.classList.add('fadein');
           this._pageContainer.appendChild(this._progressPage);
         }
+
+        // Hide the current active page.
+        this._getCurrentPage().style.height = 0;
 
         // ... show progress page
         this._state = 'show-progress';
@@ -593,6 +619,9 @@
         this._fadeInTimer = setTimeout(() => this._statusPage.style.opacity = 1.0, 0.3 * 1000);
         this._prevButton.disabled = false;
         this._nextButton.disabled = true;
+
+        // Hide the current active page.
+        this._getCurrentPage().style.height = 0;
       }
 
       /**
@@ -613,6 +642,17 @@
         this.toast.open();
       }
 
+      overrideWizardDimensions(dimensions) {
+        this._wizardContainer.style.minHeight = '';
+        this._wizardContainer.style.maxHeight = '';
+
+        this._wizardContainer.style.width = dimensions.width;
+        this._wizardContainer.style.height = dimensions.height;
+        this._pageContainer.style.maxHeight = `calc(${dimensions.height} - 42px - 60px)`;
+
+        this._setWizardTabsDimensions();
+      }
+
       //***************************************************************************************//
       //                                                                                       //
       //                    ~~~ Internals of the underworld implementaion ~~~                  //
@@ -628,14 +668,14 @@
         let page = this._pageIndex
         if ( page >= 1 ) {
           page -= 1;
-          if ( typeof this['previousOn' + this._pages[this._pageIndex].id] === 'function' ) {
-            this['previousOn' + this._pages[this._pageIndex].id].apply(this);
+          if ( typeof this['previousOn' + this._getCurrentPage().id] === 'function' ) {
+            this['previousOn' + this._getCurrentPage().id].apply(this);
           } else {
             this._activatePage(page);
           }
         } else {
-          if ( typeof this['previousOn' + this._pages[this._pageIndex].id] === 'function' ) {
-            this['previousOn' + this._pages[this._pageIndex].id].apply(this);
+          if ( typeof this['previousOn' + this._getCurrentPage().id] === 'function' ) {
+            this['previousOn' + this._getCurrentPage().id].apply(this);
           }
         }
       }
@@ -647,8 +687,8 @@
         }
 
         if ( this._pageIndex < this._pages.length - 1 ) {
-          if ( typeof this['nextOn' + this._pages[this._pageIndex].id] === 'function' ) {
-            this['nextOn' + this._pages[this._pageIndex].id].apply(this);
+          if ( typeof this['nextOn' + this._getCurrentPage().id] === 'function' ) {
+            this['nextOn' + this._getCurrentPage().id].apply(this);
           } else {
             this._activatePage(this._pageIndex + 1);
           }
@@ -675,35 +715,36 @@
       }
 
       _changeNextButtonToText (text) {
+        this.wizardText     = this.shadowRoot.querySelector('.wizard-text');
         this.wizardNextIcon = this.shadowRoot.querySelector('.wizard-icon-next-button');
-        this.wizardText = this.shadowRoot.querySelector('.wizard-text');
 
-        this.wizardNextIcon.style.display = 'none';
-        this.wizardText.style.display = 'flex';
         this.wizardText.textContent = text;
-        this.f4button = this.shadowRoot.querySelector('#f4button');
-        this.f4button.textContent = text;
-        let w = this.f4button.getBoundingClientRect().width + 40;
-        setTimeout(() => this._nextButton.style.width = w + 'px', 1);
+        this.wizardText.style.display = 'flex';
+        this.wizardNextIcon.style.display = 'none';
+
+        // Apply padding of 20px on both sides.
+        const buttonTextWidth = this._calculateTextWidth(this._nextButton, text.toUpperCase());
+        setTimeout(() => this._nextButton.style.width = `${buttonTextWidth + 40}px`, 1);
       }
 
       _changeNextButtonToIcon () {
+        this.wizardText     = this.shadowRoot.querySelector('.wizard-text');
         this.wizardNextIcon = this.shadowRoot.querySelector('.wizard-icon-next-button');
-        this.wizardText = this.shadowRoot.querySelector('.wizard-text');
 
+        this.wizardText.textContent = '';
         this.wizardText.style.display = 'none';
         this.wizardNextIcon.style.display = 'flex';
-        this.wizardText.textContent = '';
 
         setTimeout(() => this._nextButton.style.width = '40px', 1);
       }
 
       _gotoPage (pageIndex) {
         this._pageIndex = pageIndex;
-        this._pageTabs.style.left = - this._tabWidth * this._pageIndex + 'px';
+        this._wizardTabs.style.left = - this._tabWidth * this._pageIndex + 'px';
         this._adjustPageClasses();
         this._updateWizardButtons();
         this.hideStatusAndProgress();
+        this._activatePage(pageIndex);
       }
 
       _getIndexOf (pageId) {
@@ -715,19 +756,21 @@
       }
 
       _activatePage (pageIndex) {
+        this._pageIndex = pageIndex;
 
         this.hideStatusAndProgress();
 
-        this._pages[this._pageIndex].style.opacity = 0.8;
+        this._pages.forEach((page, pageIndex) => {
+          this._pages[pageIndex].style.height = pageIndex !== this._pageIndex ? 0 : 'auto';
+        });
 
-        const page = this._pages[pageIndex];
-        page.style.zIndex = '2';
-        page.style.opacity = 1.0;
+        const page = this._getCurrentPage();
+        page.style.zIndex = 2;
+        page.style.opacity = 1;
         page.classList.add('slidein');
         page.classList.remove('left');
         page.classList.remove('right');
-        this._pageIndex = pageIndex;
-        this._pageTabs.style.left = - this._tabWidth * this._pageIndex + 'px';
+        this._wizardTabs.style.left = - this._tabWidth * this._pageIndex + 'px';
         this._slideTimeout = setTimeout(() => this._pageSlideTimer(), this._slideTime);
         if ( page.hasAttribute('next') ) {
           this._changeNextButtonToText(page.getAttribute('next'));
@@ -743,14 +786,12 @@
       }
 
       _adjustPageClasses () {
-        for ( let idx = 0; idx < this._pages.length; idx++ ) {
-          const page = this._pages[idx];
-
+        this._pages.forEach((page, pageIndex) => {
           page.classList.remove('slidein');
-          if ( idx <  this._pageIndex ) {
+          if ( pageIndex <  this._pageIndex ) {
             page.classList.add('left');
             page.style.zIndex = '0';
-          } else if ( idx > this._pageIndex ) {
+          } else if ( pageIndex > this._pageIndex ) {
             page.classList.add('right');
             page.style.zIndex = '0';
           } else {
@@ -758,30 +799,30 @@
             page.classList.remove('right');
             page.style.zIndex = '1';
           }
-        }
+        });
       }
 
       _createTabs () {
         let off  = 0;
-        let w    = parseFloat(window.getComputedStyle(this._pageContainer).getPropertyValue('width')) - 2;
+        let w    = parseFloat(window.getComputedStyle(this._wizardContainer).getPropertyValue('width')) - 2;
         let opa  = CasperWizard.tabOpacity;
 
         // ... right side tabs ...
-        this._pageTabs.style.width =  w + this._tabWidth * (this._pages.length - 1) + 'px';
+        this._wizardTabs.style.width =  w + this._tabWidth * (this._pages.length - 1) + 'px';
         for ( let idx = this._pages.length; idx > 1; idx-- ) {
           let tab = document.createElement('div');
           let lbl = document.createElement('span');
 
           lbl.textContent = idx;
           lbl.style.right = off + 10 + 'px';
-          lbl.classList.add('tab-label');
-          this._pageTabs.appendChild(lbl);
+          lbl.classList.add('wizard-tab-label');
+          this._wizardTabs.appendChild(lbl);
           tab.style.right = off + 'px';
-          tab.classList.add('page-tab');
+          tab.classList.add('wizard-tab');
           tab.style.width = this._tabWidth / 2 + (idx * this._tabWidth) + 'px';
           tab.style.opacity = opa;
           tab.style.borderRadius = '0px var(--roundie) var(--roundie) 0px';
-          this._pageTabs.appendChild(tab);
+          this._wizardTabs.appendChild(tab);
           off += this._tabWidth;
         }
 
@@ -793,14 +834,14 @@
 
           lbl.textContent = (this._pages.length + 1) - idx;
           lbl.style.left = off + 10 + 'px';
-          lbl.classList.add('tab-label');
-          this._pageTabs.appendChild(lbl);
+          lbl.classList.add('wizard-tab-label');
+          this._wizardTabs.appendChild(lbl);
           tab.style.left = off + 'px';
-          tab.classList.add('page-tab');
+          tab.classList.add('wizard-tab');
           tab.style.width = this._tabWidth/2 + (idx * this._tabWidth) + 'px';
           tab.style.opacity = opa;
           tab.style.borderRadius = 'var(--roundie) 0px 0px var(--roundie)';
-          this._pageTabs.appendChild(tab);
+          this._wizardTabs.appendChild(tab);
           off += this._tabWidth;
         }
       }
@@ -875,8 +916,8 @@
             break;
           case 'completed':
             this._updateWizardButtons();
-            if ( typeof this['jobCompletedOn' + this._pages[this._pageIndex].id] === 'function' ) {
-              this['jobCompletedOn' + this._pages[this._pageIndex].id].apply(this, [notification.status_code, notification.message, notification.response]);
+            if ( typeof this['jobCompletedOn' + this._getCurrentPage().id] === 'function' ) {
+              this['jobCompletedOn' + this._getCurrentPage().id].apply(this, [notification.status_code, notification.message, notification.response]);
             } else {
               if ( this._pageIndex === this._pages.length - 1) {
                 this.close();
@@ -888,8 +929,8 @@
             break;
           case 'failed':
           case 'error':
-            if ( typeof this['errorOn' + this._pages[this._pageIndex].id] === 'function' ) {
-              this['errorOn' + this._pages[this._pageIndex].id].apply(this, [notification]);
+            if ( typeof this['errorOn' + this._getCurrentPage().id] === 'function' ) {
+              this['errorOn' + this._getCurrentPage().id].apply(this, [notification]);
             } else {
               this.showStatusPage(notification);
             }
@@ -910,6 +951,10 @@
         this.noCancelOnEscKey = false;
       }
 
+      _getCurrentPage () {
+        return this._pages[this._pageIndex];
+      }
+
       ___onOpenedChanged (event) {
         if ( event.detail.value === false ) {
           for ( let page of this._pages ) {
@@ -926,6 +971,48 @@
         }
       }
 
+      _calculateTextWidth(element, text) {
+        if (!this._canvasContext) this._canvasContext = document.createElement('canvas').getContext('2d');
+
+        const elementStyle = window.getComputedStyle(element);
+
+        this._canvasContext.font = `${elementStyle.fontSize} ${elementStyle.fontFamily}`;
+
+        return this._canvasContext.measureText(text).width;
+      }
+
+      _setWizardDefaultDimensions() {
+         const defaultWidth = window.innerWidth > CasperWizard.fixedDefaultDimensions.width
+           ? `${CasperWizard.fixedDefaultDimensions.width}px`
+           : `${CasperWizard.dynamicDefaultDimensions.width}px`;
+
+         const defaultHeight = window.innerHeight > CasperWizard.fixedDefaultDimensions.height
+           ? `${CasperWizard.fixedDefaultDimensions.height}px`
+           : `${CasperWizard.dynamicDefaultDimensions.height}px`;
+
+
+        if (this._pages.length > 1) {
+          // If the wizard has more than one page fix the dimensions to avoid jumping between pages with different sizes.
+          this._wizardContainer.style.width = defaultWidth;
+          this._wizardContainer.style.height = defaultHeight;
+
+          this._pageContainer.style.height = `calc(${defaultHeight} - 42px - 60px)`;
+        } else {
+          // In a single page scenario allow the the page container to grow until a maximum size.
+          this._wizardContainer.style.width = defaultWidth;
+          this._wizardContainer.style.minHeight = defaultHeight;
+          this._wizardContainer.style.maxHeight = CasperWizard.defaultMaximumHeight;
+
+          this._pageContainer.style.maxHeight = `calc(${CasperWizard.defaultMaximumHeight} - 42px - 60px)`;
+        }
+
+        this._setWizardTabsDimensions();
+      }
+
+      _setWizardTabsDimensions() {
+        const containerWidth = parseFloat(window.getComputedStyle(this._wizardContainer).getPropertyValue('width')) - 2;
+        this._wizardTabs.style.width = containerWidth + this._tabWidth * (this._pages.length - 1) + 'px';
+      }
     }
 
     window.customElements.define(CasperWizard.is, CasperWizard);
