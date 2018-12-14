@@ -87,6 +87,7 @@
       .wizard-container .page-container {
         width: 100%;
         flex: auto;
+        display: flex;
         overflow-y: auto;
         overflow-x: hidden;
       }
@@ -570,6 +571,7 @@
         }
 
         // Hide the current active page.
+        this._getCurrentPage().style.width = 0;
         this._getCurrentPage().style.height = 0;
 
         // ... show progress page
@@ -621,6 +623,7 @@
         this._nextButton.disabled = true;
 
         // Hide the current active page.
+        this._getCurrentPage().style.width = 0;
         this._getCurrentPage().style.height = 0;
       }
 
@@ -763,6 +766,8 @@
         this.hideStatusAndProgress();
 
         this._pages.forEach((page, pageIndex) => {
+          this._pages[pageIndex].style.flexGrow = pageIndex !== this._pageIndex ? '' : 1;
+          this._pages[pageIndex].style.width = pageIndex !== this._pageIndex ? 0 : 'auto';
           this._pages[pageIndex].style.height = pageIndex !== this._pageIndex ? 0 : 'auto';
         });
 
