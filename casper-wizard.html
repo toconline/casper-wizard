@@ -325,10 +325,6 @@
         return '90vh';
       }
 
-      static get defaultMaximumWidth() {
-        return '90vw';
-      }
-
       static get fixedDefaultDimensions() {
         return {
           width: 800,
@@ -1006,9 +1002,8 @@
             this._pageContainer.style.height = `calc(${defaultHeight} - 42px - 60px)`;
           } else {
             // In a single page scenario allow the the page container to grow until a maximum size.
-            this._wizardContainer.style.minWidth = defaultWidth;
+            this._wizardContainer.style.width = defaultWidth;
             this._wizardContainer.style.minHeight = defaultHeight;
-            this._wizardContainer.style.maxWidth = CasperWizard.defaultMaximumWidth;
             this._wizardContainer.style.maxHeight = CasperWizard.defaultMaximumHeight;
 
             this._pageContainer.style.maxHeight = `calc(${CasperWizard.defaultMaximumHeight} - 42px - 60px)`;
