@@ -973,7 +973,7 @@
         }
       }
 
-      _calculateTextWidth(element, text) {
+      _calculateTextWidth (element, text) {
         if (!this._canvasContext) this._canvasContext = document.createElement('canvas').getContext('2d');
 
         const elementStyle = window.getComputedStyle(element);
@@ -983,7 +983,7 @@
         return this._canvasContext.measureText(text).width;
       }
 
-      _setWizardDefaultDimensions() {
+      _setWizardDefaultDimensions () {
         // On resize don't override the wizard dimensions if they were overwritten.
         if (!this._hasCustomDimensions) {
           const defaultWidth = window.innerWidth > CasperWizard.fixedDefaultDimensions.width
@@ -1013,7 +1013,7 @@
         this._setWizardTabsDimensions();
       }
 
-      _setWizardTabsDimensions() {
+      _setWizardTabsDimensions () {
         const containerWidth = parseFloat(window.getComputedStyle(this._wizardContainer).getPropertyValue('width')) - 2;
         this._wizardTabs.style.width = containerWidth + this._tabWidth * (this._pages.length - 1) + 'px';
       }
