@@ -433,7 +433,7 @@
 
         // ... some options ...
         this.toast = this.shadowRoot.querySelector('#toast');
-        this.toast.fitInto = this._pageContainer;
+        this.toast.fitInto = this;
         this.toast.onclick = () => this.toast.close();
         this.closeToastButton = this.shadowRoot.querySelector('#closeToast');
         this.closeToastButton.onclick = () => this.toast.close();

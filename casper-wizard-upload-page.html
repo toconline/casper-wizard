@@ -151,6 +151,7 @@
       ready () {
         super.ready();
         this.i18nUpdateUpload(this.$.upload);
+        this.$.upload.addEventListener('upload-before',  e => this._uploadBefore(e));
         this.$.upload.addEventListener('upload-success', e => this._uploadSuccess(e));
         this.$.upload.addEventListener('upload-request', e => this._uploadRequest(e));
         this.$.upload.addEventListener('dragenter',      e => this._onDragEnter(e));
@@ -167,6 +168,15 @@
 
       clear () {
         this.$.upload.files = [];
+      }
+
+      _uploadBefore (event) {
+        if ( this.disabled ) {
+          this.clear();
+          this.$.ripple.upAction();
+          this.wizard.openToast('Para carregar o ficheiro é necessário autorizar a operação', false);
+          event.preventDefault();
+        }
       }
 
       _uploadRequest (event) {
