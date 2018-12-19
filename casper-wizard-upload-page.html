@@ -22,6 +22,7 @@
 <link rel="import" href="../casper-common-ui/casper-i18n-behavior.html">
 <link rel="import" href="../vaadin-upload/vaadin-upload.html">
 <link rel="import" href="../paper-ripple/paper-ripple.html">
+<link rel="import" href="../casper-button/casper-button.html">
 
 <dom-module id="casper-vaadin-upload" theme-for="vaadin-upload">
   <template>
@@ -36,9 +37,14 @@
         border: solid 2px var(--primary-color);
       }
 
-      [part="upload-button"] {
+      .upload-button {
         color: white;
         background-color: var(--primary-color);
+      }
+
+      .upload-button[disabled] {
+        color: var(--disabled-text-color);
+        background-color: var(--disabled-primary-color);
       }
 
       [part="drop-label"] {
@@ -97,6 +103,7 @@
                       timeout="300000"
                       form-data-name="my-attachment">
         <paper-ripple id="ripple" style="pointer-events: none;"></paper-ripple>
+        <casper-button disabled="[[disabled]]" slot="add-button" class="upload-button">ABRIR</casper-button>
       </vaadin-upload>
       <slot name="after">
         <div style="height: 48px;"></div>
@@ -163,13 +170,18 @@
       }
 
       _uploadRequest (event) {
-        this.originalFilePath = event.detail.file.name;
-        this.uploadedFilePath = undefined;
-        event.preventDefault();
-        this.$.ripple.upAction();
-        event.detail.xhr.setRequestHeader('Content-Type', 'application/octet-stream');
-        event.detail.xhr.setRequestHeader('Content-Disposition', 'form-data; name="'+event.detail.file.formDataName+'"; filename="uploaded_file";');
-        event.detail.xhr.send(event.detail.file);
+        if ( this.disabled ) {
+          event.preventDefault();
+          this.$.ripple.upAction();
+        } else {
+          this.originalFilePath = event.detail.file.name;
+          this.uploadedFilePath = undefined;
+          event.preventDefault();
+          this.$.ripple.upAction();
+          event.detail.xhr.setRequestHeader('Content-Type', 'application/octet-stream');
+          event.detail.xhr.setRequestHeader('Content-Disposition', 'form-data; name="'+event.detail.file.formDataName+'"; filename="uploaded_file";');
+          event.detail.xhr.send(event.detail.file);
+        }
       }
 
       _uploadSuccess (event) {
@@ -200,11 +212,9 @@
 
       _disabledChange (value) {
         if ( value === true ) {
-          this.$.upload.setAttribute('noDrop', true);
-          this.$.upload.shadowRoot.querySelector('vaadin-button').style.display = 'none';
+          this.$.upload.shadowRoot.querySelector('vaadin-button').setAttribute('disabled', true);
         } else {
-          this.$.upload.removeAttribute('noDrop');
-          this.$.upload.shadowRoot.querySelector('vaadin-button').style.display = 'block';
+          this.$.upload.shadowRoot.querySelector('vaadin-button').removeAttribute('disabled');
         }
       }
 

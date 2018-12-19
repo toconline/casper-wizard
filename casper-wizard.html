@@ -534,6 +534,7 @@
           this._statusPage.message = CasperWizardStatusPage.properties.message.value;
         }
         this._state = 'normal';
+        this._nextButton.disabled = false;
 
         // Display the current active page again.
         this._getCurrentPage().style.height = 'auto';
@@ -854,7 +855,6 @@
       }
 
       _updateWizardButtons () {
-        this._nextButton.disabled = false;
         this._nextButton.icon = (this._pageIndex === this._pages.length - 1) ? 'casper-icons:check-circle' : 'casper-icons:arrow-right';
       }
 
