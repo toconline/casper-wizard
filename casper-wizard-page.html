@@ -31,6 +31,7 @@
       }
 
       .content {
+        flex-grow: 1;
         padding: 24px;
         display: flex;
         flex-direction: column;
@@ -45,10 +46,9 @@
         padding: 0px 48px 0px 12px;
         margin: 0px;
         text-overflow: ellipsis;
-        white-space: nowrap; 
-        overflow: hidden;
+        white-space: nowrap;
       }
-      
+
     </style>
 
     <h1 class="pagetitle">[[pageTitle]]</h1>
@@ -69,10 +69,10 @@
      */
     class CasperWizardPage extends Polymer.Element {
 
-      static get is () { 
-        return 'casper-wizard-page'; 
+      static get is () {
+        return 'casper-wizard-page';
       }
-      
+
       static get properties() {
         return {
           pageTitle: {

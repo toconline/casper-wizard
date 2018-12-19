@@ -90,12 +90,21 @@
         display: flex;
         overflow-y: auto;
         overflow-x: hidden;
+        position: relative;
       }
 
       .wizard-container .footer-container {
-        padding: 10px;
+        height: 60px;
         display: flex;
-        justify-content: flex-end;
+        padding: 10px 10px 10px 20px;
+        justify-content: space-between;
+      }
+
+      .wizard-container .footer-container > div {
+        height: 100%;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
       }
 
       .wizard-container .wizard-tabs {
@@ -132,8 +141,8 @@
 
       .wizard-next-button {
         z-index: 4;
+        height: 40px;
         min-width: 40px;
-        min-height: 40px;
         padding: 0;
         border-radius: 20px;
         background-color: var(--primary-color);
@@ -192,7 +201,11 @@
         -ms-transform: translateZ(0);
         transform: translateZ(0);
         background-color: var(--surface-color, #FFF);
-        overflow: auto;
+        opacity: 1;
+        height: 100%;
+        position: absolute;
+        top: 0;
+
         border-radius: 0px 0px var(--roundie, 10px) var(--roundie, 10px);
       }
 
@@ -202,13 +215,17 @@
         }
       }
 
-      .slidein {
+      .fade-out {
+        opacity: 0;
+      }
+
+      .slide-in {
         visibility: visible;
-        -moz-transition: transform var(--slide-anim) ease-in-out;
-        -webkit-transition: transform var(--slide-time) ease-in-out;
-        -o-transition: transform var(--slide-time) ease-in-out;
-        -ms-transition: transform var(--slide-time) ease-in-out;
-        transition: transform var(--slide-time) ease-in-out;
+        -moz-transition: transform var(--slide-anim) ease-in-out, opacity .75s ease-in-out;
+        -webkit-transition: transform var(--slide-time) ease-in-out, opacity .75s ease-in-out;
+        -o-transition: transform var(--slide-time) ease-in-out, opacity .75s ease-in-out;
+        -ms-transition: transform var(--slide-time) ease-in-out, opacity .75s ease-in-out;
+        transition: transform var(--slide-time) ease-in-out, opacity .75s ease-in-out;
       }
 
       .tabslide {
@@ -222,15 +239,6 @@
         -o-transition: left 0.3s ease-in-out;
         -ms-transition: left 0.3s ease-in-out;
         transition: left 0.3s ease-in-out;
-      }
-
-      .fadein {
-        opacity: 0;
-        transition: opacity 0.5s ease-in-out;
-        -moz-transition: opacity 0.5s ease-in-out;
-        -webkit-transition: opacity 0.5s ease-in-out;
-        -o-transition: opacity 0.5s ease-in-out;
-        -ms-transition: opacity 0.5s ease-in-out;
       }
 
       .left {
@@ -277,21 +285,22 @@
       <div class="wizard-tabs tabslide"></div>
       <div class="header">
         <div class="title"></div>
+
         <paper-icon-button class="wizard-close-button" icon="casper-icons:close"></paper-icon-button>
       </div>
       <div class="page-container"></div>
-
       <div class="footer-container">
+        <div id="footer-slot-container"></div>
+        <div>
+          <paper-button id="wizardPrevButton" class="wizard-button wizard-previous-button button-animation">
+            <iron-icon id="wizardPreviousIcon" class="wizard-icon-previous-button" icon="casper-icons:arrow-left"></iron-icon>
+          </paper-button>
 
-        <paper-button id="wizardPrevButton" class="wizard-button wizard-previous-button button-animation">
-          <iron-icon id="wizardPreviousIcon" class="wizard-icon-previous-button" icon="casper-icons:arrow-left"></iron-icon>
-        </paper-button>
-
-        <paper-button id="wizardNextButton" class="wizard-button wizard-next-button button-animation">
-          <iron-icon id="wizardNextIcon" class="wizard-icon-next-button" icon="casper-icons:arrow-right"></iron-icon>
-          <span id="wizardText" class="wizard-text"></span>
-        </paper-button>
-
+          <paper-button id="wizardNextButton" class="wizard-button wizard-next-button button-animation">
+            <iron-icon id="wizardNextIcon" class="wizard-icon-next-button" icon="casper-icons:arrow-right"></iron-icon>
+            <span id="wizardText" class="wizard-text"></span>
+          </paper-button>
+        </div>
       </div>
     </div>
     <paper-toast id="toast" duration="5000">
@@ -326,17 +335,14 @@
         return '90vh';
       }
 
-      static get fixedDefaultDimensions() {
-        return {
-          width: 800,
-          height: 520
-        };
+      static get defaultMaximumWidth() {
+        return '90vw';
       }
 
-      static get dynamicDefaultDimensions() {
+      static get defaultDimensions() {
         return {
-          width: '90vw',
-          height: '90vh'
+          width:'800px',
+          height: '520px'
         };
       }
 
@@ -360,7 +366,7 @@
         // ... make sure all existing pages get the 'page' class
         for ( let page of this.shadowRoot.children ) {
           if ( page instanceof CasperWizardPage ) {
-            page.classList.add('page');
+            page.classList.add('page', 'slide-in');
           }
         }
 
@@ -395,26 +401,25 @@
           }
         }
 
-        // ... keep handdy pointers to the template elements ...
-        this._title           = this.shadowRoot.querySelector('.title');
-        this._wizardTabs      = this.shadowRoot.querySelector('.wizard-tabs');
-        this._wizardContainer = this.shadowRoot.querySelector('.wizard-container');
-        this._prevButton      = this.shadowRoot.querySelector('#wizardPrevButton');
-        this._nextButton      = this.shadowRoot.querySelector('#wizardNextButton');
-        this._closeButton     = this.shadowRoot.querySelector('.wizard-close-button');
-        this._pageContainer   = this.shadowRoot.querySelector('.wizard-container .page-container');
+        // ... keep handy pointers to the template elements ...
+        this._title               = this.shadowRoot.querySelector('.title');
+        this._wizardTabs          = this.shadowRoot.querySelector('.wizard-tabs');
+        this._wizardContainer     = this.shadowRoot.querySelector('.wizard-container');
+        this._prevButton          = this.shadowRoot.querySelector('#wizardPrevButton');
+        this._nextButton          = this.shadowRoot.querySelector('#wizardNextButton');
+        this._closeButton         = this.shadowRoot.querySelector('.wizard-close-button');
+        this._pageContainer       = this.shadowRoot.querySelector('.wizard-container .page-container');
+        this._footerSlotContainer = this.shadowRoot.querySelector('.wizard-container #footer-slot-container');
         this._state = 'normal';
 
         // ... move the wizard pages from the wizard into the page container ...
-        for ( let page of this._pages ) {
-          this._pageContainer.appendChild(page);
-        }
+        this._pages.forEach(page => { this._pageContainer.appendChild(page) });
 
         // ... install event handlers ...
-        window.addEventListener('resize', e => this._setWizardDefaultDimensions(e));
         this._prevButton.addEventListener('tap', e => this._gotoPreviousPage(e));
         this._nextButton.addEventListener('tap', e => this._gotoNextPage(e));
         this._closeButton.addEventListener('tap', e => this._closePage(e));
+        window.addEventListener('resize', e => this._applyDimensions());
 
         this._setWizardDefaultDimensions();
 
@@ -536,8 +541,7 @@
         this._state = 'normal';
         this._nextButton.disabled = false;
 
-        // Display the current active page again.
-        this._getCurrentPage().style.height = 'auto';
+        this._getCurrentPage().classList.remove('fade-out');
       }
 
       submitJob (job, timeout) {
@@ -567,13 +571,9 @@
         if ( this._progressPage === undefined ) {
           this._progressPage = document.createElement('casper-wizard-progress-page');
           this._progressPage.title = 'Progresso em curso';
-          this._progressPage.classList.add('fadein');
+          this._progressPage.classList.add('fade-in');
           this._pageContainer.appendChild(this._progressPage);
         }
-
-        // Hide the current active page.
-        this._getCurrentPage().style.width = 0;
-        this._getCurrentPage().style.height = 0;
 
         // ... show progress page
         this._state = 'show-progress';
@@ -583,6 +583,8 @@
         this._fadeInTimer = setTimeout(() => this._progressPage.style.opacity = 1.0, 0.3 * 1000);
         this._prevButton.disabled = false;
         this._nextButton.disabled = true;
+
+        this._getCurrentPage().classList.add('fade-out');
       }
 
       showStatusPage (notification) {
@@ -600,7 +602,7 @@
         // ... create page if needed ...
         if ( this._statusPage === undefined ) {
           this._statusPage  = document.createElement('casper-wizard-status-page');
-          this._statusPage.classList.add('fadein');
+          this._statusPage.classList.add('fade-in');
           this._pageContainer.appendChild(this._statusPage);
         }
 
@@ -623,9 +625,7 @@
         this._prevButton.disabled = false;
         this._nextButton.disabled = true;
 
-        // Hide the current active page.
-        this._getCurrentPage().style.width = 0;
-        this._getCurrentPage().style.height = 0;
+        this._getCurrentPage().classList.add('fade-out');
       }
 
       /**
@@ -647,15 +647,13 @@
       }
 
       overrideWizardDimensions (dimensions) {
-        this._hasCustomDimensions = true;
+        this.wizardDimensions = {
+          width: dimensions.width,
+          height: dimensions.height,
+          fixedHeight: true
+        };
 
-        this._wizardContainer.style.minHeight = '';
-        this._wizardContainer.style.maxHeight = '';
-
-        this._wizardContainer.style.width = dimensions.width;
-        this._wizardContainer.style.height = dimensions.height;
-        this._pageContainer.style.maxHeight = `calc(${dimensions.height} - 42px - 60px)`;
-
+        this._applyDimensions();
         this._setWizardTabsDimensions();
       }
 
@@ -747,7 +745,7 @@
       _gotoPage (pageIndex) {
         this._pageIndex = pageIndex;
         this._wizardTabs.style.left = - this._tabWidth * this._pageIndex + 'px';
-        this._adjustPageClasses();
+        //this._adjustPageClasses();
         this._updateWizardButtons();
         this.hideStatusAndProgress();
         this._activatePage(pageIndex);
@@ -762,29 +760,37 @@
       }
 
       _activatePage (pageIndex) {
+        // Put the footer again in the page before activating the new one.
+        if (this._footerSlotContainer.children.length === 1) {
+          this._getCurrentPage().appendChild(this._footerSlotContainer.firstChild);
+        }
+
         this._pageIndex = pageIndex;
 
-        this.hideStatusAndProgress();
-
         this._pages.forEach((page, pageIndex) => {
-          this._pages[pageIndex].style.flexGrow = pageIndex !== this._pageIndex ? '' : 1;
-          this._pages[pageIndex].style.width = pageIndex !== this._pageIndex ? 0 : 'auto';
-          this._pages[pageIndex].style.height = pageIndex !== this._pageIndex ? 0 : 'auto';
-        });
+          if (pageIndex !== this._pageIndex) {
+            page.classList.add('fade-out');
+            page.style.zIndex = 1;
+          } else {
+            this.hideStatusAndProgress();
 
-        const page = this._getCurrentPage();
-        page.style.zIndex = 2;
-        page.style.opacity = 1;
-        page.classList.add('slidein');
-        page.classList.remove('left');
-        page.classList.remove('right');
-        this._wizardTabs.style.left = - this._tabWidth * this._pageIndex + 'px';
-        this._slideTimeout = setTimeout(() => this._pageSlideTimer(), this._slideTime);
-        if ( page.hasAttribute('next') ) {
-          this._changeNextButtonToText(page.getAttribute('next'));
-        } else {
-          this._changeNextButtonToIcon();
-        }
+            const page = this._getCurrentPage();
+
+            const footerSlot = page.querySelector('[slot=footer]');
+            if (footerSlot) this._footerSlotContainer.appendChild(footerSlot);
+
+            page.style.zIndex = 2;
+            page.classList.remove('left', 'right', 'fade-out');
+            this._wizardTabs.style.left = - this._tabWidth * this._pageIndex + 'px';
+            this._slideTimeout = setTimeout(() => this._pageSlideTimer(), this._slideTime);
+
+            if ( page.hasAttribute('next') ) {
+              this._changeNextButtonToText(page.getAttribute('next'));
+            } else {
+              this._changeNextButtonToIcon();
+            }
+          }
+        });
       }
 
       _pageSlideTimer (event) {
@@ -795,19 +801,11 @@
 
       _adjustPageClasses () {
         this._pages.forEach((page, pageIndex) => {
-          page.classList.remove('slidein');
-          if ( pageIndex <  this._pageIndex ) {
-            page.classList.add('left');
-            page.style.zIndex = '0';
-          } else if ( pageIndex > this._pageIndex ) {
-            page.classList.add('right');
-            page.style.zIndex = '0';
-          } else {
-            page.classList.remove('left');
-            page.classList.remove('right');
-            page.style.zIndex = '1';
-          }
-        });
+            if (pageIndex !== this._pageIndex) {
+              const pageClass = pageIndex < this._pageIndex ? 'left' : 'right';
+              page.classList.add(pageClass);
+            }
+          });
       }
 
       _createTabs () {
@@ -989,38 +987,64 @@
       }
 
       _setWizardDefaultDimensions () {
-        // On resize don't override the wizard dimensions if they were overwritten.
-        if (!this._hasCustomDimensions) {
-          const defaultWidth = window.innerWidth > CasperWizard.fixedDefaultDimensions.width
-            ? `${CasperWizard.fixedDefaultDimensions.width}px`
-            : CasperWizard.dynamicDefaultDimensions.width;
+        // The wizard should only try to adjust itself if there is only one page.
+        this.wizardDimensions = {
+          width: CasperWizard.defaultDimensions.width,
+          height: CasperWizard.defaultDimensions.height,
+          fixedHeight: this._pages.length > 1
+        };
 
-          const defaultHeight = window.innerHeight > CasperWizard.fixedDefaultDimensions.height
-            ? `${CasperWizard.fixedDefaultDimensions.height}px`
-            : CasperWizard.dynamicDefaultDimensions.height;
-
-          if (this._pages.length > 1) {
-            // If the wizard has more than one page fix the dimensions to avoid jumping between pages with different sizes.
-            this._wizardContainer.style.width = defaultWidth;
-            this._wizardContainer.style.height = defaultHeight;
-
-            this._pageContainer.style.height = `calc(${defaultHeight} - 42px - 60px)`;
-          } else {
-            // In a single page scenario allow the the page container to grow until a maximum size.
-            this._wizardContainer.style.width = defaultWidth;
-            this._wizardContainer.style.minHeight = defaultHeight;
-            this._wizardContainer.style.maxHeight = CasperWizard.defaultMaximumHeight;
-
-            this._pageContainer.style.maxHeight = `calc(${CasperWizard.defaultMaximumHeight} - 42px - 60px)`;
-          }
-        }
-
+        this._applyDimensions();
         this._setWizardTabsDimensions();
       }
 
       _setWizardTabsDimensions () {
         const containerWidth = parseFloat(window.getComputedStyle(this._wizardContainer).getPropertyValue('width')) - 2;
         this._wizardTabs.style.width = containerWidth + this._tabWidth * (this._pages.length - 1) + 'px';
+      }
+
+      _applyDimensions() {
+        // Convert the wizard dimensions to numeric values.
+        const parsedWidth = this._parseDimension(this.wizardDimensions.width);
+        const parsedHeight = this._parseDimension(this.wizardDimensions.height);
+
+        // Check if we can apply the desired dimensions.
+        const calculatedWidth = window.innerWidth >= parsedWidth ? `${parsedWidth}px` : CasperWizard.defaultMaximumWidth;
+        const calculatedHeight = window.innerHeight >= parsedHeight ? `${parsedHeight}px` : CasperWizard.defaultMaximumHeight;
+
+        this._wizardContainer.style.width = calculatedWidth;
+
+        if (this.wizardDimensions.fixedHeight) {
+          this._wizardContainer.style.height = calculatedHeight;
+          this._pageContainer.style.height = `calc(${calculatedHeight} - 42px - 60px)`;
+        } else {
+          this._pageContainer.style.height = '';
+          this._wizardContainer.style.height = '';
+          this._wizardContainer.style.minHeight = calculatedHeight;
+          this._wizardContainer.style.maxHeight = CasperWizard.defaultMaximumHeight;
+        }
+      }
+
+      _parseDimension(dimension) {
+        const dimensionUnit = dimension.trim().slice(-2);
+
+        switch (dimensionUnit) {
+          case 'px': return parseFloat(dimension.slice(0, -2));
+          case 'vh': return this._convertViewportHeightToPixels(dimension);
+          case 'vw': return this._convertViewportWidthToPixels(dimension);
+        }
+      }
+
+      _convertViewportHeightToPixels(vh) {
+        const percentageViewportHeight = parseFloat(vh.replace('vh', '')) / 100;
+
+        return window.innerHeight * percentageViewportHeight;
+      }
+
+      _convertViewportWidthToPixels(vw) {
+        const percentageViewportWidth = parseFloat(vw.replace('vw', '')) / 100;
+
+        return window.innerWidth * percentageViewportWidth;
       }
     }
 

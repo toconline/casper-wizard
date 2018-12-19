@@ -36,13 +36,14 @@
 
       .container-error {
         display: flex;
-        margin: 120px auto;
+        margin: 0 auto;
+        max-width: 75%;
+        align-items: center;
+        flex-direction: column;
       }
 
-      .error_pad {
-        width: 72px;
-        height: 100%;
-        margin-right: 12px;
+      .error-icon-container {
+        margin-bottom: 10px;
       }
 
       .error_icon {
@@ -52,14 +53,14 @@
       }
 
       .error_message {
+        margin: 0;
+        color: grey;
+        display: flex;
         font-size: 16px;
         font-weight: 500;
-        color: grey;
-        right: 0;
-        top: 0;
-        overflow: auto;
-        margin: 0;
-        max-height: 250px;
+        text-align: center;
+        align-items: center;
+        flex-direction: column;
       }
 
       .error_message h2 {
@@ -72,12 +73,12 @@
 
     <casper-wizard-page page-title="Resultado operação">
       <div id="error_panel" class="container-error">
-        <div class="error_pad">
+        <div class="error-icon-container">
           <iron-icon icon="[[icon]]" class="error_icon" id="statusIcon"></iron-icon>
         </div>
         <div class="error_message">
           <h2 id="title">[[title]]</h2>
-          <span id="error_message">[[message]]</span>
+          <span id="error_message"></span>
         </div>
       </div>
     </casper-wizard-page>
@@ -110,7 +111,8 @@
           },
           message: {
             type: String,
-            value: '\xA0'
+            value: '\xA0',
+            observer: '_formatMessage'
           },
           icon: {
             type: String,
@@ -119,8 +121,11 @@
         };
       }
 
+      _formatMessage(message) {
+        this.$.error_message.innerHTML = this.message.replace(/\\n/mg, '<br />');
+      }
+
     }
 
     window.customElements.define(CasperWizardStatusPage.is, CasperWizardStatusPage);
   </script>
-</dom-module>
