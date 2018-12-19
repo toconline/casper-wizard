@@ -541,7 +541,7 @@
         this._state = 'normal';
         this._nextButton.disabled = false;
 
-        this._footerSlotContainer.style.display = 'flex';
+        this._footerSlotContainer.style.visibility = 'visible';
         this._getCurrentPage().classList.remove('fade-out');
       }
 
@@ -585,8 +585,9 @@
         this._prevButton.disabled = false;
         this._nextButton.disabled = true;
 
+        // Hide the current page and the possible slot in there.
         this._getCurrentPage().classList.add('fade-out');
-        this._footerSlotContainer.style.display = 'none';
+        this._footerSlotContainer.style.visibility = 'hidden';
       }
 
       showStatusPage (notification) {
@@ -628,7 +629,7 @@
         this._nextButton.disabled = true;
 
         // Hide the current page and the possible slot in there.
-        this._footerSlotContainer.style.display = 'none';
+        this._footerSlotContainer.style.visibility = 'hidden';
         this._getCurrentPage().classList.add('fade-out');
       }
 
