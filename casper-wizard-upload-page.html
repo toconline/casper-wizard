@@ -131,6 +131,10 @@
           accept: {
             type: String,
             value: "image/jpeg, image/png"
+          },
+          disabled: {
+            type: Boolean,
+            observer: '_disabledChange'
           }
         };
       }
@@ -190,6 +194,16 @@
       _onDragLeave (event) {
         this.$.ripple.upAction();
         event.preventDefault();
+      }
+
+      _disabledChange (value) {
+        if ( value === true ) {
+          this.$.upload.setAttribute('noDrop', true);
+          this.$.upload.shadowRoot.querySelector('vaadin-button').style.display = 'none';
+        } else {
+          this.$.upload.removeAttribute('noDrop');
+          this.$.upload.shadowRoot.querySelector('vaadin-button').style.display = 'block';
+        }
       }
 
     }
