@@ -188,24 +188,23 @@
       .wizard-icon-previous-button {
         width: 40px;
         height: 40px;
-        border: 2px solid var(--primary-color);
         border-radius: 20px;
         box-sizing: border-box;
         fill: var(--primary-color);
+        border: 2px solid var(--primary-color);
       }
 
       .page  {
+        top: 0;
+        opacity: 1;
+        height: 100%;
+        position: absolute;
         -moz-transform: translateZ(0);
         -webkit-transform: translateZ(0);
         -o-transform: translateZ(0);
         -ms-transform: translateZ(0);
         transform: translateZ(0);
         background-color: var(--surface-color, #FFF);
-        opacity: 1;
-        height: 100%;
-        position: absolute;
-        top: 0;
-
         border-radius: 0px 0px var(--roundie, 10px) var(--roundie, 10px);
       }
 
@@ -216,7 +215,20 @@
       }
 
       .fade-out {
+        opacity: 0 !important;
+      }
+
+      .fade-in {
+        opacity: 1 !important;
+      }
+
+      #footer-slot-container {
         opacity: 0;
+        -moz-transition: opacity .75s ease-in-out;
+        -webkit-transition: opacity .75s ease-in-out;
+        -o-transition: opacity .75s ease-in-out;
+        -ms-transition: opacity .75s ease-in-out;
+        transition: opacity .75s ease-in-out;
       }
 
       .slide-in {
@@ -541,7 +553,7 @@
         this._state = 'normal';
         this._nextButton.disabled = false;
 
-        this._footerSlotContainer.style.visibility = 'visible';
+        this._footerSlotContainer.classList.add('fade-in');
         this._getCurrentPage().classList.remove('fade-out');
       }
 
@@ -587,7 +599,7 @@
 
         // Hide the current page and the possible slot in there.
         this._getCurrentPage().classList.add('fade-out');
-        this._footerSlotContainer.style.visibility = 'hidden';
+        this._footerSlotContainer.classList.remove('fade-in');
       }
 
       showStatusPage (notification) {
@@ -629,7 +641,7 @@
         this._nextButton.disabled = true;
 
         // Hide the current page and the possible slot in there.
-        this._footerSlotContainer.style.visibility = 'hidden';
+        this._footerSlotContainer.classList.remove('fade-in');
         this._getCurrentPage().classList.add('fade-out');
       }
 
@@ -750,7 +762,6 @@
       _gotoPage (pageIndex) {
         this._pageIndex = pageIndex;
         this._wizardTabs.style.left = - this._tabWidth * this._pageIndex + 'px';
-        //this._adjustPageClasses();
         this._updateWizardButtons();
         this.hideStatusAndProgress();
         this._activatePage(pageIndex);
@@ -765,25 +776,18 @@
       }
 
       _activatePage (pageIndex) {
-        // Put the footer again in the page before activating the new one.
-        if (this._footerSlotContainer.children.length === 1) {
-          this._getCurrentPage().appendChild(this._footerSlotContainer.firstChild);
-        }
+        const previousPageIndex = this._pageIndex;
 
+        this.hideStatusAndProgress();
         this._pageIndex = pageIndex;
 
         this._pages.forEach((page, pageIndex) => {
           if (pageIndex !== this._pageIndex) {
-            page.classList.add('fade-out');
+            // Begin the fading transition and reset the z-index.
             page.style.zIndex = 1;
+            page.classList.add('fade-out');
           } else {
-            this.hideStatusAndProgress();
-
             const page = this._getCurrentPage();
-
-            const footerSlot = page.querySelector('[slot=footer]');
-            if (footerSlot) this._footerSlotContainer.appendChild(footerSlot);
-
             page.style.zIndex = 2;
             page.classList.remove('left', 'right', 'fade-out');
             this._wizardTabs.style.left = - this._tabWidth * this._pageIndex + 'px';
@@ -796,6 +800,27 @@
             }
           }
         });
+
+        if (this._footerSlotContainer.children.length === 1) {
+          // If there is already a footer slot element, fade it away and then append the new one.
+          this._footerSlotContainer.classList.remove('fade-in');
+          setTimeout(() => {
+            this._pages[previousPageIndex].appendChild(this._footerSlotContainer.firstChild);
+            this._appendFooterSlotElement();
+          }, 300);
+        } else {
+          // If there are no footer slot at the moment, append right away the new one.
+          this._appendFooterSlotElement();
+        }
+      }
+
+      _appendFooterSlotElement () {
+        // See if the current page has an element to append to the footer.
+        const footerSlot = this._getCurrentPage().querySelector('[slot=footer]');
+        if (footerSlot) {
+          this._footerSlotContainer.appendChild(footerSlot);
+          this._footerSlotContainer.classList.add('fade-in');
+        }
       }
 
       _pageSlideTimer (event) {
@@ -806,11 +831,11 @@
 
       _adjustPageClasses () {
         this._pages.forEach((page, pageIndex) => {
-            if (pageIndex !== this._pageIndex) {
-              const pageClass = pageIndex < this._pageIndex ? 'left' : 'right';
-              page.classList.add(pageClass);
-            }
-          });
+          if (pageIndex !== this._pageIndex) {
+            const pageClass = pageIndex < this._pageIndex ? 'left' : 'right';
+            page.classList.add(pageClass);
+          }
+        });
       }
 
       _createTabs () {
