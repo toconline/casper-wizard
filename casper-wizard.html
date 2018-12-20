@@ -557,10 +557,10 @@
         this._getCurrentPage().classList.remove('fade-out');
       }
 
-      submitJob (job, timeout) {
+      submitJob (job, timeout, ttr) {
         this.showProgressPage();
         job.validity = timeout;
-        this.socket.submitJob(job, this._submitJobResponse.bind(this), { validity: timeout, ttr: timeout, timeout: timeout});
+        this.socket.submitJob(job, this._submitJobResponse.bind(this), { validity: timeout, ttr: ttr || timeout, timeout: timeout});
       }
 
       subscribeJob (jobId, timeout) {
