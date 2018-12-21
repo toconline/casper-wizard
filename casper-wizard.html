@@ -561,7 +561,7 @@
       submitJob (job, timeout, ttr) {
         this.showProgressPage();
         job.validity = timeout;
-        this.socket.submitJob(job, this._submitJobResponse.bind(this), { validity: timeout, ttr: ttr || timeout, timeout: timeout});
+        this.socket.submitJob(job, this._submitJobResponse.bind(this), { validity: timeout, ttr: ttr === undefined ? timeout : ttr, timeout: timeout});
       }
 
       subscribeJob (jobId, timeout) {
