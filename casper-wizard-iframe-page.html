@@ -53,10 +53,9 @@
       }
 
       .iframe {
-        overflow: auto;
-        border: none;
-        flex-grow: 2.0;
         width: 100%;
+        border: none;
+        overflow: auto;
       }
 
       .iframe-menu {
@@ -65,6 +64,13 @@
         position: absolute;
         bottom: 0;
         text-align: center;
+      }
+
+      .iframe-container {
+        flex-grow: 1;
+        display: flex;
+        overflow: scroll;
+        -webkit-overflow-scrolling: touch;
       }
 
       .print-button {
@@ -106,13 +112,13 @@
       </slot>
 
       <div class="shadow"></div>
-      <iframe class="iframe" id="iframe" srcdoc$="[[srcdoc]]"></iframe>
+      <div class="iframe-container">
+        <iframe class="iframe" id="iframe" srcdoc$="[[srcdoc]]"></iframe>
+      </div>
 
       <slot name="footer">
       </slot>
     </div>
-
-
   </template>
 
   <script>

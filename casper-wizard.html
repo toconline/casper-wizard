@@ -426,7 +426,13 @@
         this._state = 'normal';
 
         // ... move the wizard pages from the wizard into the page container ...
-        this._pages.forEach(page => { this._pageContainer.appendChild(page) });
+        this._pages.forEach(page => {
+          // This is used to avoid situation where the content would overlap the page title.
+          page.style.display = 'grid';
+          page.style.gridTemplateRows = '42px auto';
+          page.style.gridTemplateColumns = 'repeat(1, 1fr)';
+          this._pageContainer.appendChild(page);
+        });
 
         // ... install event handlers ...
         this._prevButton.addEventListener('tap', e => this._gotoPreviousPage(e));
