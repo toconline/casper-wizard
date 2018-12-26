@@ -52,9 +52,8 @@
       }
 
       .wizard-container {
-        display: flex;
-        overflow: hidden;
-        flex-direction: column;
+        display: grid;
+        grid-template-rows: 42px auto 60px;
         background-color: white;
         border-radius: var(--roundie, 10px);
       }
@@ -199,6 +198,8 @@
         top: 0;
         opacity: 1;
         height: 100%;
+        display: grid;
+        grid-template-rows: 42px auto;
         position: absolute;
         -moz-transform: translateZ(0);
         -webkit-transform: translateZ(0);
@@ -298,7 +299,6 @@
       <div class="wizard-tabs tabslide"></div>
       <div class="header">
         <div class="title"></div>
-
         <paper-icon-button class="wizard-close-button" icon="casper-icons:close"></paper-icon-button>
       </div>
       <div class="page-container"></div>
@@ -426,13 +426,7 @@
         this._state = 'normal';
 
         // ... move the wizard pages from the wizard into the page container ...
-        this._pages.forEach(page => {
-          // This is used to avoid situation where the content would overlap the page title.
-          page.style.display = 'grid';
-          page.style.gridTemplateRows = '42px auto';
-          page.style.gridTemplateColumns = 'repeat(1, 1fr)';
-          this._pageContainer.appendChild(page);
-        });
+        this._pages.forEach(page => this._pageContainer.appendChild(page));
 
         // ... install event handlers ...
         this._prevButton.addEventListener('tap', e => this._gotoPreviousPage(e));
@@ -591,24 +585,24 @@
         if ( this._progressPage === undefined ) {
           this._progressPage = document.createElement('casper-wizard-progress-page');
           this._progressPage.title = 'Progresso em curso';
+          this._progressPage.style.opacity = 0;
+          this._progressPage.style.zIndex = 2;
+          this._progressPage.style.display = 'none';
+          this._progressPage.style.position = 'absolute';
           this._progressPage.classList.add('fade-in');
           this._pageContainer.appendChild(this._progressPage);
         }
 
         // ... show progress page
         this._state = 'show-progress';
-        this._progressPage.style.height = 'auto';
-        this._fadeInTimer = setTimeout(() => {
-          // Force the container to scroll up and remove the overflow from the other pages.
-          this._pageContainer.scrollTop = 0;
-          this._pages.forEach(page => page.style.overflow = 'hidden');
-        }, 0.75 * 1000);
         this._prevButton.disabled = false;
         this._nextButton.disabled = true;
 
-        // Hide the current page and the possible slot in there.
-        this._getCurrentPage().classList.add('fade-out');
         this._footerSlotContainer.classList.remove('fade-in');
+        this._getCurrentPage().classList.add('fade-out');
+
+        // Apply a slight delay for when a job is too fast.
+        setTimeout(() => { this._progressPage.style.display = 'block'; }, 500);
       }
 
       showStatusPage (notification) {
@@ -626,6 +620,10 @@
         // ... create page if needed ...
         if ( this._statusPage === undefined ) {
           this._statusPage  = document.createElement('casper-wizard-status-page');
+          this._statusPage.style.opacity = 0;
+          this._statusPage.style.zIndex = 2;
+          this._statusPage.style.display = 'none';
+          this._statusPage.style.position = 'absolute';
           this._statusPage.classList.add('fade-in');
           this._pageContainer.appendChild(this._statusPage);
         }
@@ -642,18 +640,14 @@
 
         // show status page
         this._state = 'show-progress';
-        this._statusPage.style.height = 'auto';
-        this._fadeInTimer = setTimeout(() => {
-          // Force the container to scroll up and remove the overflow from the other pages.
-          this._pageContainer.scrollTop = 0;
-          this._pages.forEach(page => page.style.overflow = 'hidden');
-        }, 0.75 * 1000);
         this._prevButton.disabled = false;
         this._nextButton.disabled = true;
 
-        // Hide the current page and the possible slot in there.
         this._footerSlotContainer.classList.remove('fade-in');
         this._getCurrentPage().classList.add('fade-out');
+
+        // Apply a slight delay for when a job is too fast.
+        setTimeout(() => { this._statusPage.style.display = 'block'; }, 500);
       }
 
       /**
@@ -1060,10 +1054,12 @@
           this._wizardContainer.style.height = calculatedHeight;
           this._pageContainer.style.height = `calc(${calculatedHeight} - 42px - 60px)`;
         } else {
-          this._pageContainer.style.height = '';
           this._wizardContainer.style.height = '';
           this._wizardContainer.style.minHeight = calculatedHeight;
           this._wizardContainer.style.maxHeight = CasperWizard.defaultMaximumHeight;
+
+          const firstPage = this._pages[0];
+          firstPage.style.position = 'relative';
         }
       }
 
