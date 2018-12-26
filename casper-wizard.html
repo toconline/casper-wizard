@@ -217,7 +217,6 @@
 
       .fade-out {
         opacity: 0 !important;
-        overflow: hidden;
       }
 
       .fade-in {
@@ -599,7 +598,11 @@
         // ... show progress page
         this._state = 'show-progress';
         this._progressPage.style.height = 'auto';
-        this._fadeInTimer = setTimeout(() => this._progressPage.style.opacity = 1.0, 0.3 * 1000);
+        this._fadeInTimer = setTimeout(() => {
+          // Force the container to scroll up and remove the overflow from the other pages.
+          this._pageContainer.scrollTop = 0;
+          this._pages.forEach(page => page.style.overflow = 'hidden');
+        }, 0.75 * 1000);
         this._prevButton.disabled = false;
         this._nextButton.disabled = true;
 
@@ -640,7 +643,11 @@
         // show status page
         this._state = 'show-progress';
         this._statusPage.style.height = 'auto';
-        this._fadeInTimer = setTimeout(() => this._statusPage.style.opacity = 1.0, 0.3 * 1000);
+        this._fadeInTimer = setTimeout(() => {
+          // Force the container to scroll up and remove the overflow from the other pages.
+          this._pageContainer.scrollTop = 0;
+          this._pages.forEach(page => page.style.overflow = 'hidden');
+        }, 0.75 * 1000);
         this._prevButton.disabled = false;
         this._nextButton.disabled = true;
 
@@ -786,6 +793,7 @@
         this._pageIndex = pageIndex;
 
         this._pages.forEach((page, pageIndex) => {
+          page.style.overflow = 'auto';
           if (pageIndex !== this._pageIndex) {
             // Begin the fading transition and reset the z-index.
             page.style.zIndex = 1;
