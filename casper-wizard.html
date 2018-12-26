@@ -598,9 +598,7 @@
 
         // ... show progress page
         this._state = 'show-progress';
-        this._progressPage.style.opacity = 0;
-        this._progressPage.style.zIndex = '3';
-        this._progressPage.style.display = 'flex';
+        this._progressPage.style.height = 'auto';
         this._fadeInTimer = setTimeout(() => this._progressPage.style.opacity = 1.0, 0.3 * 1000);
         this._prevButton.disabled = false;
         this._nextButton.disabled = true;
@@ -641,9 +639,7 @@
 
         // show status page
         this._state = 'show-progress';
-        this._statusPage.style.opacity = 0;
-        this._statusPage.style.zIndex  = '3';
-        this._statusPage.style.display = 'flex';
+        this._statusPage.style.height = 'auto';
         this._fadeInTimer = setTimeout(() => this._statusPage.style.opacity = 1.0, 0.3 * 1000);
         this._prevButton.disabled = false;
         this._nextButton.disabled = true;
