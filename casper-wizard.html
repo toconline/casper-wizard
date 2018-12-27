@@ -53,8 +53,8 @@
 
       .wizard-container {
         display: grid;
-        grid-template-rows: 42px auto 60px;
         background-color: white;
+        grid-template-rows: 42px 1fr 60px;
         border-radius: var(--roundie, 10px);
       }
 
@@ -199,7 +199,7 @@
         opacity: 1;
         height: 100%;
         display: grid;
-        grid-template-rows: 42px auto;
+        grid-template-rows: 42px 1fr;
         position: absolute;
         -moz-transform: translateZ(0);
         -webkit-transform: translateZ(0);
@@ -222,6 +222,14 @@
 
       .fade-in {
         opacity: 1 !important;
+      }
+
+      .fade-animation {
+        -moz-transition: opacity .75s ease-in-out;
+        -webkit-transition: opacity .75s ease-in-out;
+        -o-transition: opacity .75s ease-in-out;
+        -ms-transition: opacity .75s ease-in-out;
+        transition: opacity .75s ease-in-out;
       }
 
       #footer-slot-container {
@@ -585,11 +593,10 @@
         if ( this._progressPage === undefined ) {
           this._progressPage = document.createElement('casper-wizard-progress-page');
           this._progressPage.title = 'Progresso em curso';
-          this._progressPage.style.opacity = 0;
           this._progressPage.style.zIndex = 2;
-          this._progressPage.style.display = 'none';
+          this._progressPage.style.opacity = 0;
           this._progressPage.style.position = 'absolute';
-          this._progressPage.classList.add('fade-in');
+          this._progressPage.classList.add('fade-animation');
           this._pageContainer.appendChild(this._progressPage);
         }
 
@@ -598,11 +605,13 @@
         this._prevButton.disabled = false;
         this._nextButton.disabled = true;
 
-        this._footerSlotContainer.classList.remove('fade-in');
-        this._getCurrentPage().classList.add('fade-out');
+        this._fadeInTimer = setTimeout(() => {
+          this._progressPage.style.display = 'block';
+          this._progressPage.classList.add('fade-in');
 
-        // Apply a slight delay for when a job is too fast.
-        setTimeout(() => { this._progressPage.style.display = 'block'; }, 500);
+          this._footerSlotContainer.classList.remove('fade-in');
+          this._getCurrentPage().classList.add('fade-out');
+        }, CasperWizard.fadeInTimeout);
       }
 
       showStatusPage (notification) {
@@ -620,11 +629,10 @@
         // ... create page if needed ...
         if ( this._statusPage === undefined ) {
           this._statusPage  = document.createElement('casper-wizard-status-page');
-          this._statusPage.style.opacity = 0;
           this._statusPage.style.zIndex = 2;
-          this._statusPage.style.display = 'none';
+          this._statusPage.style.opacity = 0;
           this._statusPage.style.position = 'absolute';
-          this._statusPage.classList.add('fade-in');
+          this._statusPage.classList.add('fade-animation');
           this._pageContainer.appendChild(this._statusPage);
         }
 
@@ -643,11 +651,12 @@
         this._prevButton.disabled = false;
         this._nextButton.disabled = true;
 
-        this._footerSlotContainer.classList.remove('fade-in');
-        this._getCurrentPage().classList.add('fade-out');
+        this._fadeInTimer = setTimeout(() => {
+          this._statusPage.classList.add('fade-in');
 
-        // Apply a slight delay for when a job is too fast.
-        setTimeout(() => { this._statusPage.style.display = 'block'; }, 500);
+          this._footerSlotContainer.classList.remove('fade-in');
+          this._getCurrentPage().classList.add('fade-out');
+        }, CasperWizard.fadeInTimeout);
       }
 
       /**
@@ -672,7 +681,6 @@
         this.wizardDimensions = {
           width: dimensions.width,
           height: dimensions.height,
-          fixedHeight: true
         };
 
         this._applyDimensions();
@@ -1023,11 +1031,9 @@
       }
 
       _setWizardDefaultDimensions () {
-        // The wizard should only try to adjust itself if there is only one page.
         this.wizardDimensions = {
           width: CasperWizard.defaultDimensions.width,
-          height: CasperWizard.defaultDimensions.height,
-          fixedHeight: this._pages.length > 1
+          height: CasperWizard.defaultDimensions.height
         };
 
         this._applyDimensions();
@@ -1049,18 +1055,8 @@
         const calculatedHeight = window.innerHeight >= parsedHeight ? `${parsedHeight}px` : CasperWizard.defaultMaximumHeight;
 
         this._wizardContainer.style.width = calculatedWidth;
-
-        if (this.wizardDimensions.fixedHeight) {
-          this._wizardContainer.style.height = calculatedHeight;
-          this._pageContainer.style.height = `calc(${calculatedHeight} - 42px - 60px)`;
-        } else {
-          this._wizardContainer.style.height = '';
-          this._wizardContainer.style.minHeight = calculatedHeight;
-          this._wizardContainer.style.maxHeight = CasperWizard.defaultMaximumHeight;
-
-          const firstPage = this._pages[0];
-          firstPage.style.position = 'relative';
-        }
+        this._wizardContainer.style.height = calculatedHeight;
+        this._pageContainer.style.height = `calc(${calculatedHeight} - 42px - 60px)`;
       }
 
       _parseDimension(dimension) {
