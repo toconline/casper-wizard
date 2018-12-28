@@ -587,7 +587,7 @@
 
         if ( this._statusPage !== undefined ) {
           this._statusPage.style.display = 'none';
-          this._statusPage.style.opacity = 0.0;
+          this._statusPage.style.opacity = 0;
         }
 
         // ... create page if needed ...
@@ -625,7 +625,7 @@
         // ... hide current pages ...
         if ( this._progressPage !== undefined ) {
           this._progressPage.style.display = 'none';
-          this._progressPage.style.opacity = 0.0;
+          this._progressPage.style.opacity = 0;
         }
         // ... create page if needed ...
         if ( this._statusPage === undefined ) {
@@ -653,6 +653,7 @@
         this._nextButton.disabled = true;
 
         this._fadeInTimer = setTimeout(() => {
+          this._statusPage.style.display = 'block';
           this._statusPage.classList.add('fade-in');
 
           this._footerSlotContainer.classList.remove('fade-in');
