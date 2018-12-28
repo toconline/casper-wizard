@@ -663,8 +663,8 @@
       /**
        * Show toast at the bottow of the wizard
        *
-       * @param {String} message the text to display
-       * @param {Boolean} success controls the style, false for errors, true for positive messages
+       * @param {String} message the text to display.
+       * @param {Boolean} success controls the style, false for errors, true for positive messages.
        */
       openToast (message, success) {
         if ( success !== undefined ) {
@@ -678,6 +678,11 @@
         this.toast.open();
       }
 
+      /**
+       * Sets the wizard to the specified fixed dimensions.
+       *
+       * @param {Object} Object that contains the new dimensions that can be specified in px, vh and vw.
+       */
       overrideWizardDimensions (dimensions) {
         this.wizardDimensions = {
           width: dimensions.width,
@@ -686,6 +691,29 @@
 
         this._applyDimensions();
         this._setWizardTabsDimensions();
+      }
+
+      /**
+       * Remove a page by its identifier and re-draw the tabs.
+       *
+       * @param {Object} The identifier for the page that needs to be removed.
+       */
+      removePageById (pageIdentifier) {
+        const pageIndex = this._pages.findIndex(page => page.id === pageIdentifier);
+
+        // Disallow the removal of the current page.
+        if (this._pageIndex === pageIndex) return;
+
+        this._pages.splice(pageIndex, 1);
+        this._createTabs();
+        this._setWizardTabsDimensions();
+
+        // Activate the current page to trigger the tabs re-draw.
+        this._pageIndex = pageIndex > this._pageIndex
+          ? this._pageIndex
+          : this._pageIndex - 1;
+
+        this._activatePage(this._pageIndex);
       }
 
       //***************************************************************************************//
@@ -859,6 +887,7 @@
         let opa  = CasperWizard.tabOpacity;
 
         // ... right side tabs ...
+        this._wizardTabs.innerHTML = '';
         this._wizardTabs.style.width =  w + this._tabWidth * (this._pages.length - 1) + 'px';
         for ( let idx = this._pages.length; idx > 1; idx-- ) {
           let tab = document.createElement('div');
