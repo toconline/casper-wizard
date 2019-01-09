@@ -42,8 +42,7 @@
 
       .container-error {
         display: flex;
-        margin: 0 auto;
-        max-width: 75%;
+        padding: 0 50px;
         align-items: center;
         flex-direction: column;
       }
@@ -66,6 +65,8 @@
         font-weight: 500;
         text-align: center;
         align-items: center;
+        white-space: pre-line;
+        word-break: break-word;
         flex-direction: column;
       }
 
@@ -128,7 +129,9 @@
       }
 
       _formatMessage(message) {
-        this.$.error_message.innerHTML = this.message.replace(/\\n/mg, '<br />');
+        if (!message) return;
+
+        this.$.error_message.textContent = this.message.replace(/\\n/mg, '');
       }
 
     }
