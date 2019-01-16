@@ -51,9 +51,9 @@
   <script>
 
     class ConfirmWizardConfirmModal extends Casper.I18n(CasperWizard) {
-  		static get is () {
-  			return 'casper-wizard-confirm-modal';
-  		}
+      static get is () {
+        return 'casper-wizard-confirm-modal';
+      }
 
       static get properties () {
         return {
@@ -74,25 +74,21 @@
           needsPassword: {
             type: Boolean,
             value: false
-          },
-          options: {
-            type: Object
           }
         };
       }
 
       ready () {
         super.ready();
-        this.addEventListener('accept-modal', e => this._resolve && this._resolve({ ok: true }) );
-        this.addEventListener('reject-modal', e => this._reject && this._reject() );
+        this.addEventListener('accept-modal', () => this._resolve && this._resolve({ ok: true }) );
+        this.addEventListener('reject-modal', () => this._reject && this._reject() );
         this.defaultOptions = {
           message: 'Tem a certeza que pretende prosseguir?',
           accept: 'sim',
           reject: 'não'
-        }
+        };
 
-        this.setOptions({})
-
+        this.setOptions({});
       }
 
       setOptions (options) {
@@ -115,7 +111,7 @@
           next: {
             backgroundColor: '#EF5350'
           }
-        })
+        });
 
         this.pageTitle = this.options.message;
         this.$.confirm.setAttribute("next", this.options.accept);
@@ -137,20 +133,20 @@
           }.bind(this));
       }
 
-      _gotoPreviousPage (event) {
-        this.dispatchEvent(new CustomEvent('reject-modal', {bubbles: true, composed: true}));
+      _gotoPreviousPage () {
+        this.dispatchEvent(new CustomEvent('reject-modal', { bubbles: true, composed: true }));
         this.close();
       }
 
-      _gotoNextPage (event) {
-        this.dispatchEvent(new CustomEvent('accept-modal', {bubbles: true, composed: true}));
+      _gotoNextPage () {
+        this.dispatchEvent(new CustomEvent('accept-modal', { bubbles: true, composed: true }));
         this.close();
       }
 
       isValid () {
-       return true
+       return true;
       }
-  	}
+    }
 
     window.customElements.define(ConfirmWizardConfirmModal.is, ConfirmWizardConfirmModal);
   </script>
