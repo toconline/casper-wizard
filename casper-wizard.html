@@ -363,7 +363,7 @@
 
       static get defaultDimensions() {
         return {
-          width:'800px',
+          width: '800px',
           height: '520px'
         };
       }
@@ -438,10 +438,10 @@
         this._pages.forEach(page => this._pageContainer.appendChild(page));
 
         // ... install event handlers ...
-        this._prevButton.addEventListener('tap', e => this._gotoPreviousPage(e));
-        this._nextButton.addEventListener('tap', e => this._gotoNextPage(e));
-        this._closeButton.addEventListener('tap', e => this._closePage(e));
-        window.addEventListener('resize', e => this._applyDimensions());
+        this._prevButton.addEventListener('tap', () => this._gotoPreviousPage());
+        this._nextButton.addEventListener('tap', () => this._gotoNextPage());
+        this._closeButton.addEventListener('tap', () => this._closePage());
+        window.addEventListener('resize', () => this._applyDimensions());
 
         this._setWizardDefaultDimensions();
 
@@ -570,7 +570,7 @@
       submitJob (job, timeout, ttr) {
         this.showProgressPage();
         job.validity = timeout;
-        this.socket.submitJob(job, this._submitJobResponse.bind(this), { validity: timeout, ttr: ttr === undefined ? timeout : ttr, timeout: timeout});
+        this.socket.submitJob(job, this._submitJobResponse.bind(this), { validity: timeout, ttr: ttr === undefined ? timeout : ttr, timeout: timeout });
       }
 
       subscribeJob (jobId, timeout) {
@@ -723,13 +723,13 @@
       //                                                                                       //
       //***************************************************************************************//
 
-      _gotoPreviousPage (event) {
+      _gotoPreviousPage () {
 
         if ( this._slideTimeout !== undefined ) {
           return;
         }
 
-        let page = this._pageIndex
+        let page = this._pageIndex;
         if ( page >= 1 ) {
           page -= 1;
           if ( typeof this['previousOn' + this._getCurrentPage().id] === 'function' ) {
@@ -744,7 +744,7 @@
         }
       }
 
-      _gotoNextPage (event) {
+      _gotoNextPage () {
 
         if ( this._slideTimeout !== undefined ) {
           return;
@@ -765,7 +765,7 @@
         }
       }
 
-      _gotoNextPageNoHandlers (event) {
+      _gotoNextPageNoHandlers () {
 
         if ( this._slideTimeout !== undefined ) {
           return;
@@ -867,7 +867,7 @@
         }
       }
 
-      _pageSlideTimer (event) {
+      _pageSlideTimer () {
         this._slideTimeout = undefined;
         this._adjustPageClasses();
         this._updateWizardButtons();
@@ -931,7 +931,7 @@
         this._nextButton.icon = (this._pageIndex === this._pages.length - 1) ? 'casper-icons:check-circle' : 'casper-icons:arrow-right';
       }
 
-      _closePage (event) {
+      _closePage () {
         this.close();
       }
 

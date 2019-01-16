@@ -119,7 +119,7 @@
         if ( count !== this.progressCount || forced) {
           this.progressCount = count;
           this.progressMessages = null;
-          var pdata = Array.apply(null, { length: this.progressCount }).map(function() { return { message: '\xA0' }; });
+          const pdata = Array.apply(null, { length: this.progressCount }).map(function() { return { message: '\xA0' }; });
           pdata[0].message = 'Em fila de espera';
           this.progressMessages = pdata;
 

@@ -161,19 +161,19 @@
 
       ready () {
         super.ready();
-        if(this.shadow) {
+        if (this.shadow) {
           this.shadowRoot.querySelector(".shadow").style.display = "block";
         }
       }
 
-      _printableChanged (newValue, oldValue) {
+      _printableChanged (newValue) {
         if ( newValue == true ) {
           this.$.button.style.display = 'flex';
         }
       }
 
       _printDocument () {
-        var frm = this.shadowRoot.querySelector('iframe');
+        const frm = this.shadowRoot.querySelector('iframe');
         if ( CasperBrowser.isIos ) {
           window.open(frm.src, "_blank");
         } else {
