@@ -77,8 +77,19 @@
         return {
           pageTitle: {
             type: String
+          },
+          hideTitle: {
+            type: Boolean,
+            value: false
           }
         };
+      }
+
+      connectedCallback () {
+        super.connectedCallback();
+        if (this.hideTitle) {
+          this.shadowRoot.querySelector('.pagetitle').style.display = 'none';
+        }
       }
 
     }

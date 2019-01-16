@@ -316,11 +316,12 @@
         <div>
           <paper-button id="wizardPrevButton" class="wizard-button wizard-previous-button button-animation">
             <iron-icon id="wizardPreviousIcon" class="wizard-icon-previous-button" icon="casper-icons:arrow-left"></iron-icon>
+            <span class="wizard-text"></span>
           </paper-button>
 
           <paper-button id="wizardNextButton" class="wizard-button wizard-next-button button-animation">
             <iron-icon id="wizardNextIcon" class="wizard-icon-next-button" icon="casper-icons:arrow-right"></iron-icon>
-            <span id="wizardText" class="wizard-text"></span>
+            <span class="wizard-text"></span>
           </paper-button>
         </div>
       </div>
@@ -434,8 +435,9 @@
         this._footerSlotContainer = this.shadowRoot.querySelector('.wizard-container #footer-slot-container');
         this._state = 'normal';
 
-        // ... move the wizard pages from the wizard into the page container ...
-        this._pages.forEach(page => this._pageContainer.appendChild(page));
+        if ( typeof(ConfirmModal) === "undefined" || !(this instanceof ConfirmModal) ) {
+          this.appendPagesAndActivate(0);
+        }
 
         // ... install event handlers ...
         this._prevButton.addEventListener('tap', e => this._gotoPreviousPage(e));
@@ -456,7 +458,6 @@
           this._createTabs();
         }
 
-        this._gotoPage(0);
 
         // ... some options ...
         this.toast = this.shadowRoot.querySelector('#toast');
@@ -470,6 +471,12 @@
 
         // listen to close event
         this.addEventListener('opened-changed', e => this.___onOpenedChanged(e));
+      }
+
+      appendPagesAndActivate (index) {
+        // ... move the wizard pages from the wizard into the page container ...
+        this._pages.forEach(page => this._pageContainer.appendChild(page));
+        this._gotoPage(index);
       }
 
       connectedCallback () {
@@ -694,6 +701,15 @@
         this._setWizardTabsDimensions();
       }
 
+      overrideWizardButtons (cssProps) {
+        for ( const [button, buttonProps] of Object.entries(cssProps) ) {
+          const element = this.shadowRoot.querySelector(`.wizard-${button}-button`);
+          for ( const [key, value] of Object.entries(buttonProps) ) {
+            element.style[key] = value;
+          }
+        }
+      }
+
       /**
        * Remove a page by its identifier and re-draw the tabs.
        *
@@ -778,28 +794,37 @@
         }
       }
 
-      _changeNextButtonToText (text) {
-        this.wizardText     = this.shadowRoot.querySelector('.wizard-text');
-        this.wizardNextIcon = this.shadowRoot.querySelector('.wizard-icon-next-button');
+      _changeButtonToText (selector, text) {
+        const buttonSelector = this.shadowRoot.querySelector(selector);
+        const wizardIcon     = buttonSelector.querySelector('iron-icon');
+        const buttonText     = buttonSelector.querySelector('.wizard-text');
 
-        this.wizardText.textContent = text;
-        this.wizardText.style.display = 'flex';
-        this.wizardNextIcon.style.display = 'none';
+        buttonText.textContent   = text;
+        buttonText.style.display = 'flex';
+        wizardIcon.style.display = 'none';
 
         // Apply padding of 20px on both sides.
-        const buttonTextWidth = this._calculateTextWidth(this._nextButton, text.toUpperCase());
-        setTimeout(() => this._nextButton.style.width = `${buttonTextWidth + 40}px`, 1);
+        const buttonTextWidth = this._calculateTextWidth(buttonSelector, text.toUpperCase());
+        buttonSelector.style.width = `${buttonTextWidth + 40}px`;
+      }
+
+      _changeButtonToIcon (selector) {
+        const buttonSelector = this.shadowRoot.querySelector(selector);
+        const wizardIcon     = buttonSelector.querySelector('iron-icon');
+        const buttonText     = buttonSelector.querySelector('.wizard-text');
+
+        buttonText.textContent     = '';
+        buttonText.style.display   = 'none';
+        buttonSelector.style.width = '40px'
+        wizardIcon.style.display   = 'block';
+      }
+
+      _changeNextButtonToText (text) {
+        this._changeButtonToText('#wizardNextButton', text);
       }
 
       _changeNextButtonToIcon () {
-        this.wizardText     = this.shadowRoot.querySelector('.wizard-text');
-        this.wizardNextIcon = this.shadowRoot.querySelector('.wizard-icon-next-button');
-
-        this.wizardText.textContent = '';
-        this.wizardText.style.display = 'none';
-        this.wizardNextIcon.style.display = 'flex';
-
-        setTimeout(() => this._nextButton.style.width = '40px', 1);
+        this._changeButtonToIcon('#wizardNextButton');
       }
 
       _gotoPage (pageIndex) {
@@ -837,10 +862,16 @@
             this._wizardTabs.style.left = - this._tabWidth * this._pageIndex + 'px';
             this._slideTimeout = setTimeout(() => this._pageSlideTimer(), this._slideTime);
 
-            if ( page.hasAttribute('next') ) {
-              this._changeNextButtonToText(page.getAttribute('next'));
+            if ( page.hasAttribute('previous') ) {
+              this._changeButtonToText('#wizardPrevButton', page.getAttribute('previous'));
             } else {
-              this._changeNextButtonToIcon();
+              this._changeButtonToIcon('#wizardPrevButton');
+            }
+
+            if ( page.hasAttribute('next') ) {
+              this._changeButtonToText('#wizardNextButton', page.getAttribute('next'));
+            } else {
+              this._changeButtonToIcon('#wizardNextButton');
             }
           }
         });
