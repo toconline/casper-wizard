@@ -136,17 +136,26 @@
         const idx = index || 0;
 
         if ( message ) {
-          this.progressMessages[idx].message = message;
-          this.notifyPath('progressMessages.'+idx+'.message');
+          try {
+            this.progressMessages[idx].message = message;
+            this.notifyPath(`progressMessages.${idx}.message`);
+          } catch (e) {
+            // protect the error
+          }
         }
+
 
         if ( progress !== undefined ) {
           const pvalue = parseFloat(progress);
 
           if ( isNaN(progress) === false ) {
-            const pbar = this.shadowRoot.querySelector(`vaadin-progress-bar:nth-of-type(${idx + 1})`);
-            pbar.indeterminate = false;
-            pbar.value = pvalue;
+            try {
+              const pbar = this.shadowRoot.querySelector(`vaadin-progress-bar:nth-of-type(${idx + 1})`);
+              pbar.indeterminate = false;
+              pbar.value = pvalue;
+            } catch (e) {
+                // protect the error
+            }
           }
         }
       }
