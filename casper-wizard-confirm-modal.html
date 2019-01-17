@@ -38,12 +38,12 @@
       }
 
       .text {
-        font-size: 20px;
+        font-size: 18px;
       }
     </style>
 
     <casper-wizard-page id="confirm" hide-title next$="[[accept]]" previous$="[[reject]]">
-      <div class="text">[[pageTitle]]</div>
+      <div class="text"></div>
     </casper-wizard-page>
 
   </template>
@@ -86,24 +86,14 @@
           message: 'Tem a certeza que pretende prosseguir?',
           accept: 'sim',
           reject: 'não'
-        };
+        }
 
-        this.setOptions({});
-      }
-
-      setOptions (options) {
-        super.setOptions(Object.assign({}, this.defaultOptions, options));
-      }
-
-
-      connectedCallback () {
-        super.connectedCallback();
-        this.overrideWizardDimensions({
+        this.defaultOverrideWizardDimensions = {
           width: '350px',
           height: '200px'
-        });
+        }
 
-        this.overrideWizardButtons({
+        this.defaultOverrideWizardButtons = {
           previous: {
             backgroundColor: '#E5E5E5',
             color: '#A9A9A9'
@@ -111,13 +101,29 @@
           next: {
             backgroundColor: '#EF5350'
           }
-        });
+        }
 
-        this.pageTitle = this.options.message;
+        this.setOptions({})
+
+      }
+
+      setOptions (options) {
+        const wizardDimensions = Object.assign({}, this.defaultOverrideWizardDimensions, options.overrideWizardDimensions);
+        const wizardButtons = Object.assign({}, this.defaultOverrideWizardButtons, options.overrideWizardButtons);
+
+        this.overrideWizardDimensions(wizardDimensions);
+        this.overrideWizardButtons(wizardButtons);
+
+        super.setOptions(Object.assign({}, this.defaultOptions, options));
+      }
+
+      connectedCallback () {
+        super.connectedCallback();
+        this.shadowRoot.querySelector('.text').innerHTML = this.options.message;
+
         this.$.confirm.setAttribute("next", this.options.accept);
         this.$.confirm.setAttribute("previous", this.options.reject);
         this.appendPagesAndActivate(0);
-
       }
 
       open () {

@@ -302,6 +302,10 @@
         --paper-toast-color: white;
       }
 
+      .page.page--no-title {
+        grid-template-rows: 1fr;
+      }
+
     </style>
 
     <div class="wizard-container">
@@ -390,6 +394,11 @@
         for ( let page of this.shadowRoot.children ) {
           if ( page instanceof CasperWizardPage ) {
             page.classList.add('page', 'slide-in');
+
+            if (page.hasAttribute('hide-title')) {
+              page.classList.add("page--no-title");
+            }
+
           }
         }
 

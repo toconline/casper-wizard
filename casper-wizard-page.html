@@ -50,8 +50,9 @@
       }
 
     </style>
-
-    <h1 class="pagetitle">[[pageTitle]]</h1>
+    <template is="dom-if" if="[[!hideTitle]]">
+      <h1 class="pagetitle">[[pageTitle]]</h1>
+    </template>
     <div class="content">
       <slot></slot>
     </div>
@@ -84,14 +85,6 @@
           }
         };
       }
-
-      connectedCallback () {
-        super.connectedCallback();
-        if (this.hideTitle) {
-          this.shadowRoot.querySelector('.pagetitle').style.display = 'none';
-        }
-      }
-
     }
 
     window.customElements.define(CasperWizardPage.is, CasperWizardPage);
