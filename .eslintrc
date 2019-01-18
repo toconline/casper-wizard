@@ -25,6 +25,13 @@
     "customElements": true,
     "HTMLImports": true,
     "Polymer": true,
+    "Casper": true,
+    "CasperWizard": true,
+    "CasperWizardPage": true,
+    "CasperBrowser": true,
+    "ConfirmModal": true,
+    "CasperWizardStatusPage": true,
+    "CasperWizardUploadPage": true,
     "ShadyDOM": true,
     "ShadyCSS": true,
     "JSCompiler_renameProperty": true
