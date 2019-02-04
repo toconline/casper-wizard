@@ -26,7 +26,7 @@
 <link rel="import" href="../iron-icon/iron-icon.html">
 <link rel="import" href="../paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../casper-icons/casper-icons.html">
-<link rel="import" href="../paper-toast/paper-toast.html">
+<link rel="import" href="../casper-toast/casper-toast.html">
 <link rel="import" href="../paper-button/paper-button.html">
 <link rel="import" href="casper-wizard-page.html">
 <link rel="import" href="casper-wizard-upload-page.html">
@@ -287,21 +287,6 @@
         z-index: -1;
       }
 
-      #toast {
-        --paper-toast-background-color: var(--primary-color);
-        --paper-toast-color: white;
-        width: 100%;
-        font-weight: bold;
-        display: inline-flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-
-      #toast[success] {
-        --paper-toast-background-color: #4a9a4a;
-        --paper-toast-color: white;
-      }
-
       .page.page--no-title {
         grid-template-rows: 1fr;
       }
@@ -330,9 +315,7 @@
         </div>
       </div>
     </div>
-    <paper-toast id="toast" duration="5000">
-      <iron-icon id="closeToast" icon="casper-icons:cancel"/></iron-icon>
-    </paper-toast>
+    <casper-toast duration="5000"></casper-toast>
   </template>
 
   <script>
@@ -469,11 +452,8 @@
 
 
         // ... some options ...
-        this.toast = this.shadowRoot.querySelector('#toast');
-        this.toast.fitInto = this;
+        this.toast = this.shadowRoot.querySelector('casper-toast');
         this.toast.onclick = () => this.toast.close();
-        this.closeToastButton = this.shadowRoot.querySelector('#closeToast');
-        this.closeToastButton.onclick = () => this.toast.close();
         this.noCancelOnEscKey = false;
         this.noCancelOnOutsideClick = true;
         this._jobId = this._jobChannel = undefined;
@@ -684,13 +664,8 @@
        * @param {Boolean} success controls the style, false for errors, true for positive messages.
        */
       openToast (message, success) {
-        if ( success !== undefined ) {
-          if ( success ) {
-            this.toast.setAttribute('success', '');
-          } else {
-            this.toast.removeAttribute('success');
-          }
-        }
+        this.toast.backgroundColor = success ? '#4A9A4A' : '';
+        this.toast.fitInto = this;
         this.toast.text = message;
         this.toast.open();
       }
