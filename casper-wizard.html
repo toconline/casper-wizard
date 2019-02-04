@@ -178,7 +178,7 @@
         min-width: 40px;
         min-height: 40px;
         padding: 0;
-        border-radius: 20px;
+        border-radius: 50%;
         font-size: 14px;
         font-weight: bold;
         -webkit-font-smoothing: antialiased;
@@ -189,10 +189,9 @@
       .wizard-icon-previous-button {
         width: 40px;
         height: 40px;
-        border-radius: 20px;
+        border-radius: 50%;
         box-sizing: border-box;
         fill: var(--primary-color);
-        border: 2px solid var(--primary-color);
       }
 
       .page  {
@@ -304,7 +303,7 @@
         <div id="footer-slot-container"></div>
         <div>
           <paper-button id="wizardPrevButton" class="wizard-button wizard-previous-button button-animation">
-            <iron-icon id="wizardPreviousIcon" class="wizard-icon-previous-button" icon="casper-icons:arrow-left"></iron-icon>
+            <iron-icon id="wizardPreviousIcon" class="wizard-icon-previous-button" icon="casper-icons:arrow-circle-left"></iron-icon>
             <span class="wizard-text"></span>
           </paper-button>
 
@@ -943,7 +942,7 @@
       }
 
       _updateWizardButtons () {
-        this._nextButton.icon = (this._pageIndex === this._pages.length - 1) ? 'casper-icons:check-circle' : 'casper-icons:arrow-right';
+        this._nextButton.icon = (this._pageIndex === this._pages.length - 1) ? 'casper-icons:check-circle' : 'casper-icons:arrow-circle-rights';
       }
 
       _closePage () {
