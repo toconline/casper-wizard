@@ -37,13 +37,13 @@
         display: none;
       }
 
-      .text {
+      .content {
         font-size: 18px;
       }
     </style>
 
     <casper-wizard-page id="confirm" hide-title next$="[[accept]]" previous$="[[reject]]">
-      <div class="text"></div>
+      <div class="content"></div>
     </casper-wizard-page>
 
   </template>
@@ -115,12 +115,15 @@
         this.overrideWizardButtons(wizardButtons);
 
         super.setOptions(Object.assign({}, this.defaultOptions, options));
+        if ( options.title ) {
+          super.setTitle(options.title);
+        }
       }
 
       connectedCallback () {
         super.connectedCallback();
-        this.shadowRoot.querySelector('.text').innerHTML = this.options.message;
-
+        const content = this.shadowRoot.querySelector('.content');
+        content.innerHTML = this.options.message;
         this.$.confirm.setAttribute("next", this.options.accept);
         this.$.confirm.setAttribute("previous", this.options.reject);
         this.appendPagesAndActivate(0);
@@ -136,7 +139,8 @@
             this.open();
             this._resolve = resolve;
             this._reject = reject;
-          }.bind(this));
+          }.bind(this)
+        );
       }
 
       _gotoPreviousPage () {
