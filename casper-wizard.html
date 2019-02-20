@@ -380,7 +380,6 @@
             if (page.hasAttribute('hide-title')) {
               page.classList.add("page--no-title");
             }
-
           }
         }
 
@@ -501,11 +500,17 @@
       }
 
       enablePrevious () {
-        this._prevButton.disabled = false;
+        if ( this._prevButton.disabled === true ) {
+          this._prevButton.querySelector('iron-icon').icon = 'casper-icons:arrow-circle-left';
+          this._prevButton.disabled = false;
+        }
       }
 
       disablePrevious () {
-        this._prevButton.disabled = true;
+        if ( this._prevButton.disabled === false ) {
+          this._prevButton.querySelector('iron-icon').icon = 'casper-icons:arrow-left';
+          this._prevButton.disabled = true;
+        }
       }
 
       enableNext () {
@@ -598,8 +603,8 @@
 
         // ... show progress page
         this._state = 'show-progress';
-        this._prevButton.disabled = false;
-        this._nextButton.disabled = true;
+        this.enablePrevious(); //_prevButton.disabled = false;
+        this.disableNext();    //_nextButton.disabled = true;
 
         this._fadeInTimer = setTimeout(() => {
           this._progressPage.style.display = 'block';
@@ -632,20 +637,26 @@
           this._pageContainer.appendChild(this._statusPage);
         }
 
-        // ... set message and or icon ...
-        this._statusPage.message = this.i18n.apply(this, notification.message);
-        if ( notification.response !== undefined && notification.response.title !== undefined ) {
-          this._statusPage.title = notification.response.title;
-        }
-        if ( notification.response !== undefined && notification.response.message_icon !== undefined ) {
-          this._statusPage.icon = notification.response.message_icon;
-          this._statusPage.$.statusIcon.style.fill = notification.response.color_icon;
+        if ( notification.custom === true ) {
+          // ... set custom html message ...
+          this._statusPage.setCustom(notification.message[0]);
+        } else {
+          // ... set standard message and or icons ...
+          this._statusPage.clearCustom();
+          this._statusPage.message = this.i18n.apply(this, notification.message);
+          if ( notification.response !== undefined && notification.response.title !== undefined ) {
+            this._statusPage.title = notification.response.title;
+          }
+          if ( notification.response !== undefined && notification.response.message_icon !== undefined ) {
+            this._statusPage.icon = notification.response.message_icon;
+            this._statusPage.$.statusIcon.style.fill = notification.response.color_icon;
+          }
         }
 
         // show status page
         this._state = 'show-progress';
-        this._prevButton.disabled = false;
-        this._nextButton.disabled = true;
+        this.enablePrevious();
+        this.disableNext();
 
         this._fadeInTimer = setTimeout(() => {
           this._statusPage.style.display = 'block';
@@ -663,7 +674,7 @@
        * @param {Boolean} success controls the style, false for errors, true for positive messages.
        */
       openToast (message, success) {
-        this.toast.backgroundColor = success ? '#4A9A4A' : '';
+        this.toast.backgroundColor = success ? 'var(--primary-color)' : 'var(--error-color)';
         this.toast.fitInto = this;
         this.toast.text = message;
         this.toast.open();
@@ -870,6 +881,9 @@
           // If there are no footer slot at the moment, append right away the new one.
           this._appendFooterSlotElement();
         }
+        if ( pageIndex === 0 ) {
+          this.disablePrevious();
+        }
       }
 
       _appendFooterSlotElement () {
@@ -1011,12 +1025,22 @@
           case 'completed':
             this._updateWizardButtons();
             if ( typeof this['jobCompletedOn' + this._getCurrentPage().id] === 'function' ) {
-              this['jobCompletedOn' + this._getCurrentPage().id].apply(this, [notification.status_code, notification.message, notification.response]);
-            } else {
-              if ( this._pageIndex === this._pages.length - 1) {
-                this.close();
+              if ( notification.custom === true ) {
+                // ... Pass the full notification to allow more flexible custom handling ...
+                this['jobCompletedOn' + this._getCurrentPage().id].apply(this, [notification.status_code, notification, notification.response]);
               } else {
-                this._gotoNextPageNoHandlers();
+                // ... passes only the notification message, it's an array that can be i18n'ed ...
+                this['jobCompletedOn' + this._getCurrentPage().id].apply(this, [notification.status_code, notification.message, notification.response]);
+              }
+            } else {
+              if ( notification.custom === true ) {
+                this.showStatusPage(notification);
+              } else {
+                if ( this._pageIndex === this._pages.length - 1) {
+                  this.close();
+                } else {
+                  this._gotoNextPageNoHandlers();
+                }
               }
             }
             this._clearJob();
