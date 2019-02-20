@@ -51,13 +51,13 @@
         margin-bottom: 10px;
       }
 
-      .error_icon {
+      .error-icon {
         fill: var(--error-color);
         --iron-icon-height: 72px;
         --iron-icon-width: 72px;
       }
 
-      .error_message, .custom_message {
+      .error-message, .custom-message {
         margin: 0;
         color: grey;
         display: flex;
@@ -70,13 +70,13 @@
         flex-direction: column;
       }
 
-      .custom_message iron-icon {
+      .custom-message iron-icon {
         fill: var(--primary-color);
         --iron-icon-height: 100px;
         --iron-icon-width: 100px;
       }
 
-      .error_message h2 {
+      .error-message h2 {
         color: grey;
         margin-top: 4px;
         margin-bottom: 15px;
@@ -93,9 +93,9 @@
       </div>
       <div id="errorPanel" class="container-error">
         <div class="error-icon-container">
-          <iron-icon icon="[[icon]]" class="error_icon" id="statusIcon"></iron-icon>
+          <iron-icon icon="[[icon]]" class="error-icon" id="statusIcon"></iron-icon>
         </div>
-        <div class="error_message">
+        <div class="error-message">
           <h2 id="title">[[title]]</h2>
           <div id="errorMessage"></div>
         </div>
