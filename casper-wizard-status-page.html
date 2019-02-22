@@ -70,6 +70,17 @@
         flex-direction: column;
       }
 
+      .custom-message {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+      }
+
+      casper-notice {
+        width: 100%;
+        align-self: flex-end;
+      }
+
       .custom-message iron-icon {
         fill: var(--primary-color);
         --iron-icon-height: 100px;
@@ -86,10 +97,14 @@
         display: none;
       }
 
+      .fill {
+        height: 100%;
+      }
+
     </style>
 
     <casper-wizard-page page-title="Resultado operação">
-      <div id="customHtml" class="hide">
+      <div id="customHtml" class="hide fill">
       </div>
       <div id="errorPanel" class="container-error">
         <div class="error-icon-container">

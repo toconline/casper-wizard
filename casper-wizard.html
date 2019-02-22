@@ -424,6 +424,7 @@
         this._pageContainer       = this.shadowRoot.querySelector('.wizard-container .page-container');
         this._footerSlotContainer = this.shadowRoot.querySelector('.wizard-container #footer-slot-container');
         this._state = 'normal';
+        this._nextClosesWizard = false;
 
         if ( typeof(ConfirmModal) === "undefined" || !(this instanceof ConfirmModal) ) {
           this.appendPagesAndActivate(0);
@@ -654,7 +655,7 @@
         }
 
         // show status page
-        this._state = 'show-progress';
+        this._state = 'show-status';
         this.enablePrevious();
         this.disableNext();
 
@@ -758,6 +759,10 @@
 
         if ( this._slideTimeout !== undefined ) {
           return;
+        }
+
+        if ( this._nextClosesWizard === true ) {
+          this.close();
         }
 
         if ( this._pageIndex < this._pages.length - 1 ) {
@@ -1035,6 +1040,10 @@
             } else {
               if ( notification.custom === true ) {
                 this.showStatusPage(notification);
+                this.disablePrevious();
+                this._changeNextButtonToText('Fechar');
+                this.enableNext();
+                this._nextClosesWizard = true;
               } else {
                 if ( this._pageIndex === this._pages.length - 1) {
                   this.close();
