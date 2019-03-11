@@ -140,6 +140,10 @@
             type: String,
             notify: true
           },
+          originalFileSize: {
+            type: Number,
+            notify: true
+          },
           uploadedFilePath: {
             type: String,
             notify: true
@@ -192,6 +196,7 @@
           this.$.ripple.upAction();
         } else {
           this.originalFilePath = event.detail.file.name;
+          this.originalFileSize = event.detail.file.size;
           this.uploadedFilePath = undefined;
           event.preventDefault();
           this.$.ripple.upAction();
