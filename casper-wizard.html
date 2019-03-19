@@ -457,6 +457,8 @@
         this.noCancelOnOutsideClick = true;
         this._jobId = this._jobChannel = undefined;
 
+        this._controlledSubmission = false;
+
         // listen to close event
         this.addEventListener('opened-changed', e => this.___onOpenedChanged(e));
       }
@@ -571,6 +573,21 @@
       submitJob (job, timeout, ttr) {
         this.showProgressPage();
         job.validity = timeout;
+        this._controlledSubmission = false;
+        this.socket.submitJob(job, this._submitJobResponse.bind(this), { validity: timeout, ttr: ttr === undefined ? timeout : ttr, timeout: timeout });
+      }
+
+      submitControlledJob (job, timeout, ttr) {
+        this.showProgressPage();
+        job.validity           = timeout;
+        job.destination_tube   = job.tube;
+        job.tube               = 'job-controller';
+        job.notification_title = job.notification_title || 'Tarefa em segundo plano';
+        job.validity           = timeout;
+        job.ttr                = ttr;
+
+        this._controlledSubmission = true;
+
         this.socket.submitJob(job, this._submitJobResponse.bind(this), { validity: timeout, ttr: ttr === undefined ? timeout : ttr, timeout: timeout });
       }
 
@@ -726,6 +743,14 @@
           : this._pageIndex - 1;
 
         this._activatePage(this._pageIndex);
+      }
+
+      showCustomNotification (notification) {
+        this.showStatusPage(notification);
+        this.disablePrevious();
+        this._changeNextButtonToText('Fechar');
+        this.enableNext();
+        this._nextClosesWizard = true;
       }
 
       //***************************************************************************************//
@@ -1025,37 +1050,42 @@
         switch (notification.status) {
           case 'in-progress':
             this.showProgressPage();
+            if ( notification.index + 1 > this._progressPage.progressCount ) {
+              this._progressPage.setProgressCount(notification.index + 1);
+            }
             this._progressPage.updateProgress(notification.index, this.i18n.apply(this, notification.message), notification.progress);
             break;
           case 'completed':
-            this._updateWizardButtons();
-            if ( typeof this['jobCompletedOn' + this._getCurrentPage().id] === 'function' ) {
-              if ( notification.custom === true ) {
-                // ... Pass the full notification to allow more flexible custom handling ...
-                this['jobCompletedOn' + this._getCurrentPage().id].apply(this, [notification.status_code, notification, notification.response]);
-              } else {
-                // ... passes only the notification message, it's an array that can be i18n'ed ...
-                this['jobCompletedOn' + this._getCurrentPage().id].apply(this, [notification.status_code, notification.message, notification.response]);
-              }
+            if ( this._controlledSubmission === true ) {
+              this._controlledSubmission = false;
+              this.subscribeJob(`${notification.response.channel}`, 604800);
             } else {
-              if ( notification.custom === true ) {
-                this.showStatusPage(notification);
-                this.disablePrevious();
-                this._changeNextButtonToText('Fechar');
-                this.enableNext();
-                this._nextClosesWizard = true;
-              } else {
-                if ( this._pageIndex === this._pages.length - 1) {
-                  this.close();
+              this._updateWizardButtons();
+              if ( typeof this['jobCompletedOn' + this._getCurrentPage().id] === 'function' ) {
+                if ( notification.custom === true ) {
+                  // ... Pass the full notification to allow more flexible custom handling ...
+                  this['jobCompletedOn' + this._getCurrentPage().id].apply(this, [notification.status_code, notification, notification.response]);
                 } else {
-                  this._gotoNextPageNoHandlers();
+                  // ... passes only the notification message, it's an array that can be i18n'ed ...
+                  this['jobCompletedOn' + this._getCurrentPage().id].apply(this, [notification.status_code, notification.message, notification.response]);
+                }
+              } else {
+                if ( notification.custom === true ) {
+                  this.showCustomNotification(notification);
+                } else {
+                  if ( this._pageIndex === this._pages.length - 1) {
+                    this.close();
+                  } else {
+                    this._gotoNextPageNoHandlers();
+                  }
                 }
               }
+              this._clearJob();
             }
-            this._clearJob();
             break;
           case 'failed':
           case 'error':
+            this._controlledSubmission = false;
             if ( typeof this['errorOn' + this._getCurrentPage().id] === 'function' ) {
               this['errorOn' + this._getCurrentPage().id].apply(this, [notification]);
             } else {
@@ -1064,6 +1094,7 @@
             this._clearJob();
             break;
           default:
+            this._controlledSubmission = false;
             break;
         }
       }
