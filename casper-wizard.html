@@ -911,9 +911,10 @@
           // If there are no footer slot at the moment, append right away the new one.
           this._appendFooterSlotElement();
         }
-        if ( pageIndex === 0 ) {
-          this.disablePrevious();
-        }
+
+        pageIndex === 0
+          ? this.disablePrevious()
+          : this.enablePrevious();
       }
 
       _appendFooterSlotElement () {
