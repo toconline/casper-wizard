@@ -457,7 +457,7 @@
         this.noCancelOnOutsideClick = true;
         this._jobId = this._jobChannel = undefined;
 
-        this._controlledSubmission = false;
+        this._setControlledSubmission();
 
         // listen to close event
         this.addEventListener('opened-changed', e => this.___onOpenedChanged(e));
@@ -573,20 +573,19 @@
       submitJob (job, timeout, ttr) {
         this.showProgressPage();
         job.validity = timeout;
-        this._controlledSubmission = false;
+        this._setControlledSubmission();
         this.socket.submitJob(job, this._submitJobResponse.bind(this), { validity: timeout, ttr: ttr === undefined ? timeout : ttr, timeout: timeout });
       }
 
       submitControlledJob (job, timeout, ttr) {
         this.showProgressPage();
-        job.validity           = timeout;
         job.destination_tube   = job.tube;
         job.tube               = 'job-controller';
         job.notification_title = job.notification_title || 'Tarefa em segundo plano';
         job.validity           = timeout;
-        job.ttr                = ttr;
+        job.ttr                = (ttr || timeout);
 
-        this._controlledSubmission = true;
+        this._setControlledSubmission(true, job.ttr);
 
         this.socket.submitJob(job, this._submitJobResponse.bind(this), { validity: timeout, ttr: ttr === undefined ? timeout : ttr, timeout: timeout });
       }
@@ -1058,8 +1057,8 @@
             break;
           case 'completed':
             if ( this._controlledSubmission === true ) {
-              this._controlledSubmission = false;
-              this.subscribeJob(`${notification.response.channel}`, 604800);
+              this.subscribeJob(notification.response.channel, this._controlledSubmissionTTR);
+              this._setControlledSubmission();
             } else {
               this._updateWizardButtons();
               if ( typeof this['jobCompletedOn' + this._getCurrentPage().id] === 'function' ) {
@@ -1086,7 +1085,7 @@
             break;
           case 'failed':
           case 'error':
-            this._controlledSubmission = false;
+            this._setControlledSubmission();
             if ( typeof this['errorOn' + this._getCurrentPage().id] === 'function' ) {
               this['errorOn' + this._getCurrentPage().id].apply(this, [notification]);
             } else {
@@ -1095,7 +1094,7 @@
             this._clearJob();
             break;
           default:
-            this._controlledSubmission = false;
+            this._setControlledSubmission();
             break;
         }
       }
@@ -1189,6 +1188,11 @@
         const percentageViewportWidth = parseFloat(vw.replace('vw', '')) / 100;
 
         return window.innerWidth * percentageViewportWidth;
+      }
+
+      _setControlledSubmission (isControlled = false, ttr = undefined) {
+        this._controlledSubmission    = isControlled;
+        this._controlledSubmissionTTR = ttr;
       }
     }
 
