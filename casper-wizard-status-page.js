@@ -18,7 +18,7 @@
   -
  */
 
-import { CasperWizardPage } from './casper-wizard-page';
+import { CasperWizardPage } from './casper-wizard-page.js';
 import '@polymer/iron-icon/iron-icon.js';
 import '@casper2020/casper-icons/casper-icons.js';
 import { html } from '@polymer/polymer/lib/utils/html-tag.js';

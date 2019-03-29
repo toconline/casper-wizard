@@ -19,7 +19,6 @@
  */
 
 import './casper-wizard-upload-page.js';
-
 import './casper-wizard-iframe-page.js';
 import './casper-wizard-progress-page.js';
 import '@polymer/iron-icon/iron-icon.js';
