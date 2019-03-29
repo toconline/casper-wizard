@@ -19,6 +19,7 @@
  */
 
 import { CasperWizard } from './casper-wizard.js';
+import { html } from '@polymer/polymer/lib/utils/html-tag.js';
 
 class ConfirmWizardConfirmModal extends Casper.I18n(CasperWizard) {
   static get template () {

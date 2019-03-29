@@ -18,7 +18,6 @@
   -
  */
 
-import './casper-wizard-page.js';
 import './casper-wizard-upload-page.js';
 import './casper-wizard-status-page.js';
 import './casper-wizard-iframe-page.js';
@@ -28,6 +27,7 @@ import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@casper2020/casper-icons/casper-icons.js';
 import '@casper2020/casper-toast/casper-toast.js';
+import { CasperWizardPage } from './casper-wizard-page.js';
 import { mixinBehaviors } from '@polymer/polymer/lib/legacy/class.js';
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import { IronFitBehavior } from '@polymer/iron-fit-behavior/iron-fit-behavior.js';
