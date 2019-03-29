@@ -18,7 +18,7 @@
   -
  */
 
-import './casper-wizard-page.js';
+import { CasperWizardPage } from './casper-wizard-page';
 import '@vaadin/vaadin-progress-bar/vaadin-progress-bar.js';
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 

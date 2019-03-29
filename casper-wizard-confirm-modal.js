@@ -18,7 +18,7 @@
   -
  */
 
-import './casper-wizard.js';
+import { CasperWizard } from './casper-wizard.js';
 
 class ConfirmWizardConfirmModal extends Casper.I18n(CasperWizard) {
   static get template () {

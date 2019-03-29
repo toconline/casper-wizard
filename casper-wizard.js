@@ -33,7 +33,7 @@ import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import { IronFitBehavior } from '@polymer/iron-fit-behavior/iron-fit-behavior.js';
 import { IronOverlayBehavior } from '@polymer/iron-overlay-behavior/iron-overlay-behavior.js';
 
-class CasperWizard extends mixinBehaviors([IronOverlayBehavior, IronFitBehavior], Casper.I18n(PolymerElement)) {
+export class CasperWizard extends mixinBehaviors([IronOverlayBehavior, IronFitBehavior], Casper.I18n(PolymerElement)) {
   static get template() {
     return html`
       <style>

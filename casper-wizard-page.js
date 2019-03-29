@@ -20,7 +20,7 @@
 
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 
-class CasperWizardPage extends PolymerElement {
+export class CasperWizardPage extends PolymerElement {
   static get template() {
     return html`
       <style>

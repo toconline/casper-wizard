@@ -18,6 +18,7 @@
   -
  */
 
+import { CasperWizardPage } from './casper-wizard-page';
 import '@polymer/paper-ripple/paper-ripple.js';
 import '@vaadin/vaadin-upload/vaadin-upload.js';
 import { html } from '@polymer/polymer/lib/utils/html-tag.js';
