@@ -62,7 +62,7 @@ casperVaadinUpload.innerHTML = `
 `;
 document.head.appendChild(casperVaadinUpload.content);
 
-class CasperWizardUploadPage extends Casper.I18n(CasperWizardPage) {
+export class CasperWizardUploadPage extends Casper.I18n(CasperWizardPage) {
   static get template() {
     return html`
       <style>
