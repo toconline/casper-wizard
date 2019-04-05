@@ -70,7 +70,7 @@ class CasperWizardIframePage extends CasperWizardPage {
         .iframe-container {
           flex-grow: 1;
           display: flex;
-          overflow: scroll;
+          overflow: auto;
           -webkit-overflow-scrolling: touch;
         }
 
