@@ -109,7 +109,7 @@ class CasperWizardIframePage extends CasperWizardPage {
       <h1 class="pagetitle">[[pageTitle]]</h1>
       <div class="content">
         <slot name="header">
-          <paper-button id="button" class="print-button" on-tap="_printDocument" raised="">Imprimir</paper-button>
+          <paper-button id="button" class="print-button" on-tap="_printDocument" raised>Imprimir</paper-button>
         </slot>
 
         <div class="shadow"></div>
@@ -117,7 +117,8 @@ class CasperWizardIframePage extends CasperWizardPage {
           <iframe class="iframe" id="iframe" srcdoc$="[[srcdoc]]"></iframe>
         </div>
 
-        <slot name="footer"></slot>
+        <slot name="footer">
+        </slot>
       </div>
     `;
   }
