@@ -124,6 +124,7 @@ class ConfirmWizardConfirmModal extends Casper.I18n(CasperWizard) {
     this.$.confirm.setAttribute("next", this.options.accept);
     this.$.confirm.setAttribute("previous", this.options.reject);
     this.appendPagesAndActivate(0);
+    this.enablePrevious();
   }
 
   open () {
