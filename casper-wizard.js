@@ -620,6 +620,9 @@ export class CasperWizard extends mixinBehaviors([IronOverlayBehavior, IronFitBe
 
       this._footerSlotContainer.classList.remove('fade-in');
       this._getCurrentPage().classList.add('fade-out');
+      if (this._footerSlotContainer.children.length === 1) {
+        this._getCurrentPage().appendChild(this._footerSlotContainer.firstChild);
+      }
     }, CasperWizard.fadeInTimeout);
   }
 
@@ -672,6 +675,9 @@ export class CasperWizard extends mixinBehaviors([IronOverlayBehavior, IronFitBe
 
       this._footerSlotContainer.classList.remove('fade-in');
       this._getCurrentPage().classList.add('fade-out');
+      if (this._footerSlotContainer.children.length === 1) {
+        this._getCurrentPage().appendChild(this._footerSlotContainer.firstChild);
+      }
     }, CasperWizard.fadeInTimeout);
   }
 
