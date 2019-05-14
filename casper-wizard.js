@@ -31,6 +31,7 @@ import { CasperWizardUploadPage } from './casper-wizard-upload-page.js';
 import { CasperWizardStatusPage } from './casper-wizard-status-page.js';
 import { mixinBehaviors } from '@polymer/polymer/lib/legacy/class.js';
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import { Casper } from '@casper2020/casper-common-ui/casper-i18n-behavior.js';
 import { IronFitBehavior } from '@polymer/iron-fit-behavior/iron-fit-behavior.js';
 import { IronOverlayBehavior } from '@polymer/iron-overlay-behavior/iron-overlay-behavior.js';
 

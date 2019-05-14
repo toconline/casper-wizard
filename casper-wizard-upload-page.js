@@ -22,6 +22,7 @@ import '@polymer/paper-ripple/paper-ripple.js';
 import '@vaadin/vaadin-upload/vaadin-upload.js';
 import { CasperWizardPage } from './casper-wizard-page.js';
 import { html } from '@polymer/polymer/lib/utils/html-tag.js';
+import { Casper } from '@casper2020/casper-common-ui/casper-i18n-behavior.js';
 
 const casperVaadinUpload = document.createElement('template');
 casperVaadinUpload.innerHTML = `
