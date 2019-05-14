@@ -849,11 +849,10 @@ export class CasperWizard extends mixinBehaviors([IronOverlayBehavior, IronFitBe
   }
 
   _gotoPage (pageIndex) {
-    this._pageIndex = pageIndex;
+    this._activatePage(pageIndex);
     this._wizardTabs.style.left = - this._tabWidth * this._pageIndex + 'px';
     this._updateWizardButtons();
     this.hideStatusAndProgress();
-    this._activatePage(pageIndex);
   }
 
   _getIndexOf (pageId) {
@@ -867,9 +866,9 @@ export class CasperWizard extends mixinBehaviors([IronOverlayBehavior, IronFitBe
   _activatePage (pageIndex) {
     const previousPageIndex = this._pageIndex;
 
-    this.hideStatusAndProgress();
     this._pageIndex = pageIndex;
-
+    this.hideStatusAndProgress();
+    
     this._pages.forEach((page, pageIndex) => {
       page.style.overflow = 'auto';
       if (pageIndex !== this._pageIndex) {
@@ -903,7 +902,7 @@ export class CasperWizard extends mixinBehaviors([IronOverlayBehavior, IronFitBe
       setTimeout(() => {
         this._pages[previousPageIndex].appendChild(this._footerSlotContainer.firstChild);
         this._appendFooterSlotElement();
-      }, 300);
+      }, Casper.fadeInTimeout);
     } else {
       // If there are no footer slot at the moment, append right away the new one.
       this._appendFooterSlotElement();
