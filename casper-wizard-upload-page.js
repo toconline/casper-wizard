@@ -133,6 +133,10 @@ export class CasperWizardUploadPage extends Casper.I18n(CasperWizardPage) {
         type: Number,
         notify: true
       },
+      originalFileType: {
+        type: String,
+        notify: true
+      },
       uploadedFilePath: {
         type: String,
         notify: true
@@ -186,6 +190,7 @@ export class CasperWizardUploadPage extends Casper.I18n(CasperWizardPage) {
     } else {
       this.originalFilePath = event.detail.file.name;
       this.originalFileSize = event.detail.file.size;
+      this.originalFileType = event.detail.file.type;
       this.uploadedFilePath = undefined;
       event.preventDefault();
       this.$.ripple.upAction();
