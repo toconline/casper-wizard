@@ -785,6 +785,7 @@ export class CasperWizard extends mixinBehaviors([IronOverlayBehavior, IronFitBe
 
     if ( this._nextClosesWizard === true ) {
       this.close();
+      return;
     }
 
     if ( this._pageIndex < this._pages.length - 1 ) {
@@ -868,7 +869,7 @@ export class CasperWizard extends mixinBehaviors([IronOverlayBehavior, IronFitBe
 
     this._pageIndex = pageIndex;
     this.hideStatusAndProgress();
-    
+
     this._pages.forEach((page, pageIndex) => {
       page.style.overflow = 'auto';
       if (pageIndex !== this._pageIndex) {
