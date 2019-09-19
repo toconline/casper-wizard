@@ -655,6 +655,9 @@ export class CasperWizard extends mixinBehaviors([IronOverlayBehavior, IronFitBe
     } else {
       // ... set standard message and or icons ...
       this._statusPage.clearCustom();
+      if(notification && notification.title) {
+        this._statusPage.title = this.i18n.apply(this, notification.title);
+      }
       this._statusPage.message = this.i18n.apply(this, notification.message);
       if ( notification.response !== undefined && notification.response.title !== undefined ) {
         this._statusPage.title = notification.response.title;
