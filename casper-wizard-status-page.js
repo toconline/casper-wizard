@@ -101,6 +101,15 @@ export class CasperWizardStatusPage extends CasperWizardPage {
           height: 100%;
         }
 
+        a {
+          color: var(--primary-color);
+          text-decoration: none;
+        }
+
+        a:hover {
+          text-decoration: underline;
+        }
+
       </style>
 
       <casper-wizard-page page-title="Resultado operação">
