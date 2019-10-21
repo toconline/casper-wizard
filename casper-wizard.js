@@ -1018,7 +1018,21 @@ export class CasperWizard extends mixinBehaviors([IronOverlayBehavior, IronFitBe
 
     if ( response.status_code !== 200 && !status.message ) {
       if ( status.response ) {
-        response.message = ['Erro serviço, detalhe técnico: ' + JSON.stringify(status.response) ];
+        try {
+
+          // Catch the error from job if exists
+          let detailed_error = status.response.map(element => {
+            return element.errors.map(error => {
+              return error.detail
+            }).join(";")
+          }).join(";");
+
+          response.detailed_error = true;
+          response.message = detailed_error;
+        } catch (error) {
+          response.detailed_error = false;
+          response.message = ['Erro serviço, detalhe técnico: ' + JSON.stringify(status.response) ];
+        }
         response.status = 'error';
       } else {
         response.message = ['Erro desconhecido status por favor tente mais tarde'];
