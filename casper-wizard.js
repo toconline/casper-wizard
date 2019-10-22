@@ -1023,9 +1023,13 @@ export class CasperWizard extends mixinBehaviors([IronOverlayBehavior, IronFitBe
           // Catch the error from job if exists
           let detailed_error = status.response.map(element => {
             return element.errors.map(error => {
-              return error.detail
+              return error.detail;
             }).join(";")
           }).join(";");
+
+          if (detailed_error == "" || detailed_error == undefined){
+            throw "No error detail";
+          }
 
           response.detailed_error = true;
           response.message = detailed_error;
