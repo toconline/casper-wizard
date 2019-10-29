@@ -869,9 +869,17 @@ export class CasperWizard extends mixinBehaviors([IronOverlayBehavior, IronFitBe
 
   _activatePage (pageIndex) {
     const previousPageIndex = this._pageIndex;
+    let closingWizard = (pageIndex == 0 && previousPageIndex !== undefined);
 
     this._pageIndex = pageIndex;
     this.hideStatusAndProgress();
+
+    // Prevent enterOn execution on close of wizard
+    if (!closingWizard) {
+      if (typeof this['enterOn' + this._getCurrentPage().id] === 'function') {
+        this['enterOn' + this._getCurrentPage().id].apply(this);
+      }
+    }
 
     this._pages.forEach((page, pageIndex) => {
       page.style.overflow = 'auto';
