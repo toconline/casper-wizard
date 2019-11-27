@@ -298,7 +298,7 @@ export class CasperWizard extends mixinBehaviors([IronOverlayBehavior, IronFitBe
         <div class="wizard-tabs tabslide"></div>
         <div class="header">
           <div class="title"></div>
-          <paper-icon-button class="wizard-close-button" icon="casper-icons:close"></paper-icon-button>
+          <paper-icon-button tooltip="Fechar" class="wizard-close-button" icon="casper-icons:close"></paper-icon-button>
         </div>
         <div class="page-container"></div>
         <div class="footer-container">
@@ -1142,6 +1142,7 @@ export class CasperWizard extends mixinBehaviors([IronOverlayBehavior, IronFitBe
 
   ___onOpenedChanged (event) {
     if ( event.detail.value === false ) {
+      if (this.app) this.app.tooltip.hide();
       for ( let page of this._pages ) {
         if ( page instanceof CasperWizardUploadPage ) {
           page.clear();
@@ -1153,6 +1154,11 @@ export class CasperWizard extends mixinBehaviors([IronOverlayBehavior, IronFitBe
         this.socket.cancelJob(this._jobChannel);
       }
       this._clearJob();
+    } else {
+      if (this.app) {
+        this.app.tooltip.hide();
+        this.addEventListener('mousemove', (event) => this.app.tooltip.mouseMoveToolip(event));
+      }
     }
   }
 
