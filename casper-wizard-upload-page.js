@@ -206,7 +206,7 @@ export class CasperWizardUploadPage extends Casper.I18n(CasperWizardPage) {
         let response = JSON.parse(event.detail.xhr.responseText);
         this.uploadedFilePath = response.file;
         if ( typeof this.wizard['uploadSuccessOn' + this.wizard._pages[this.wizard._pageIndex].id] === 'function' ) {
-          this.wizard['uploadSuccessOn' + this.wizard._pages[this.wizard._pageIndex].id].apply(this.wizard, [response.file]);
+          this.wizard['uploadSuccessOn' + this.wizard._pages[this.wizard._pageIndex].id].apply(this.wizard, [response.file, event.detail.file]);
         }
       } catch (exception) {
         // TODO Handle the error.
