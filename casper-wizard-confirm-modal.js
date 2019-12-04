@@ -94,10 +94,12 @@ class ConfirmWizardConfirmModal extends Casper.I18n(CasperWizard) {
     this.defaultOverrideWizardButtons = {
       previous: {
         backgroundColor: '#E5E5E5',
-        color: '#A9A9A9'
+        color: '#A9A9A9',
+        display: 'flex'
       },
       next: {
-        backgroundColor: '#EF5350'
+        backgroundColor: '#EF5350',
+        display: 'flex'
       }
     };
 
@@ -106,13 +108,24 @@ class ConfirmWizardConfirmModal extends Casper.I18n(CasperWizard) {
   }
 
   setOptions (options) {
-    const wizardDimensions = Object.assign({}, this.defaultOverrideWizardDimensions, options.overrideWizardDimensions);
-    const wizardButtons = Object.assign({}, this.defaultOverrideWizardButtons, options.overrideWizardButtons);
+    
+    const wizardDimensions = {...this.defaultOverrideWizardDimensions, ...options.overrideWizardDimensions};
+    // Changed functionality to merge button options, not replace
+    const wizardButtons = options.overrideWizardButtons != undefined ? {
+      previous: {...this.defaultOverrideWizardButtons.previous, ...options.overrideWizardButtons.previous},
+      next: {...this.defaultOverrideWizardButtons.next, ...options.overrideWizardButtons.next},
+    } : this.defaultOverrideWizardButtons;
+    
+    console.log(options);
+
+    if ( options.hideCloseButton ) {
+      this._closeButton.style.visibility = 'hidden';
+    }
 
     this.overrideWizardDimensions(wizardDimensions);
     this.overrideWizardButtons(wizardButtons);
 
-    super.setOptions(Object.assign({}, this.defaultOptions, options));
+    super.setOptions({...this.defaultOptions, ...options});
     if ( options.title ) {
       super.setTitle(options.title);
     }
