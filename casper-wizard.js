@@ -655,6 +655,9 @@ export class CasperWizard extends mixinBehaviors([IronOverlayBehavior, IronFitBe
     } else {
       // ... set standard message and or icons ...
       this._statusPage.clearCustom();
+      if(notification && notification.title) {
+        this._statusPage.title = this.i18n.apply(this, notification.title);
+      }
       this._statusPage.message = this.i18n.apply(this, notification.message);
       if ( notification.response !== undefined && notification.response.title !== undefined ) {
         this._statusPage.title = notification.response.title;
@@ -785,6 +788,7 @@ export class CasperWizard extends mixinBehaviors([IronOverlayBehavior, IronFitBe
 
     if ( this._nextClosesWizard === true ) {
       this.close();
+      return;
     }
 
     if ( this._pageIndex < this._pages.length - 1 ) {
@@ -1022,7 +1026,25 @@ export class CasperWizard extends mixinBehaviors([IronOverlayBehavior, IronFitBe
 
     if ( response.status_code !== 200 && !status.message ) {
       if ( status.response ) {
-        response.message = ['Erro serviço, detalhe técnico: ' + JSON.stringify(status.response) ];
+        try {
+
+          // Catch the error from job if exists
+          let detailed_error = status.response.map(element => {
+            return element.errors.map(error => {
+              return error.detail;
+            }).join(";")
+          }).join(";");
+
+          if (detailed_error == "" || detailed_error == undefined){
+            throw "No error detail";
+          }
+
+          response.detailed_error = true;
+          response.message = detailed_error;
+        } catch (error) {
+          response.detailed_error = false;
+          response.message = ['Erro serviço, detalhe técnico: ' + JSON.stringify(status.response) ];
+        }
         response.status = 'error';
       } else {
         response.message = ['Erro desconhecido status por favor tente mais tarde'];
