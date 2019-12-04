@@ -108,21 +108,20 @@ class ConfirmWizardConfirmModal extends Casper.I18n(CasperWizard) {
   }
 
   setOptions (options) {
-    
+
     const wizardDimensions = {...this.defaultOverrideWizardDimensions, ...options.overrideWizardDimensions};
     // Changed functionality to merge button options, not replace
     const wizardButtons = options.overrideWizardButtons != undefined ? {
       previous: {...this.defaultOverrideWizardButtons.previous, ...options.overrideWizardButtons.previous},
       next: {...this.defaultOverrideWizardButtons.next, ...options.overrideWizardButtons.next},
     } : this.defaultOverrideWizardButtons;
-    
-    console.log(options);
 
-    if ( options.hideCloseButton ) {
-      this._closeButton.style.visibility = 'hidden';
-    }
+    this._closeButton.style.visibility = 'hidden';
 
     this.overrideWizardDimensions(wizardDimensions);
+    if ( options && options.hideReject && wizardButtons && wizardButtons.previous ) {
+      wizardButtons.previous.display = 'none';
+    }
     this.overrideWizardButtons(wizardButtons);
 
     super.setOptions({...this.defaultOptions, ...options});
