@@ -32,11 +32,10 @@ import { CasperWizardStatusPage } from './casper-wizard-status-page.js';
 import { mixinBehaviors } from '@polymer/polymer/lib/legacy/class.js';
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import { Casper } from '@casper2020/casper-common-ui/casper-i18n-behavior.js';
-import { IronFitBehavior } from '@polymer/iron-fit-behavior/iron-fit-behavior.js';
-import { IronOverlayBehavior } from '@polymer/iron-overlay-behavior/iron-overlay-behavior.js';
+import { CasperOverlayBehavior } from '@casper2020/casper-overlay-behavior/casper-overlay-behavior.js';
 
-export class CasperWizard extends mixinBehaviors([IronOverlayBehavior, IronFitBehavior], Casper.I18n(PolymerElement)) {
-  static get template() {
+export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I18n(PolymerElement)) {
+  static get template () {
     return html`
       <style>
 
@@ -332,15 +331,15 @@ export class CasperWizard extends mixinBehaviors([IronOverlayBehavior, IronFitBe
     return 300;
   }
 
-  static get defaultMaximumHeight() {
+  static get defaultMaximumHeight () {
     return '90vh';
   }
 
-  static get defaultMaximumWidth() {
+  static get defaultMaximumWidth () {
     return '90vw';
   }
 
-  static get defaultDimensions() {
+  static get defaultDimensions () {
     return {
       width: '800px',
       height: '520px'
@@ -365,8 +364,8 @@ export class CasperWizard extends mixinBehaviors([IronOverlayBehavior, IronFitBe
     this.style.setProperty('--roundie', 'var(--radius-primary, 10px)');
 
     // ... make sure all existing pages get the 'page' class
-    for ( let page of this.shadowRoot.children ) {
-      if ( page instanceof CasperWizardPage ) {
+    for (let page of this.shadowRoot.children) {
+      if (page instanceof CasperWizardPage) {
         page.classList.add('page', 'slide-in');
 
         if (page.hasAttribute('hide-title')) {
@@ -378,28 +377,28 @@ export class CasperWizard extends mixinBehaviors([IronOverlayBehavior, IronFitBe
     // ... collect the active wizard pages ...
     this._pages = [];
     let pageIdList = null;
-    if ( typeof this.activePagesIds === 'function' ) {
+    if (typeof this.activePagesIds === 'function') {
       pageIdList = this.activePagesIds();
     }
-    if ( pageIdList ) {
+    if (pageIdList) {
       // If the page is not in the list hide it
-      for ( let page of this.shadowRoot.children ) {
-        if ( page instanceof CasperWizardPage ) {
-          if ( ! pageIdList.includes(page.id) ) {
+      for (let page of this.shadowRoot.children) {
+        if (page instanceof CasperWizardPage) {
+          if (!pageIdList.includes(page.id)) {
             page.style.display = 'none';
           }
         }
       }
       // ... use the explict page list ...
-      for ( let id of pageIdList ) {
+      for (let id of pageIdList) {
         let page = this.$[id];
         this._pages.push(page);
         page.wizard = this;
       }
     } else {
       // ... grab all children that extend casper-wizard-page ...
-      for ( let page of this.shadowRoot.children ) {
-        if ( page instanceof CasperWizardPage ) {
+      for (let page of this.shadowRoot.children) {
+        if (page instanceof CasperWizardPage) {
           this._pages.push(page);
           page.wizard = this;
         }
@@ -407,18 +406,18 @@ export class CasperWizard extends mixinBehaviors([IronOverlayBehavior, IronFitBe
     }
 
     // ... keep handy pointers to the template elements ...
-    this._title               = this.shadowRoot.querySelector('.title');
-    this._wizardTabs          = this.shadowRoot.querySelector('.wizard-tabs');
-    this._wizardContainer     = this.shadowRoot.querySelector('.wizard-container');
-    this._prevButton          = this.shadowRoot.querySelector('#wizardPrevButton');
-    this._nextButton          = this.shadowRoot.querySelector('#wizardNextButton');
-    this._closeButton         = this.shadowRoot.querySelector('.wizard-close-button');
-    this._pageContainer       = this.shadowRoot.querySelector('.wizard-container .page-container');
+    this._title = this.shadowRoot.querySelector('.title');
+    this._wizardTabs = this.shadowRoot.querySelector('.wizard-tabs');
+    this._wizardContainer = this.shadowRoot.querySelector('.wizard-container');
+    this._prevButton = this.shadowRoot.querySelector('#wizardPrevButton');
+    this._nextButton = this.shadowRoot.querySelector('#wizardNextButton');
+    this._closeButton = this.shadowRoot.querySelector('.wizard-close-button');
+    this._pageContainer = this.shadowRoot.querySelector('.wizard-container .page-container');
     this._footerSlotContainer = this.shadowRoot.querySelector('.wizard-container #footer-slot-container');
     this._state = 'normal';
     this._nextClosesWizard = false;
 
-    if ( typeof(ConfirmModal) === "undefined" || !(this instanceof ConfirmModal) ) {
+    if (typeof (ConfirmModal) === "undefined" || !(this instanceof ConfirmModal)) {
       this.appendPagesAndActivate(0);
     }
 
@@ -437,7 +436,7 @@ export class CasperWizard extends mixinBehaviors([IronOverlayBehavior, IronFitBe
     this._roundie = parseFloat(style.getPropertyValue('--roundie'));
 
     // ... build tabs if they are not surpressed ...
-    if ( this.notabs === undefined || this.notabs === false ) {
+    if (this.notabs === undefined || this.notabs === false) {
       this._createTabs();
     }
 
@@ -489,20 +488,20 @@ export class CasperWizard extends mixinBehaviors([IronOverlayBehavior, IronFitBe
 
   setPageTitle (pageId, title) {
     let pageIndex = this._getIndexOf(pageId);
-    if ( pageIndex !== undefined ) {
+    if (pageIndex !== undefined) {
       this._pages[pageIndex].pageTitle = title;
     }
   }
 
   enablePrevious () {
-    if ( this._prevButton.disabled === true ) {
+    if (this._prevButton.disabled === true) {
       this._prevButton.querySelector('iron-icon').icon = 'casper-icons:arrow-circle-left';
       this._prevButton.disabled = false;
     }
   }
 
   disablePrevious () {
-    if ( this._prevButton.disabled === false ) {
+    if (this._prevButton.disabled === false) {
       this._prevButton.querySelector('iron-icon').icon = 'casper-icons:arrow-left';
       this._prevButton.disabled = true;
     }
@@ -517,20 +516,20 @@ export class CasperWizard extends mixinBehaviors([IronOverlayBehavior, IronFitBe
   }
 
   nextPage () {
-    if ( this._pageIndex < this._pages.length - 1 ) {
+    if (this._pageIndex < this._pages.length - 1) {
       this._activatePage(this._pageIndex + 1);
     }
   }
 
   previousPage () {
-    if ( this._pageIndex >= 1 ) {
+    if (this._pageIndex >= 1) {
       this._activatePage(this._pageIndex - 1);
     }
   }
 
   gotoPage (pageId) {
     let pageIndex = this._getIndexOf(pageId);
-    if ( pageIndex !== undefined ) {
+    if (pageIndex !== undefined) {
       this._gotoPage(pageIndex);
       let page = this._pages[pageIndex];
       if (page.hasAttribute('next')) {
@@ -544,12 +543,12 @@ export class CasperWizard extends mixinBehaviors([IronOverlayBehavior, IronFitBe
   hideStatusAndProgress () {
     clearTimeout(this._fadeInTimer);
 
-    if ( this._progressPage !== undefined ) {
+    if (this._progressPage !== undefined) {
       this._progressPage.style.display = 'none';
       this._progressPage.style.opacity = 0;
       this._progressPage.setProgressCount(1, true);
     }
-    if ( this._statusPage !== undefined ) {
+    if (this._statusPage !== undefined) {
       this._statusPage.style.display = 'none';
       this._statusPage.style.opacity = 0;
       this._statusPage.icon = CasperWizardStatusPage.properties.icon.value;
@@ -571,11 +570,11 @@ export class CasperWizard extends mixinBehaviors([IronOverlayBehavior, IronFitBe
 
   submitControlledJob (job, timeout, ttr) {
     this.showProgressPage();
-    job.destination_tube   = job.tube;
-    job.tube               = 'job-controller';
+    job.destination_tube = job.tube;
+    job.tube = 'job-controller';
     job.notification_title = job.notification_title || 'Tarefa em segundo plano';
-    job.validity           = timeout;
-    job.ttr                = (ttr || timeout);
+    job.validity = timeout;
+    job.ttr = (ttr || timeout);
 
     this._setControlledSubmission(true, job.ttr);
 
@@ -588,19 +587,19 @@ export class CasperWizard extends mixinBehaviors([IronOverlayBehavior, IronFitBe
   }
 
   showProgressPage () {
-    if ( this._state === 'show-progress') {
+    if (this._state === 'show-progress') {
       return;
     }
 
     clearTimeout(this._fadeInTimer);
 
-    if ( this._statusPage !== undefined ) {
+    if (this._statusPage !== undefined) {
       this._statusPage.style.display = 'none';
       this._statusPage.style.opacity = 0;
     }
 
     // ... create page if needed ...
-    if ( this._progressPage === undefined ) {
+    if (this._progressPage === undefined) {
       this._progressPage = document.createElement('casper-wizard-progress-page');
       this._progressPage.title = 'Progresso em curso';
       this._progressPage.style.zIndex = 2;
@@ -628,20 +627,20 @@ export class CasperWizard extends mixinBehaviors([IronOverlayBehavior, IronFitBe
   }
 
   showStatusPage (notification) {
-    if ( this._state === 'show-status') {
+    if (this._state === 'show-status') {
       return;
     }
 
     clearTimeout(this._fadeInTimer);
 
     // ... hide current pages ...
-    if ( this._progressPage !== undefined ) {
+    if (this._progressPage !== undefined) {
       this._progressPage.style.display = 'none';
       this._progressPage.style.opacity = 0;
     }
     // ... create page if needed ...
-    if ( this._statusPage === undefined ) {
-      this._statusPage  = document.createElement('casper-wizard-status-page');
+    if (this._statusPage === undefined) {
+      this._statusPage = document.createElement('casper-wizard-status-page');
       this._statusPage.style.zIndex = 2;
       this._statusPage.style.opacity = 0;
       this._statusPage.style.position = 'absolute';
@@ -649,20 +648,20 @@ export class CasperWizard extends mixinBehaviors([IronOverlayBehavior, IronFitBe
       this._pageContainer.appendChild(this._statusPage);
     }
 
-    if ( notification.custom === true ) {
+    if (notification.custom === true) {
       // ... set custom html message ...
       this._statusPage.setCustom(notification.message[0]);
     } else {
       // ... set standard message and or icons ...
       this._statusPage.clearCustom();
-      if(notification && notification.title) {
+      if (notification && notification.title) {
         this._statusPage.title = this.i18n.apply(this, notification.title);
       }
       this._statusPage.message = this.i18n.apply(this, notification.message);
-      if ( notification.response !== undefined && notification.response.title !== undefined ) {
+      if (notification.response !== undefined && notification.response.title !== undefined) {
         this._statusPage.title = notification.response.title;
       }
-      if ( notification.response !== undefined && notification.response.message_icon !== undefined ) {
+      if (notification.response !== undefined && notification.response.message_icon !== undefined) {
         this._statusPage.icon = notification.response.message_icon;
         this._statusPage.$.statusIcon.style.fill = notification.response.color_icon;
       }
@@ -714,9 +713,9 @@ export class CasperWizard extends mixinBehaviors([IronOverlayBehavior, IronFitBe
   }
 
   overrideWizardButtons (cssProps) {
-    for ( const [button, buttonProps] of Object.entries(cssProps) ) {
+    for (const [button, buttonProps] of Object.entries(cssProps)) {
       const element = this.shadowRoot.querySelector(`.wizard-${button}-button`);
-      for ( const [key, value] of Object.entries(buttonProps) ) {
+      for (const [key, value] of Object.entries(buttonProps)) {
         element.style[key] = value;
       }
     }
@@ -761,20 +760,20 @@ export class CasperWizard extends mixinBehaviors([IronOverlayBehavior, IronFitBe
 
   _gotoPreviousPage () {
 
-    if ( this._slideTimeout !== undefined ) {
+    if (this._slideTimeout !== undefined) {
       return;
     }
 
     let page = this._pageIndex;
-    if ( page >= 1 ) {
+    if (page >= 1) {
       page -= 1;
-      if ( typeof this['previousOn' + this._getCurrentPage().id] === 'function' ) {
+      if (typeof this['previousOn' + this._getCurrentPage().id] === 'function') {
         this['previousOn' + this._getCurrentPage().id].apply(this);
       } else {
         this._activatePage(page);
       }
     } else {
-      if ( typeof this['previousOn' + this._getCurrentPage().id] === 'function' ) {
+      if (typeof this['previousOn' + this._getCurrentPage().id] === 'function') {
         this['previousOn' + this._getCurrentPage().id].apply(this);
       }
     }
@@ -782,23 +781,23 @@ export class CasperWizard extends mixinBehaviors([IronOverlayBehavior, IronFitBe
 
   _gotoNextPage () {
 
-    if ( this._slideTimeout !== undefined ) {
+    if (this._slideTimeout !== undefined) {
       return;
     }
 
-    if ( this._nextClosesWizard === true ) {
+    if (this._nextClosesWizard === true) {
       this.close();
       return;
     }
 
-    if ( this._pageIndex < this._pages.length - 1 ) {
-      if ( typeof this['nextOn' + this._getCurrentPage().id] === 'function' ) {
+    if (this._pageIndex < this._pages.length - 1) {
+      if (typeof this['nextOn' + this._getCurrentPage().id] === 'function') {
         this['nextOn' + this._getCurrentPage().id].apply(this);
       } else {
         this._activatePage(this._pageIndex + 1);
       }
     } else {
-      if ( typeof this['nextOn' + this._pages[this._pages.length - 1].id] === 'function' ) {
+      if (typeof this['nextOn' + this._pages[this._pages.length - 1].id] === 'function') {
         this['nextOn' + this._pages[this._pages.length - 1].id].apply(this);
       } else {
         this.close();
@@ -808,11 +807,11 @@ export class CasperWizard extends mixinBehaviors([IronOverlayBehavior, IronFitBe
 
   _gotoNextPageNoHandlers () {
 
-    if ( this._slideTimeout !== undefined ) {
+    if (this._slideTimeout !== undefined) {
       return;
     }
 
-    if ( this._pageIndex < this._pages.length - 1 ) {
+    if (this._pageIndex < this._pages.length - 1) {
       this._activatePage(this._pageIndex + 1);
     } else {
       this.close();
@@ -821,10 +820,10 @@ export class CasperWizard extends mixinBehaviors([IronOverlayBehavior, IronFitBe
 
   _changeButtonToText (selector, text) {
     const buttonSelector = this.shadowRoot.querySelector(selector);
-    const wizardIcon     = buttonSelector.querySelector('iron-icon');
-    const buttonText     = buttonSelector.querySelector('.wizard-text');
+    const wizardIcon = buttonSelector.querySelector('iron-icon');
+    const buttonText = buttonSelector.querySelector('.wizard-text');
 
-    buttonText.textContent   = text;
+    buttonText.textContent = text;
     buttonText.style.display = 'flex';
     wizardIcon.style.display = 'none';
 
@@ -835,13 +834,13 @@ export class CasperWizard extends mixinBehaviors([IronOverlayBehavior, IronFitBe
 
   _changeButtonToIcon (selector) {
     const buttonSelector = this.shadowRoot.querySelector(selector);
-    const wizardIcon     = buttonSelector.querySelector('iron-icon');
-    const buttonText     = buttonSelector.querySelector('.wizard-text');
+    const wizardIcon = buttonSelector.querySelector('iron-icon');
+    const buttonText = buttonSelector.querySelector('.wizard-text');
 
-    buttonText.textContent     = '';
-    buttonText.style.display   = 'none';
+    buttonText.textContent = '';
+    buttonText.style.display = 'none';
     buttonSelector.style.width = '40px';
-    wizardIcon.style.display   = 'block';
+    wizardIcon.style.display = 'block';
   }
 
   _changeNextButtonToText (text) {
@@ -861,7 +860,7 @@ export class CasperWizard extends mixinBehaviors([IronOverlayBehavior, IronFitBe
 
   _getIndexOf (pageId) {
     let page = this._pageContainer.querySelector('#' + pageId);
-    if ( ! page ) {
+    if (!page) {
       return undefined;
     }
     return Array.prototype.indexOf.call(this._pageContainer.children, page);
@@ -894,13 +893,13 @@ export class CasperWizard extends mixinBehaviors([IronOverlayBehavior, IronFitBe
         this._wizardTabs.style.left = - this._tabWidth * this._pageIndex + 'px';
         this._slideTimeout = setTimeout(() => this._pageSlideTimer(), this._slideTime);
 
-        if ( page.hasAttribute('previous') ) {
+        if (page.hasAttribute('previous')) {
           this._changeButtonToText('#wizardPrevButton', page.getAttribute('previous'));
         } else {
           this._changeButtonToIcon('#wizardPrevButton');
         }
 
-        if ( page.hasAttribute('next') ) {
+        if (page.hasAttribute('next')) {
           this._changeButtonToText('#wizardNextButton', page.getAttribute('next'));
         } else {
           this._changeButtonToIcon('#wizardNextButton');
@@ -950,14 +949,14 @@ export class CasperWizard extends mixinBehaviors([IronOverlayBehavior, IronFitBe
   }
 
   _createTabs () {
-    let off  = 0;
-    let w    = parseFloat(window.getComputedStyle(this._wizardContainer).getPropertyValue('width')) - 2;
-    let opa  = CasperWizard.tabOpacity;
+    let off = 0;
+    let w = parseFloat(window.getComputedStyle(this._wizardContainer).getPropertyValue('width')) - 2;
+    let opa = CasperWizard.tabOpacity;
 
     // ... right side tabs ...
     this._wizardTabs.innerHTML = '';
-    this._wizardTabs.style.width =  w + this._tabWidth * (this._pages.length - 1) + 'px';
-    for ( let idx = this._pages.length; idx > 1; idx-- ) {
+    this._wizardTabs.style.width = w + this._tabWidth * (this._pages.length - 1) + 'px';
+    for (let idx = this._pages.length; idx > 1; idx--) {
       let tab = document.createElement('div');
       let lbl = document.createElement('span');
 
@@ -976,7 +975,7 @@ export class CasperWizard extends mixinBehaviors([IronOverlayBehavior, IronFitBe
 
     // ... left side tabs ...
     off = 0;
-    for ( let idx = this._pages.length; idx > 1; idx-- ) {
+    for (let idx = this._pages.length; idx > 1; idx--) {
       let tab = document.createElement('div');
       let lbl = document.createElement('span');
 
@@ -986,7 +985,7 @@ export class CasperWizard extends mixinBehaviors([IronOverlayBehavior, IronFitBe
       this._wizardTabs.appendChild(lbl);
       tab.style.left = off + 'px';
       tab.classList.add('wizard-tab');
-      tab.style.width = this._tabWidth/2 + (idx * this._tabWidth) + 'px';
+      tab.style.width = this._tabWidth / 2 + (idx * this._tabWidth) + 'px';
       tab.style.opacity = opa;
       tab.style.borderRadius = 'var(--roundie) 0px 0px var(--roundie)';
       this._wizardTabs.appendChild(tab);
@@ -1010,22 +1009,22 @@ export class CasperWizard extends mixinBehaviors([IronOverlayBehavior, IronFitBe
   static _normalizeServerResponse (response) {
     let status;
 
-    if ( response.success === undefined ) {
+    if (response.success === undefined) {
       response.success = true;
     }
 
-    if ( typeof response.status === 'object' ) {
+    if (typeof response.status === 'object') {
       status = response.status;
     } else {
       status = response;
     }
 
-    if ( status.status_code === undefined ) {
+    if (status.status_code === undefined) {
       response.status_code = response.success ? 200 : 500;
     }
 
-    if ( response.status_code !== 200 && !status.message ) {
-      if ( status.response ) {
+    if (response.status_code !== 200 && !status.message) {
+      if (status.response) {
         try {
 
           // Catch the error from job if exists
@@ -1035,7 +1034,7 @@ export class CasperWizard extends mixinBehaviors([IronOverlayBehavior, IronFitBe
             }).join(";")
           }).join(";");
 
-          if (detailed_error == "" || detailed_error == undefined){
+          if (detailed_error == "" || detailed_error == undefined) {
             throw "No error detail";
           }
 
@@ -1043,7 +1042,7 @@ export class CasperWizard extends mixinBehaviors([IronOverlayBehavior, IronFitBe
           response.message = detailed_error;
         } catch (error) {
           response.detailed_error = false;
-          response.message = ['Erro serviço, detalhe técnico: ' + JSON.stringify(status.response) ];
+          response.message = ['Erro serviço, detalhe técnico: ' + JSON.stringify(status.response)];
         }
         response.status = 'error';
       } else {
@@ -1052,20 +1051,20 @@ export class CasperWizard extends mixinBehaviors([IronOverlayBehavior, IronFitBe
       }
     }
 
-    if ( status.action === 'redirect' && status.status === 'completed' && response.response === undefined ) {
+    if (status.action === 'redirect' && status.status === 'completed' && response.response === undefined) {
       response.response = {
         public_link: status.public_link,
-        redirect:    status.redirect
+        redirect: status.redirect
       };
-      response.message = [ 'Redirect' ];
+      response.message = ['Redirect'];
       response.status = 'completed';
       response.status_code = 200;
     }
   }
 
   _submitJobResponse (notification) {
-    if ( notification.success === true && this._jobId === undefined && notification.id !== undefined ) {
-      this._jobId      = notification.id;
+    if (notification.success === true && this._jobId === undefined && notification.id !== undefined) {
+      this._jobId = notification.id;
       this._jobChannel = notification.channel;
       this.noCancelOnEscKey = true;
     }
@@ -1077,19 +1076,19 @@ export class CasperWizard extends mixinBehaviors([IronOverlayBehavior, IronFitBe
     switch (notification.status) {
       case 'in-progress':
         this.showProgressPage();
-        if ( notification.index + 1 > this._progressPage.progressCount ) {
+        if (notification.index + 1 > this._progressPage.progressCount) {
           this._progressPage.setProgressCount(notification.index + 1);
         }
         this._progressPage.updateProgress(notification.index, this.i18n.apply(this, notification.message), notification.progress);
         break;
       case 'completed':
-        if ( this._controlledSubmission === true ) {
+        if (this._controlledSubmission === true) {
           this.subscribeJob(notification.response.channel, this._controlledSubmissionTTR);
           this._setControlledSubmission();
         } else {
           this._updateWizardButtons();
-          if ( typeof this['jobCompletedOn' + this._getCurrentPage().id] === 'function' ) {
-            if ( notification.custom === true ) {
+          if (typeof this['jobCompletedOn' + this._getCurrentPage().id] === 'function') {
+            if (notification.custom === true) {
               // ... Pass the full notification to allow more flexible custom handling ...
               this['jobCompletedOn' + this._getCurrentPage().id].apply(this, [notification.status_code, notification, notification.response]);
             } else {
@@ -1097,10 +1096,10 @@ export class CasperWizard extends mixinBehaviors([IronOverlayBehavior, IronFitBe
               this['jobCompletedOn' + this._getCurrentPage().id].apply(this, [notification.status_code, notification.message, notification.response]);
             }
           } else {
-            if ( notification.custom === true ) {
+            if (notification.custom === true) {
               this.showCustomNotification(notification);
             } else {
-              if ( this._pageIndex === this._pages.length - 1) {
+              if (this._pageIndex === this._pages.length - 1) {
                 this.close();
               } else {
                 this._gotoNextPageNoHandlers();
@@ -1113,7 +1112,7 @@ export class CasperWizard extends mixinBehaviors([IronOverlayBehavior, IronFitBe
       case 'failed':
       case 'error':
         this._setControlledSubmission();
-        if ( typeof this['errorOn' + this._getCurrentPage().id] === 'function' ) {
+        if (typeof this['errorOn' + this._getCurrentPage().id] === 'function') {
           this['errorOn' + this._getCurrentPage().id].apply(this, [notification]);
         } else {
           this.showStatusPage(notification);
@@ -1131,7 +1130,7 @@ export class CasperWizard extends mixinBehaviors([IronOverlayBehavior, IronFitBe
   }
 
   _clearJob () {
-    this._jobId     = undefined;
+    this._jobId = undefined;
     this._jobChannel = undefined;
     this.noCancelOnEscKey = false;
   }
@@ -1141,16 +1140,16 @@ export class CasperWizard extends mixinBehaviors([IronOverlayBehavior, IronFitBe
   }
 
   ___onOpenedChanged (event) {
-    if ( event.detail.value === false ) {
+    if (event.detail.value === false) {
       if (this.app) this.app.tooltip.hide();
-      for ( let page of this._pages ) {
-        if ( page instanceof CasperWizardUploadPage ) {
+      for (let page of this._pages) {
+        if (page instanceof CasperWizardUploadPage) {
           page.clear();
         }
       }
       this.hideStatusAndProgress();
       this._gotoPage(0);
-      if ( this._jobId !== undefined ) {
+      if (this._jobId !== undefined) {
         this.socket.cancelJob(this._jobChannel);
       }
       this._clearJob();
@@ -1187,7 +1186,7 @@ export class CasperWizard extends mixinBehaviors([IronOverlayBehavior, IronFitBe
     this._wizardTabs.style.width = containerWidth + this._tabWidth * (this._pages.length - 1) + 'px';
   }
 
-  _applyDimensions() {
+  _applyDimensions () {
     // Convert the wizard dimensions to numeric values.
     const parsedWidth = this._parseDimension(this.wizardDimensions.width);
     const parsedHeight = this._parseDimension(this.wizardDimensions.height);
@@ -1201,7 +1200,7 @@ export class CasperWizard extends mixinBehaviors([IronOverlayBehavior, IronFitBe
     this._pageContainer.style.height = `calc(${calculatedHeight} - 42px - 60px)`;
   }
 
-  _parseDimension(dimension) {
+  _parseDimension (dimension) {
     const dimensionUnit = dimension.trim().slice(-2);
 
     switch (dimensionUnit) {
@@ -1211,20 +1210,20 @@ export class CasperWizard extends mixinBehaviors([IronOverlayBehavior, IronFitBe
     }
   }
 
-  _convertViewportHeightToPixels(vh) {
+  _convertViewportHeightToPixels (vh) {
     const percentageViewportHeight = parseFloat(vh.replace('vh', '')) / 100;
 
     return window.innerHeight * percentageViewportHeight;
   }
 
-  _convertViewportWidthToPixels(vw) {
+  _convertViewportWidthToPixels (vw) {
     const percentageViewportWidth = parseFloat(vw.replace('vw', '')) / 100;
 
     return window.innerWidth * percentageViewportWidth;
   }
 
   _setControlledSubmission (isControlled = false, ttr = undefined) {
-    this._controlledSubmission    = isControlled;
+    this._controlledSubmission = isControlled;
     this._controlledSubmissionTTR = ttr;
   }
 }
