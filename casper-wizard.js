@@ -450,8 +450,13 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
 
     this._setControlledSubmission();
 
-    // listen to close event
-    this.addEventListener('opened-changed', e => this.___onOpenedChanged(e));
+    this.addEventListener('opened-changed', e => this.__onOpenedChanged(e));
+    this.addEventListener('click', event => {
+      // Close the wizard if a link is clicked.
+      if (event.composedPath().some(element => element.nodeName && element.nodeName.toLowerCase() === 'a')) {
+        return this.close();
+      }
+    });
   }
 
   appendPagesAndActivate (index) {
@@ -1139,7 +1144,7 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
     return this._pages[this._pageIndex];
   }
 
-  ___onOpenedChanged (event) {
+  __onOpenedChanged (event) {
     if (event.detail.value === false) {
       if (this.app) this.app.tooltip.hide();
       for (let page of this._pages) {
