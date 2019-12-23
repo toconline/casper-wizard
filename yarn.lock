@@ -10,6 +10,13 @@
     "@polymer/iron-icons" "^3.x"
     "@polymer/polymer" "^3.x"
 
+"@casper2020/casper-overlay-behavior@^1.x":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@casper2020/casper-overlay-behavior/-/casper-overlay-behavior-1.0.0.tgz#a436b62700631fbbca0e72afa6d97859058813a7"
+  integrity sha512-mSzHjid+pMGdmEsWpuWPrKnglEtinqLIEeun/PBkWLMZBveewrcS7vbyVryUd8G5OiIHLW0DRW42De4GgnO5Uw==
+  dependencies:
+    "@polymer/iron-overlay-behavior" "^3.x"
+
 "@casper2020/casper-toast@^1.x":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@casper2020/casper-toast/-/casper-toast-1.0.0.tgz#ffeecc0eb971afd44f4205c57904b614408f35da"
