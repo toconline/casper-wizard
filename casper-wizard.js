@@ -453,9 +453,9 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
     this.addEventListener('opened-changed', e => this.__onOpenedChanged(e));
     this.addEventListener('click', event => {
       // Close the wizard if a link is clicked.
-      if (event.composedPath().some(element => element.nodeName && element.nodeName.toLowerCase() === 'a')) {
-        return this.close();
-      }
+      // if (event.composedPath().some(element => element.nodeName && element.nodeName.toLowerCase() === 'a')) {
+      //   return this.close();
+      // }
     });
   }
 
