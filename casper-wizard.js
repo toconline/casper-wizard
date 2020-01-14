@@ -21,10 +21,10 @@
 
 import './casper-wizard-iframe-page.js';
 import './casper-wizard-progress-page.js';
-import '@polymer/iron-icon/iron-icon.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@casper2020/casper-icons/casper-icons.js';
+import '@casper2020/casper-icons/casper-icon-button.js';
 import '@casper2020/casper-toast/casper-toast.js';
 import { CasperWizardPage } from './casper-wizard-page.js';
 import { CasperWizardUploadPage } from './casper-wizard-upload-page.js';
@@ -44,12 +44,9 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
         }
 
         .wizard-button[disabled] {
+          border: none;
+          color: white;
           background-color: #e0e0e0;
-        }
-
-        .wizard-button[disabled] iron-icon {
-          border: 0px solid #e0e0e0;
-          fill: #ffffff;
         }
 
         .wizard-container {
@@ -81,8 +78,13 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
           padding: 0;
           z-index: 4;
           color: #FFF;
-          width: 35px;
-          height: 35px;
+          width: 25px;
+          height: 25px;
+        }
+
+        .wizard-container .header .wizard-close-button:hover {
+          color: #FFF;
+          background: transparent;
         }
 
         .wizard-container .page-container {
@@ -155,9 +157,9 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
         }
 
         .wizard-icon-next-button {
-          width: 40px;
-          height: 40px;
-          fill: #fff;
+          width: 25px;
+          height: 25px;
+          color: #fff;
         }
 
         .button-animation {
@@ -184,15 +186,15 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
           font-weight: bold;
           -webkit-font-smoothing: antialiased;
           background-color: white;
-          color: white;
+          color: var(--primary-color);
+          border: 2px solid var(--primary-color);
         }
 
         .wizard-icon-previous-button {
-          width: 40px;
-          height: 40px;
+          width: 25px;
+          height: 25px;
           border-radius: 20px;
           box-sizing: border-box;
-          fill: var(--primary-color);
         }
 
         .page  {
@@ -297,19 +299,19 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
         <div class="wizard-tabs tabslide"></div>
         <div class="header">
           <div class="title"></div>
-          <paper-icon-button tooltip="Fechar" class="wizard-close-button" icon="casper-icons:close"></paper-icon-button>
+          <casper-icon-button tooltip="Fechar" class="wizard-close-button" icon="fa-light:times-circle"></casper-icon-button>
         </div>
         <div class="page-container"></div>
         <div class="footer-container">
           <div id="footer-slot-container"></div>
           <div>
             <paper-button id="wizardPrevButton" class="wizard-button wizard-previous-button button-animation">
-              <iron-icon id="wizardPreviousIcon" class="wizard-icon-previous-button" icon="casper-icons:arrow-circle-left"></iron-icon>
+              <casper-icon id="wizardPreviousIcon" class="wizard-icon-previous-button" icon="fa-light:arrow-left"></casper-icon>
               <span class="wizard-text"></span>
             </paper-button>
 
             <paper-button id="wizardNextButton" class="wizard-button wizard-next-button button-animation">
-              <iron-icon id="wizardNextIcon" class="wizard-icon-next-button" icon="casper-icons:arrow-right"></iron-icon>
+              <casper-icon id="wizardNextIcon" class="wizard-icon-next-button" icon="fa-light:arrow-right"></casper-icon>
               <span class="wizard-text"></span>
             </paper-button>
           </div>
@@ -411,6 +413,7 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
     this._wizardContainer = this.shadowRoot.querySelector('.wizard-container');
     this._prevButton = this.shadowRoot.querySelector('#wizardPrevButton');
     this._nextButton = this.shadowRoot.querySelector('#wizardNextButton');
+    this._nextButtonIcon = this.shadowRoot.querySelector('#wizardNextIcon');
     this._closeButton = this.shadowRoot.querySelector('.wizard-close-button');
     this._pageContainer = this.shadowRoot.querySelector('.wizard-container .page-container');
     this._footerSlotContainer = this.shadowRoot.querySelector('.wizard-container #footer-slot-container');
@@ -500,14 +503,14 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
 
   enablePrevious () {
     if (this._prevButton.disabled === true) {
-      this._prevButton.querySelector('iron-icon').icon = 'casper-icons:arrow-circle-left';
+      this._prevButton.querySelector('casper-icon').icon = 'fa-light:arrow-left';
       this._prevButton.disabled = false;
     }
   }
 
   disablePrevious () {
     if (this._prevButton.disabled === false) {
-      this._prevButton.querySelector('iron-icon').icon = 'casper-icons:arrow-left';
+      this._prevButton.querySelector('casper-icon').icon = 'fa-light:arrow-left';
       this._prevButton.disabled = true;
     }
   }
@@ -825,7 +828,7 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
 
   _changeButtonToText (selector, text) {
     const buttonSelector = this.shadowRoot.querySelector(selector);
-    const wizardIcon = buttonSelector.querySelector('iron-icon');
+    const wizardIcon = buttonSelector.querySelector('casper-icon');
     const buttonText = buttonSelector.querySelector('.wizard-text');
 
     buttonText.textContent = text;
@@ -839,7 +842,7 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
 
   _changeButtonToIcon (selector) {
     const buttonSelector = this.shadowRoot.querySelector(selector);
-    const wizardIcon = buttonSelector.querySelector('iron-icon');
+    const wizardIcon = buttonSelector.querySelector('casper-icon');
     const buttonText = buttonSelector.querySelector('.wizard-text');
 
     buttonText.textContent = '';
@@ -999,7 +1002,9 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
   }
 
   _updateWizardButtons () {
-    this._nextButton.icon = (this._pageIndex === this._pages.length - 1) ? 'casper-icons:check-circle' : 'casper-icons:arrow-circle-rights';
+    this._nextButtonIcon.icon = (this._pageIndex === this._pages.length - 1)
+      ? 'fa-light:check'
+      : 'fa-light:arrow-right';
   }
 
   _closePage () {

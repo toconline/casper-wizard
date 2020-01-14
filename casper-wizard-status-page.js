@@ -24,7 +24,7 @@ import '@casper2020/casper-icons/casper-icons.js';
 import { html } from '@polymer/polymer/lib/utils/html-tag.js';
 
 export class CasperWizardStatusPage extends CasperWizardPage {
-  static get template() {
+  static get template () {
     return html`
       <style>
         :host {
@@ -75,6 +75,16 @@ export class CasperWizardStatusPage extends CasperWizardPage {
           align-self: flex-end;
         }
 
+        casper-icon {
+          width: 85px;
+          height: 85px;
+          color: var(--primary-color);
+        }
+
+        casper-icon.error-icon {
+          color: var(--error-color);
+        }
+
         iron-icon {
           fill: var(--primary-color);
           --iron-icon-height: 100px;
@@ -113,11 +123,10 @@ export class CasperWizardStatusPage extends CasperWizardPage {
       </style>
 
       <casper-wizard-page page-title="Resultado operação">
-        <div id="customHtml" class="hide fill">
-        </div>
+        <div id="customHtml" class="hide fill"></div>
         <div id="errorPanel" class="container-error">
           <div class="error-icon-container">
-            <iron-icon icon="[[icon]]" class="error-icon" id="statusIcon"></iron-icon>
+            <casper-icon icon="[[icon]]" class="error-icon" id="statusIcon"></casper-icon>
           </div>
           <div class="error-message">
             <h2 id="title">[[title]]</h2>
@@ -148,7 +157,7 @@ export class CasperWizardStatusPage extends CasperWizardPage {
       },
       icon: {
         type: String,
-        value: 'casper-icons:error-outline'
+        value: 'fa-light:exclamation-circle'
       }
     };
   }
