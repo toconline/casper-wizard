@@ -1002,7 +1002,7 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
   }
 
   _updateWizardButtons () {
-    this._nextButtonIcon.icon = (this._pageIndex === this._pages.length - 1)
+    this._nextButtonIcon.icon = this._pageIndex === this._pages.length - 1 && !this._getCurrentPage().hasAttribute('next')
       ? 'fa-light:check'
       : 'fa-light:arrow-right';
   }
