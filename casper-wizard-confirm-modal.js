@@ -95,7 +95,8 @@ class ConfirmWizardConfirmModal extends Casper.I18n(CasperWizard) {
       previous: {
         backgroundColor: '#E5E5E5',
         color: '#A9A9A9',
-        display: 'flex'
+        display: 'flex',
+        border: 'none'
       },
       next: {
         backgroundColor: '#EF5350',
