@@ -881,6 +881,8 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
     this._pageIndex = pageIndex;
     this.hideStatusAndProgress();
 
+    pageIndex === 0 ? this.disablePrevious() : this.enablePrevious();
+
     // Prevent enterOn execution on close of wizard
     if (!closingWizard) {
       if (typeof this['enterOn' + this._getCurrentPage().id] === 'function') {
@@ -927,9 +929,6 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
       this._appendFooterSlotElement();
     }
 
-    pageIndex === 0
-      ? this.disablePrevious()
-      : this.enablePrevious();
   }
 
   _appendFooterSlotElement () {
