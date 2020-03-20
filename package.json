@@ -1,7 +1,7 @@
 {
   "description": "Wizard a container for simple dialogs with the infamous prev-next buttons",
   "name": "@casper2020/casper-wizard",
-  "version": "1.7.2",
+  "version": "1.7.3",
   "resolutions": {
     "inherits": "2.0.3",
     "samsam": "1.1.3",
