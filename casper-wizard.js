@@ -454,12 +454,6 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
     this._setControlledSubmission();
 
     this.addEventListener('opened-changed', e => this.__onOpenedChanged(e));
-    this.addEventListener('click', event => {
-      // Close the wizard if a link is clicked.
-      // if (event.composedPath().some(element => element.nodeName && element.nodeName.toLowerCase() === 'a')) {
-      //   return this.close();
-      // }
-    });
   }
 
   appendPagesAndActivate (index) {
@@ -851,6 +845,22 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
     wizardIcon.style.display = 'block';
   }
 
+  changePreviousButtonToText (text) {
+    this._changeButtonToText('#wizardPrevButton', text);
+  }
+
+  changePreviousButtonToIcon () {
+    this._changeButtonToIcon('#wizardPrevButton');
+  }
+
+  changeNextButtonToText (text) {
+    this._changeButtonToText('#wizardNextButton', text);
+  }
+
+  changeNextButtonToIcon () {
+    this._changeButtonToIcon('#wizardNextButton');
+  }
+
   _changeNextButtonToText (text) {
     this._changeButtonToText('#wizardNextButton', text);
   }
@@ -1162,6 +1172,9 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
         this.socket.cancelJob(this._jobChannel);
       }
       this._clearJob();
+      if ( typeof this['onWizardClose'] === 'function') {
+        this['onWizardClose'].apply(this);
+      }
     } else {
       if (this.app) {
         this.app.tooltip.hide();
