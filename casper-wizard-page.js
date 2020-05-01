@@ -47,6 +47,7 @@ export class CasperWizardPage extends PolymerElement {
           margin: 0px;
           text-overflow: ellipsis;
           white-space: nowrap;
+          overflow: hidden;
         }
 
       </style>
