@@ -1,7 +1,10 @@
 {
   "description": "Wizard a container for simple dialogs with the infamous prev-next buttons",
-  "name": "@casper2020/casper-wizard",
+  "name": "@cloudware-casper/casper-wizard",
   "version": "1.7.5",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
   "resolutions": {
     "inherits": "2.0.3",
     "samsam": "1.1.3",
@@ -10,9 +13,9 @@
   },
   "main": "casper-wizard.js",
   "dependencies": {
-    "@casper2020/casper-icons": "^1.x",
-    "@casper2020/casper-overlay-behavior": "^1.x",
-    "@casper2020/casper-toast": "^1.x",
+    "@cloudware-casper/casper-icons": "^1.x",
+    "@cloudware-casper/casper-overlay-behavior": "^1.x",
+    "@cloudware-casper/casper-toast": "^1.x",
     "@polymer/iron-icon": "^3.x",
     "@polymer/iron-overlay-behavior": "^3.x",
     "@polymer/iron-pages": "^3.x",
