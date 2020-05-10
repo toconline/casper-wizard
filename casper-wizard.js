@@ -754,6 +754,13 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
     this._nextClosesWizard = true;
   }
 
+  close () {
+    if ( this.options.closeAllWizards === true ) {
+      this.app.closeOtherWizards(this);
+    }
+    super.close();
+  }
+  
   //***************************************************************************************//
   //                                                                                       //
   //                    ~~~ Internals of the underworld implementaion ~~~                  //
