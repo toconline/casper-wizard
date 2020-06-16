@@ -18,53 +18,12 @@
   -
  */
 
-import '@polymer/paper-ripple/paper-ripple.js';
-import '@vaadin/vaadin-upload/vaadin-upload.js';
-import { CasperWizardPage } from './casper-wizard-page.js';
 import { html } from '@polymer/polymer/lib/utils/html-tag.js';
-import { Casper } from '@cloudware-casper/casper-common-ui/casper-i18n-behavior.js';
+import { CasperWizardPage } from './casper-wizard-page.js';
+import '@cloudware-casper/casper-upload-dropzone/casper-upload-dropzone.js';
 
-const casperVaadinUpload = document.createElement('template');
-casperVaadinUpload.innerHTML = `
-  <dom-module id="casper-vaadin-upload" theme-for="vaadin-upload">
-    <template>
-      <style>
-        :host {
-          padding: 24px;
-          color: gray;
-        }
-
-        :host([dragover]) {
-          color: var(--primary-color);
-          border: solid 2px var(--primary-color);
-        }
-
-        .upload-button {
-          color: white;
-          background-color: var(--primary-color);
-        }
-
-        .upload-button[disabled] {
-          color: var(--disabled-text-color);
-          background-color: var(--disabled-primary-color);
-        }
-
-        [part="drop-label"] {
-          align-items: center;
-        }
-
-        [part="drop-label-icon"] {
-          margin: 6px;
-        }
-
-      </style>
-    </template>
-  </dom-module>
-`;
-document.head.appendChild(casperVaadinUpload.content);
-
-export class CasperWizardUploadPage extends Casper.I18n(CasperWizardPage) {
-  static get template() {
+export class CasperWizardUploadPage extends CasperWizardPage {
+  static get template () {
     return html`
       <style>
         :host {
@@ -92,14 +51,14 @@ export class CasperWizardUploadPage extends Casper.I18n(CasperWizardPage) {
           white-space: nowrap;
         }
 
-        casper-button {
-          margin: 0;
-        }
-
-        vaadin-upload  {
+        casper-upload-dropzone  {
           flex-grow: 2.0;
           overflow: visible;
           cursor: pointer;
+          --casper-upload-dropzone-header-icon: {
+            width: 75px;
+            height: 75px;
+          }
         }
 
       </style>
@@ -107,10 +66,15 @@ export class CasperWizardUploadPage extends Casper.I18n(CasperWizardPage) {
       <h1 class="pagetitle">[[pageTitle]]</h1>
       <div class="content">
         <slot name="before"></slot>
-        <vaadin-upload id="upload" accept="[[accept]]" target="[[uploadUrl]]" max-files="1" method="POST" timeout="300000" form-data-name="my-attachment">
-          <paper-ripple id="ripple" style="pointer-events: none;"></paper-ripple>
-          <casper-button disabled="[[disabled]]" slot="add-button" class="upload-button">ABRIR</casper-button>
-        </vaadin-upload>
+        <casper-upload-dropzone
+          id="upload"
+          max-files="1"
+          method="POST"
+          timeout="300000"
+          accept="[[accept]]"
+          target="[[uploadUrl]]"
+          disabled="[[disabled]]">
+        </casper-upload-dropzone>
         <slot name="after">
           <div style="height: 48px;"></div>
         </slot>
@@ -122,7 +86,7 @@ export class CasperWizardUploadPage extends Casper.I18n(CasperWizardPage) {
     return 'casper-wizard-upload-page';
   }
 
-  static get properties() {
+  static get properties () {
     return {
       uploadUrl: String,
       originalFilePath: {
@@ -145,21 +109,13 @@ export class CasperWizardUploadPage extends Casper.I18n(CasperWizardPage) {
         type: String,
         value: "image/jpeg, image/png"
       },
-      disabled: {
-        type: Boolean,
-        observer: '_disabledChange'
-      }
+      disabled: Boolean,
     };
   }
 
   ready () {
     super.ready();
-    this.i18nUpdateUpload(this.$.upload);
-    this.$.upload.addEventListener('upload-before',  e => this._uploadBefore(e));
-    this.$.upload.addEventListener('upload-success', e => this._uploadSuccess(e));
-    this.$.upload.addEventListener('upload-request', e => this._uploadRequest(e));
-    this.$.upload.addEventListener('dragenter',      e => this._onDragEnter(e));
-    this.$.upload.addEventListener('dragleave',      e => this._onDragLeave(e));
+    this.$.upload.addEventListener('on-upload-success', e => this._uploadSuccess(e));
   }
 
   showUpload () {
@@ -171,66 +127,23 @@ export class CasperWizardUploadPage extends Casper.I18n(CasperWizardPage) {
   }
 
   clear () {
-    this.$.upload.files = [];
-  }
-
-  _uploadBefore (event) {
-    if ( this.disabled ) {
-      this.clear();
-      this.$.ripple.upAction();
-      this.wizard.openToast('Para carregar o ficheiro é necessário autorizar a operação', false);
-      event.preventDefault();
-    }
-  }
-
-  _uploadRequest (event) {
-    if ( this.disabled ) {
-      event.preventDefault();
-      this.$.ripple.upAction();
-    } else {
-      this.originalFilePath = event.detail.file.name;
-      this.originalFileSize = event.detail.file.size;
-      this.originalFileType = event.detail.file.type;
-      this.uploadedFilePath = undefined;
-      event.preventDefault();
-      this.$.ripple.upAction();
-      event.detail.xhr.setRequestHeader('Content-Type', 'application/octet-stream');
-      event.detail.xhr.setRequestHeader('Content-Disposition', 'form-data; name="'+event.detail.file.formDataName+'"; filename="uploaded_file";');
-      event.detail.xhr.send(event.detail.file);
-    }
+    this.$.upload.clearUploadedFiles();
   }
 
   _uploadSuccess (event) {
-    if ( event.detail.xhr.status == 200 ) {
-      try {
-        let response = JSON.parse(event.detail.xhr.responseText);
-        this.uploadedFilePath = response.file;
-        if ( typeof this.wizard['uploadSuccessOn' + this.wizard._pages[this.wizard._pageIndex].id] === 'function' ) {
-          this.wizard['uploadSuccessOn' + this.wizard._pages[this.wizard._pageIndex].id].apply(this.wizard, [response.file, event.detail.file]);
-        }
-      } catch (exception) {
-        // TODO Handle the error.
+    try {
+      this.uploadedFilePath = event.detail.uploadedFile;
+      this.originalFileSize = event.detail.originalFileSize;
+      this.originalFileType = event.detail.originalFileType;
+      this.originalFilePath = event.detail.originalFileName;
+
+      const uploadOnSuccessCallback = `uploadSuccessOn${this.wizard._pages[this.wizard._pageIndex].id}`;
+
+      if (typeof this.wizard[uploadOnSuccessCallback] === 'function') {
+        this.wizard[uploadOnSuccessCallback].apply(this.wizard);
       }
-    } else {
-      // TODO report error to Wizard ??
-    }
-  }
-
-  _onDragEnter (event) {
-    this.$.ripple.downAction(event);
-    event.preventDefault();
-  }
-
-  _onDragLeave (event) {
-    this.$.ripple.upAction();
-    event.preventDefault();
-  }
-
-  _disabledChange (value) {
-    if ( value === true ) {
-      this.$.upload.shadowRoot.querySelector('vaadin-button').setAttribute('disabled', true);
-    } else {
-      this.$.upload.shadowRoot.querySelector('vaadin-button').removeAttribute('disabled');
+    } catch (exception) {
+      // TODO Handle the error.
     }
   }
 }
