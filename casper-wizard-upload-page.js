@@ -67,6 +67,7 @@ export class CasperWizardUploadPage extends CasperWizardPage {
       <div class="content">
         <slot name="before"></slot>
         <casper-upload-dropzone
+          minimalist
           id="upload"
           max-files="1"
           method="POST"
