@@ -1075,6 +1075,13 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
         response.message = ['Erro desconhecido status por favor tente mais tarde'];
         response.status = 'error';
       }
+    } else {
+      if (response.success && status.status === 'error') {
+        if (status.custom) response.custom = status.custom; 
+        response.message = status.message;
+        response.status = status.status;
+        response.status_code = status.status_code;
+      }
     }
 
     if (status.action === 'redirect' && status.status === 'completed' && response.response === undefined) {
