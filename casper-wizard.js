@@ -204,11 +204,6 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
           display: grid;
           grid-template-rows: 42px 1fr;
           position: absolute;
-          -moz-transform: translateZ(0);
-          -webkit-transform: translateZ(0);
-          -o-transform: translateZ(0);
-          -ms-transform: translateZ(0);
-          transform: translateZ(0);
           background-color: var(--surface-color, #FFF);
           border-radius: 0px 0px var(--roundie, 10px) var(--roundie, 10px);
         }
@@ -760,7 +755,7 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
     }
     super.close();
   }
-  
+
   //***************************************************************************************//
   //                                                                                       //
   //                    ~~~ Internals of the underworld implementaion ~~~                  //
@@ -1077,7 +1072,7 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
       }
     } else {
       if (response.success && status.status === 'error') {
-        if (status.custom) response.custom = status.custom; 
+        if (status.custom) response.custom = status.custom;
         response.message = status.message;
         response.status = status.status;
         response.status_code = status.status_code;
