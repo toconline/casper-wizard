@@ -144,7 +144,6 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
         }
 
         .wizard-next-button {
-          z-index: 4;
           height: 40px;
           min-width: 40px;
           padding: 0;
