@@ -489,6 +489,10 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
     }
   }
 
+  hidePrevious () {
+    this._prevButton.hidden = true;
+  }
+
   enablePrevious () {
     if (this._prevButton.disabled === true) {
       this._prevButton.querySelector('casper-icon').icon = 'fa-light:arrow-left';
