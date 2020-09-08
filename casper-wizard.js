@@ -23,7 +23,7 @@ import './casper-wizard-iframe-page.js';
 import './casper-wizard-progress-page.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
-import '@cloudware-casper/casper-icons/casper-icons.js';
+import '@cloudware-casper/casper-icons/casper-icon.js';
 import '@cloudware-casper/casper-icons/casper-icon-button.js';
 import '@cloudware-casper/casper-toast/casper-toast.js';
 import { CasperWizardPage } from './casper-wizard-page.js';
@@ -753,7 +753,7 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
   }
 
   close () {
-    if ( this.options.closeAllWizards === true ) {
+    if (this.options.closeAllWizards === true) {
       this.app.closeOtherWizards(this);
     }
     super.close();
@@ -1184,7 +1184,7 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
         this.socket.cancelJob(this._jobChannel);
       }
       this._clearJob();
-      if ( typeof this['onWizardClose'] === 'function') {
+      if (typeof this['onWizardClose'] === 'function') {
         this['onWizardClose'].apply(this);
       }
     } else {
