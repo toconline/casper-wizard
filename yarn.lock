@@ -2,12 +2,11 @@
 # yarn lockfile v1
 
 
-"@cloudware-casper/casper-icons@^1.x":
-  version "1.20.1"
-  resolved "https://npm.pkg.github.com/download/@cloudware-casper/casper-icons/1.20.1/6ba9149bb421104c8c9d13189d147cb467fc50ffcf6769f0e456ce44634fcf17#77db54efca20b3d3f8b4035fab0c19a08888891d"
-  integrity sha512-ds4GQU4HS8K4np4BNrYZCcN5K+/lXiUzuyf0byFJELY4TXYpm7EhdEVE+E0TIq2llygrcCMIwgaWV/gWiAsSqg==
+"@cloudware-casper/casper-icons@^2.x":
+  version "2.0.0"
+  resolved "https://npm.pkg.github.com/download/@cloudware-casper/casper-icons/2.0.0/02282bd9eb18bb2f92a8bb8a9b8a72a7b22cd553b7d6d7c4e173e28c7d2324c7#4530bba4d403280c603e1c971707ce5106449ecb"
+  integrity sha512-ohFaNY6h4BVdKvX3ljKuRGui4VNZKqgNxlpdQc0caq5SnpBsHigQ3vQxBiTwy/krAAeFnBmmPXZGI6YvDtWW7w==
   dependencies:
-    "@polymer/iron-icons" "^3.x"
     "@polymer/polymer" "^3.x"
 
 "@cloudware-casper/casper-overlay-behavior@^1.x":
@@ -18,12 +17,11 @@
     "@polymer/iron-overlay-behavior" "^3.x"
 
 "@cloudware-casper/casper-toast@^1.x":
-  version "1.0.0"
-  resolved "https://npm.pkg.github.com/download/@cloudware-casper/casper-toast/1.0.0/a593fe7f261e7d42162f94390199793ca0425f1a3aa9a2049e1aa0f438687c5b#32f6714c713a5cb888daf507a8351153d98c5238"
-  integrity sha512-TOmeyqiPg29Pj5gtOsrSalwRvhUwMQ2HkJcRDJzfPLN+TTPnEyha71ToV4oN8Uvn1pJn94LQtrrlaKiHMA+i3Q==
+  version "1.5.0"
+  resolved "https://npm.pkg.github.com/download/@cloudware-casper/casper-toast/1.5.0/924c40651be101ea7397983f3dbfbd4e2bedb44c0323990f4a3bdf1c39a1955b#71ca46102982e9705729bff4a4c8241fbfda0f3f"
+  integrity sha512-KvxOIbv2h9ai19DKJFafdNow4CEgdOUm1uO6dCfBp5u7wmZBiQdymuPHiu3umfBvdgtIwE0yDNSjLarTYwKdWQ==
   dependencies:
-    "@cloudware-casper/casper-icons" "^1.x"
-    "@polymer/iron-icons" "^3.0.0"
+    "@cloudware-casper/casper-icons" "^2.x"
     "@polymer/paper-toast" "^3.0.0"
     "@polymer/polymer" "^3.0.0"
 
@@ -33,9 +31,9 @@
   integrity sha512-tx5TauYSmzsIvmSqepUPDYbs4/Ejz2XbZ1IkD7JEGqkdNUJlh+9KU85G56Tfdk/xjEZ8zorFfN09OSwiMrIQWA==
 
 "@polymer/iron-a11y-announcer@^3.0.0-pre.26":
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/@polymer/iron-a11y-announcer/-/iron-a11y-announcer-3.0.2.tgz#730dd36ccb2e042ecd5160ba439c2bf2f8a97412"
-  integrity sha512-LqnMF39mXyxSSRbTHRzGbcJS8nU0NVTo2raBOgOlpxw5yfGJUVcwaTJ/qy5NtWCZLRfa4suycf0oAkuUjHTXHQ==
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/@polymer/iron-a11y-announcer/-/iron-a11y-announcer-3.1.0.tgz#3d3712a165070ed3cdfc39e54f95515c913c9613"
+  integrity sha512-lc5i4NKB8kSQHH0Hwu8WS3ym93m+J69OHJWSSBxwd17FI+h2wmgxDzeG9LI4ojMMck17/uc2pLe7g/UHt5/K/A==
   dependencies:
     "@polymer/polymer" "^3.0.0"
 
@@ -93,16 +91,7 @@
     "@polymer/iron-meta" "^3.0.0-pre.26"
     "@polymer/polymer" "^3.0.0"
 
-"@polymer/iron-icons@^3.0.0", "@polymer/iron-icons@^3.x":
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/@polymer/iron-icons/-/iron-icons-3.0.1.tgz#c1bd31d8483afbdb5422cdc384081e19c9267cfe"
-  integrity sha512-xtEI8erH2GIBiF3QxEMyW81XuVjguu6Le5WjEEpX67qd9z7jjmc4T/ke3zRUlnDydex9p8ytcwVpMIKcyvjYAQ==
-  dependencies:
-    "@polymer/iron-icon" "^3.0.0-pre.26"
-    "@polymer/iron-iconset-svg" "^3.0.0-pre.26"
-    "@polymer/polymer" "^3.0.0"
-
-"@polymer/iron-iconset-svg@^3.0.0", "@polymer/iron-iconset-svg@^3.0.0-pre.26":
+"@polymer/iron-iconset-svg@^3.0.0":
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/@polymer/iron-iconset-svg/-/iron-iconset-svg-3.0.1.tgz#568d6e7dbc120299dae63be3600aeba0d30ddbea"
   integrity sha512-XNwURbNHRw6u2fJe05O5fMYye6GSgDlDqCO+q6K1zAnKIrpgZwf2vTkBd5uCcZwsN0FyCB3mvNZx4jkh85dRDw==
@@ -311,9 +300,9 @@
     "@vaadin/vaadin-development-mode-detector" "^2.0.0"
 
 "@webcomponents/shadycss@^1.9.1":
-  version "1.9.6"
-  resolved "https://registry.yarnpkg.com/@webcomponents/shadycss/-/shadycss-1.9.6.tgz#a8c5db867e49200a05cf8d5008029c09b7861979"
-  integrity sha512-5fFjvP0jQJZoXK6YzYeYcIDGJ5oEsdjr1L9VaYLw5yxNd4aRz4srMpwCwldeNG0A6Hvr9igbG7fCsBeiiCXd7A==
+  version "1.10.1"
+  resolved "https://registry.yarnpkg.com/@webcomponents/shadycss/-/shadycss-1.10.1.tgz#6f377b313c96a93a690f25206b32a20eada4b2a9"
+  integrity sha512-XEVDA7oH6o4Au9apyRDucjcIzvP44Ur4sqTMGRKCcE6sCAeKiOkRE03TCYNJAFkzckMWWT8Xx3IxG3iwjAcsRQ==
 
 lit-element@^2.0.0:
   version "2.3.1"
