@@ -41,6 +41,18 @@ class ConfirmWizardConfirmModal extends Casper.I18n(CasperWizard) {
         .content {
           font-size: 18px;
         }
+
+        .errors_list {
+          padding: 0 30px;
+          color: var(--dark-theme-background-color);
+        }
+
+        .errors_list > li {
+          padding: 10px;
+          border-bottom: 1px var(--dark-theme-background-color) solid;
+          margin-bottom: 4px;
+        }
+
       </style>
 
       <casper-wizard-page id="confirm" hide-title next$="[[accept]]" previous$="[[reject]]">

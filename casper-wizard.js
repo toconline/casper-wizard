@@ -1111,6 +1111,9 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
           this._progressPage.setProgressCount(notification.index + 1);
         }
         this._progressPage.updateProgress(notification.index, this.i18n.apply(this, notification.message), notification.progress);
+        if (typeof this['jobProgressOn' + this._getCurrentPage().id] === 'function') {
+          this['jobProgressOn' + this._getCurrentPage().id].apply(this, [notification.status_code, notification, notification.response]);
+        }
         break;
       case 'completed':
         if (this._controlledSubmission === true) {
@@ -1149,6 +1152,8 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
           this.showStatusPage(notification);
         }
         this._clearJob();
+        break;
+      case 'reset':
         break;
       default:
         this._setControlledSubmission();
