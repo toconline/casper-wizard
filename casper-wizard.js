@@ -753,7 +753,7 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
   }
 
   close () {
-    if (this.options.closeAllWizards === true) {
+    if (this.options && this.options.closeAllWizards === true) {
       this.app.closeOtherWizards(this);
     }
     super.close();
