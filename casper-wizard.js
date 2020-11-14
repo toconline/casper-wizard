@@ -685,6 +685,19 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
   }
 
   /**
+   * Shows an error that is considered fatal, i.e. the next button will close the wizard
+   * 
+   * @param {Object} notification an error notification returned by the server
+   */
+  showFatalError (notification) {
+    this._nextClosesWizard = true;
+    this.hidePrevious();
+    this.changeNextButtonToText('Fechar');
+    this.showStatusPage(notification);
+    this.enableNext();
+  }
+
+  /**
    * Show toast at the bottow of the wizard
    *
    * @param {String} message the text to display.
