@@ -443,6 +443,7 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
     this.toast.onclick = () => this.toast.close();
     this.noCancelOnEscKey = false;
     this.noCancelOnOutsideClick = true;
+    this.errorsAreFatal = true;
     this._jobId = this._jobChannel = undefined;
 
     this._setControlledSubmission();
@@ -568,6 +569,30 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
     this.socket.submitJob(job, this._submitJobResponse.bind(this), { validity: timeout, ttr: ttr === undefined ? timeout : ttr, timeout: timeout });
   }
 
+  /**
+   * 
+   * @param {Object}  job 
+   * @param {Integer} timeout 
+   * @param {Integer} ttr 
+   */
+  submitJobWithStrictValidity (job, timeout, ttr) {
+    const ltimeout = parseInt(timeout);
+    const lttr     = parseInt(ttr);
+    
+    if ( isNaN(ltimeout) || isNaN(lttr) ) {
+      console.error("Strict timing requires valid ttr and timeout!!!");
+      return;
+    }
+    job.validity = ltimeout - lttr - 2; // 2 seconds safety margin
+    if ( job.validity < 1 ) {
+      console.error("Strict timing requires a timeout greater than ttr + 3!!!");
+      return;
+    }
+    this.showProgressPage();
+    this._setControlledSubmission();
+    this.socket.submitJob(job, this._submitJobResponse.bind(this), { validity: job.validity, ttr: lttr, timeout: ltimeout });
+  }
+
   submitControlledJob (job, timeout, ttr) {
     this.showProgressPage();
     job.destination_tube = job.tube;
@@ -611,8 +636,7 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
 
     // ... show progress page
     this._state = 'show-progress';
-    this.enablePrevious(); //_prevButton.disabled = false;
-    this.disableNext();    //_nextButton.disabled = true;
+    this.disableNext();
 
     this._fadeInTimer = setTimeout(() => {
       this._progressPage.style.display = 'block';
@@ -1162,7 +1186,11 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
         if (typeof this['errorOn' + this._getCurrentPage().id] === 'function') {
           this['errorOn' + this._getCurrentPage().id].apply(this, [notification]);
         } else {
-          this.showStatusPage(notification);
+          if ( this.errorsAreFatal === true ) {
+            this.showFatalError(notification);
+          } else {
+            this.showStatusPage(notification);
+          }
         }
         this._clearJob();
         break;
