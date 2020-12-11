@@ -50,10 +50,31 @@ export class CasperWizardPage extends PolymerElement {
           overflow: hidden;
         }
 
+
+        .print-button {
+          position: absolute;
+          top: 5px;
+          right: 0;
+          background-color: var(--primary-color);
+          font-weight: normal;
+          font-size: 14px;
+          -webkit-font-smoothing: antialiased;
+          color: white;
+          margin: 0 12px 12px 12px;
+          height: 30px;
+          box-shadow: none;
+          display: none;
+        }
+
       </style>
       <template is="dom-if" if="[[!hideTitle]]">
         <h1 class="pagetitle">[[pageTitle]]</h1>
       </template>
+
+      <slot name="header">
+        <paper-button id="button" class="print-button" on-tap="_printWizard" raised>Imprimir</paper-button>
+      </slot>
+
       <div class="content">
         <slot></slot>
       </div>
@@ -72,9 +93,64 @@ export class CasperWizardPage extends PolymerElement {
       hideTitle: {
         type: Boolean,
         value: false
+      },
+      printContents: {
+        type: Boolean,
+        value: false,
+        observer: '_printableChanged'
       }
     };
   }
+
+
+  _printableChanged (newValue) {
+    if ( newValue == true ) {
+      this.$.button.style.display = 'flex';
+    }
+  }
+
+  _printWizard () {
+    let printContents = this.querySelector('*');
+    let htmlToPrint = `
+      <style>
+        table {
+          width: 100%;
+        }
+
+        [printable] {
+          display: block;
+        }
+
+        table th, table td {
+          text-align: left;
+          border:1px solid #000;
+          padding: 0.5em;
+        }
+      </style>`;
+    htmlToPrint += printContents.outerHTML;
+    htmlToPrint += `
+      <script>
+        window.focus();
+        window.print();
+      </script>
+    `;
+
+    let outerHtml = `<body>`;
+    outerHtml += `<h1>${this.pageTitle}</h1>`;
+    outerHtml += htmlToPrint;
+    outerHtml += `</body>`;
+
+    let iframe    = document.createElement("iframe");
+    iframe.setAttribute('hidden', true);
+
+    this.shadowRoot.querySelector('.content').append(iframe);
+
+    let frameDoc = iframe.contentWindow.document;
+    frameDoc.open();
+    frameDoc.writeln(outerHtml);
+    frameDoc.close();
+  }
+
 }
 
 window.customElements.define(CasperWizardPage.is, CasperWizardPage);
