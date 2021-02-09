@@ -1084,6 +1084,14 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
       response.status_code = response.success ? 200 : 500;
     }
 
+    if (!response.status_code && response.success && status.response && status.status_code && status.action !== 'redirect') {
+      if (status.custom) response.custom = status.custom;
+      response.message = status.message;
+      response.status = status.status;
+      response.response = status.response;
+      response.status_code = status.status_code;
+    }
+
     if (response.status_code !== 200 && !status.message) {
       if (status.response) {
         try {
