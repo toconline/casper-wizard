@@ -52,18 +52,23 @@ export class CasperWizardPage extends PolymerElement {
 
 
         .print-button {
-          position: absolute;
-          top: 5px;
-          right: 0;
           background-color: var(--primary-color);
           font-weight: normal;
           font-size: 14px;
           -webkit-font-smoothing: antialiased;
           color: white;
-          margin: 0 12px 12px 12px;
+          margin-right: 10px;
           height: 30px;
           box-shadow: none;
           display: none;
+        }
+
+        .headery {
+          display: flex;
+          flex-direction: row;
+          position: absolute;
+          top: 5px;
+          right: 0px;
         }
 
       </style>
@@ -71,10 +76,10 @@ export class CasperWizardPage extends PolymerElement {
         <h1 class="pagetitle">[[pageTitle]]</h1>
       </template>
 
-      <slot name="header">
+      <div class="headery">
+        <slot name="header"></slot>
         <paper-button id="button" class="print-button" on-tap="_printWizard" raised>Imprimir</paper-button>
-      </slot>
-
+      </div>
       <div class="content">
         <slot></slot>
       </div>
@@ -110,7 +115,7 @@ export class CasperWizardPage extends PolymerElement {
   }
 
   _printWizard () {
-    let printContents = this.querySelector('*');
+    const printContents = this.querySelector('table');
     let htmlToPrint = `
       <style>
         table {
@@ -140,12 +145,12 @@ export class CasperWizardPage extends PolymerElement {
     outerHtml += htmlToPrint;
     outerHtml += `</body>`;
 
-    let iframe    = document.createElement("iframe");
+    const iframe    = document.createElement("iframe");
     iframe.setAttribute('hidden', true);
 
     this.shadowRoot.querySelector('.content').append(iframe);
 
-    let frameDoc = iframe.contentWindow.document;
+    const frameDoc = iframe.contentWindow.document;
     frameDoc.open();
     frameDoc.writeln(outerHtml);
     frameDoc.close();
