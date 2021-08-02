@@ -570,15 +570,15 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
   }
 
   /**
-   * 
-   * @param {Object}  job 
-   * @param {Integer} timeout 
-   * @param {Integer} ttr 
+   *
+   * @param {Object}  job
+   * @param {Integer} timeout
+   * @param {Integer} ttr
    */
   submitJobWithStrictValidity (job, timeout, ttr) {
     const ltimeout = parseInt(timeout);
     const lttr     = parseInt(ttr);
-    
+
     if ( isNaN(ltimeout) || isNaN(lttr) ) {
       console.error("Strict timing requires valid ttr and timeout!!!");
       return;
@@ -710,7 +710,7 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
 
   /**
    * Shows an error that is considered fatal, i.e. the next button will close the wizard
-   * 
+   *
    * @param {Object} notification an error notification returned by the server
    */
   showFatalError (notification) {

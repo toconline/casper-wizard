@@ -80,9 +80,12 @@ export class CasperWizardPage extends PolymerElement {
         <slot name="header"></slot>
         <paper-button id="button" class="print-button" on-tap="_printWizard" raised>Imprimir</paper-button>
       </div>
+
       <div class="content">
+        <slot name="composed-header"></slot>
         <slot></slot>
       </div>
+
     `;
   }
 
