@@ -1,7 +1,7 @@
 {
   "description": "Wizard a container for simple dialogs with the infamous prev-next buttons",
   "name": "@cloudware-casper/casper-wizard",
-  "version": "1.15.2",
+  "version": "1.15.3",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
   },
