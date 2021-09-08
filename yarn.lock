@@ -2,13 +2,6 @@
 # yarn lockfile v1
 
 
-"@cloudware-casper/casper-icons@^2.x":
-  version "2.7.3"
-  resolved "https://npm.pkg.github.com/download/@cloudware-casper/casper-icons/2.7.3/b017b327390ea425c3eb5b0a33830c98a5921a7c82e5303cae39a6fe63a4e1fa#2ca45f54c9fc43029ce6bece0e4aa961d41a1128"
-  integrity sha512-H78RCXvey8P9RLZsm+nAjd4cxMncBQrSNN916GbcL9VaRGAN13Z4wPiIF1izdsWqFdtEYns28CMgHiFC2FeWTQ==
-  dependencies:
-    "@polymer/polymer" "^3.x"
-
 "@cloudware-casper/casper-icons@^3.x":
   version "3.0.7"
   resolved "https://npm.pkg.github.com/download/@cloudware-casper/casper-icons/3.0.7/758797540c564467103fa065e88afc3f3a785dea9f944c5267882dffbe50b22b#371927b0444532a43450bd585be686b1099cf987"
@@ -24,12 +17,12 @@
   dependencies:
     "@polymer/iron-overlay-behavior" "^3.x"
 
-"@cloudware-casper/casper-toast@^1.x":
-  version "1.5.3"
-  resolved "https://npm.pkg.github.com/download/@cloudware-casper/casper-toast/1.5.3/c518c9b79a348646b061ac55f10d46900a00d30779a2e499146bb27360d12a17#b87a0beffe852a07a476cc944369015c022cc651"
-  integrity sha512-HfddqurHbhMGtpyRYRLjnDTyDAZ4Qb/ias8TVU7xKhxauIgguWgtINxO/GVI2lE7BG75K2kGjr7wSCeW74CGUw==
+"@cloudware-casper/casper-toast@^2.x":
+  version "2.0.1"
+  resolved "https://npm.pkg.github.com/download/@cloudware-casper/casper-toast/2.0.1/3f0443c38dcd7470cfd6b4571bfad2c7e3bb0f13aad7ccccb2495cc0a91e99cc#abbe146f0afd5bc74465a27fbd05302609d96e92"
+  integrity sha512-X0PX5gAXl1hOLyPwH3MXvLFyRxcSNlKorIeePsE9+ivx+XkLSs5x+AQ2QtB/vc68LidDb9V+S6Pf8Vndf5Oj2A==
   dependencies:
-    "@cloudware-casper/casper-icons" "^2.x"
+    "@cloudware-casper/casper-icons" "^3.x"
     "@polymer/paper-toast" "^3.0.0"
     "@polymer/polymer" "^3.0.0"
 
@@ -295,7 +288,7 @@
   integrity sha512-PZZOZnke3KUlZsDrRVbWxAGEeFBPRyRayNRCvip0XnQK+Zs3cLuRgdgbdro3Ir9LZ3Izsw6HqA6XNMKffEP67A==
   dependencies:
     "@polymer/polymer" "^3.0.0"
-    lit-element "^2.0.0"
+    lit-element "^3.0.0-rc.2"
 
 "@vaadin/vaadin-upload@^4.x":
   version "4.4.1"
@@ -318,20 +311,13 @@
     "@vaadin/vaadin-development-mode-detector" "^2.0.0"
 
 "@webcomponents/shadycss@^1.9.1":
-  version "1.10.2"
-  resolved "https://registry.yarnpkg.com/@webcomponents/shadycss/-/shadycss-1.10.2.tgz#40e03cab6dc5e12f199949ba2b79e02f183d1e7b"
-  integrity sha512-9Iseu8bRtecb0klvv+WXZOVZatsRkbaH7M97Z+f+Pt909R4lDfgUODAnra23DOZTpeMTAkVpf4m/FZztN7Ox1A==
+  version "1.11.0"
+  resolved "https://registry.yarnpkg.com/@webcomponents/shadycss/-/shadycss-1.11.0.tgz#73e289996c002d8be694cd3be0e83c46ad25e7e0"
+  integrity sha512-L5O/+UPum8erOleNjKq6k58GVl3fNsEQdSOyh0EUhNmi7tHUyRuCJy1uqJiWydWcLARE5IPsMoPYMZmUGrz1JA==
 
-"ink-ripple@github:alex-saunders/ink-ripple":
+ink-ripple@alex-saunders/ink-ripple:
   version "0.0.0"
   resolved "https://codeload.github.com/alex-saunders/ink-ripple/tar.gz/88e4d753bba9f7b57b372c62a4517bb091c7f713"
-
-lit-element@^2.0.0:
-  version "2.5.1"
-  resolved "https://registry.yarnpkg.com/lit-element/-/lit-element-2.5.1.tgz#3fa74b121a6cd22902409ae3859b7847d01aa6b6"
-  integrity sha512-ogu7PiJTA33bEK0xGu1dmaX5vhcRjBXCFexPja0e7P7jqLhTpNKYRPmE+GmiCaRVAbiQKGkUgkh/i6+bh++dPQ==
-  dependencies:
-    lit-html "^1.1.1"
 
 lit-element@^3.0.0-rc.2:
   version "3.0.0-rc.4"
@@ -340,11 +326,6 @@ lit-element@^3.0.0-rc.2:
   dependencies:
     "@lit/reactive-element" "^1.0.0-rc.2"
     lit-html "^2.0.0-rc.4"
-
-lit-html@^1.1.1:
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/lit-html/-/lit-html-1.4.1.tgz#0c6f3ee4ad4eb610a49831787f0478ad8e9ae5e0"
-  integrity sha512-B9btcSgPYb1q4oSOb/PrOT6Z/H+r6xuNzfH4lFli/AWhYwdtrgQkQWBbIc6mdnf6E2IL3gDXdkkqNktpU0OZQA==
 
 lit-html@^2.0.0-rc.4:
   version "2.0.0-rc.5"
