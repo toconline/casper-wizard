@@ -7,7 +7,7 @@
   },
   "main": "casper-wizard.js",
   "dependencies": {
-    "@cloudware-casper/casper-icons": "^2.x",
+    "@cloudware-casper/casper-icons": "^3.x",
     "@cloudware-casper/casper-overlay-behavior": "^1.x",
     "@cloudware-casper/casper-toast": "^1.x",
     "@polymer/iron-icon": "^3.x",
