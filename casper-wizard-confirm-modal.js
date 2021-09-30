@@ -41,6 +41,7 @@ class ConfirmWizardConfirmModal extends Casper.I18n(CasperWizard) {
 
 				.content {
 					font-size: 18px;
+					color: var(--dark-theme-background-color);
 				}
 
 				.errors_list {
@@ -53,10 +54,32 @@ class ConfirmWizardConfirmModal extends Casper.I18n(CasperWizard) {
 					border-bottom: 1px var(--dark-theme-background-color) solid;
 					margin-bottom: 4px;
 				}
+
+				.alert-container {
+					padding: 10px;
+					border-radius: 4px;
+					margin-top: 20px;
+					font-size: 14px;
+					line-height: 1.4;
+				}
+
+				.alert-container[info] {
+					color: var(--dark-theme-background-color);
+					background: var(--light-primary-color, #ebf1f0);
+				}
+
+				.alert-container[warning] {
+					color: white;
+					background: var(--error-color-soft);
+				}
+
 			</style>
 
 			<casper-wizard-page id="confirm" hide-title next$="[[accept]]" previous$="[[reject]]">
 				<div class="content"></div>
+				<template is="dom-if" if="[[showAlert]]" restamp>
+					<div class="alert-container">[[alert]]</div>
+				</template>
 				<template is="dom-if" if="[[needsReason]]" restamp>
 					<paper-input
 						id="reason"
@@ -101,6 +124,18 @@ class ConfirmWizardConfirmModal extends Casper.I18n(CasperWizard) {
 				type: String,
 				value: undefined,
 			},
+			showAlert: {
+				type: Boolean,
+				value: false,
+			},
+			alert: {
+				type: String,
+				value: ""
+			},
+			alertType: {
+				type: String,
+				value: "info"
+			}
 		};
 	}
 
@@ -152,6 +187,14 @@ class ConfirmWizardConfirmModal extends Casper.I18n(CasperWizard) {
 			};
 		}
 
+
+		if ( options.alert ) {
+			this.defaultOverrideWizardDimensions = {
+				width: '450px',
+				height: '350px',
+			};
+		}
+
 		const wizardDimensions = {
 			...this.defaultOverrideWizardDimensions,
 			...options.overrideWizardDimensions,
@@ -195,6 +238,14 @@ class ConfirmWizardConfirmModal extends Casper.I18n(CasperWizard) {
 		const content = this.shadowRoot.querySelector('.content');
 		content.innerHTML = this.options.message;
 
+		this.alert = this.options.alert;
+
+		if ( this.options?.alertType) {
+			this.alertType = this.options.alertType;
+		}
+
+		this.showAlert = this.options?.alert ? true : false;
+
 		this._resetReason();
 
 		this.$.confirm.setAttribute('next', this.options.accept);
@@ -203,6 +254,11 @@ class ConfirmWizardConfirmModal extends Casper.I18n(CasperWizard) {
 		this.enablePrevious();
 
 		afterNextRender(this, () => {
+
+			if ( this.showAlert ) {
+				this.shadowRoot.querySelector('.alert-container').setAttribute(this.alertType, true)
+			}
+
 			if (this.shadowRoot.querySelector('paper-input')) {
 				this.shadowRoot.querySelector('paper-input').focus();
 				this.shadowRoot
