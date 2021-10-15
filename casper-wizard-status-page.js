@@ -91,7 +91,7 @@ export class CasperWizardStatusPage extends CasperWizardPage {
           --iron-icon-width: 100px;
         }
 
-         .error-icon {
+        .error-icon {
           fill: var(--error-color);
           --iron-icon-height: 100px;
           --iron-icon-width: 100px;
