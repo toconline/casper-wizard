@@ -38,9 +38,63 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
   static get template () {
     return html`
       <style>
+        :host {
+          --accept-color: #EF5350;
+          --accept-normal-color: var(--primary-color);
+          --reject-color: #EF5350;
+        }
+
+        .confirm-accept-button {
+          background-color: var(--accept-color) !important;
+          border-color: var(--accept-color) !important;
+          color: white !important;
+        }
+
+        .confirm-accept-button:hover {
+          background-color: white !important;
+          border-color: var(--accept-color) !important;
+          color: var(--accept-color) !important;
+        }
+
+
+        .confirm-accept-normal-button {
+          background-color: var(--accept-normal-color) !important;
+          border-color: var(--accept-normal-color) !important;
+          color: white !important;
+        }
+
+        .confirm-accept-normal-button:hover {
+          background-color: white !important;
+          border-color: var(--accept-normal-color) !important;
+          color: var(--accept-normal-color) !important;
+        }
+
+        .confirm-reject-button {
+
+        }
+
+        .confirm-reject-button:hover {
+          color: #666666 !important;
+          background-color: #CCCCCC !important;
+        }
+
+        .button-animation {
+          -moz-transition: width 0.5s;
+          -webkit-transition: width 0.5s;
+          -o-transition: width 0.5s;
+          -ms-transition: width 0.5s;
+          transition: width 0.5s;
+        }
 
         .wizard-button {
           background-color: var(--primary-color);
+          transition: background 0.5s;
+          transition: color 0.5s;
+        }
+
+        .wizard-button:hover{
+          transition: background 1s;
+          transition: color 0.5s;
         }
 
         .wizard-button[disabled] {
@@ -148,25 +202,29 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
           min-width: 40px;
           padding: 0;
           border-radius: 20px;
-          background-color: var(--primary-color);
           font-size: 14px;
           font-weight: bold;
           -webkit-font-smoothing: antialiased;
+          background-color: var(--button-primary-color);
+          border: 2px solid var(--button-primary-color);
           color: white;
+        }
+
+
+        .wizard-next-button:hover {
+          background-color: white;
+          border: 2px solid var(--button-primary-color);
+          color: var(--button-primary-color);
+        }
+
+        .wizard-next-button:hover .wizard-icon-next-button {
+          color: var(--button-primary-color);
         }
 
         .wizard-icon-next-button {
           width: 25px;
           height: 25px;
           color: #fff;
-        }
-
-        .button-animation {
-          -moz-transition: width 0.5s;
-          -webkit-transition: width 0.5s;
-          -o-transition: width 0.5s;
-          -ms-transition: width 0.5s;
-          transition: width 0.5s;
         }
 
         .wizard-text {
@@ -187,6 +245,18 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
           background-color: white;
           color: var(--primary-color);
           border: 2px solid var(--primary-color);
+        }
+
+        .wizard-previous-button:hover {
+          border-color: var(--button-primary-color);
+          background-color: var(--button-primary-color);
+          color: white;
+          transition: all 0.5s;
+        }
+
+
+        .wizard-previous-button:hover .wizard-icon-next-button {
+          color: var(--button-primary-color);
         }
 
         .wizard-icon-previous-button {
@@ -752,9 +822,21 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
   overrideWizardButtons (cssProps) {
     for (const [button, buttonProps] of Object.entries(cssProps)) {
       const element = this.shadowRoot.querySelector(`.wizard-${button}-button`);
-      for (const [key, value] of Object.entries(buttonProps)) {
+
+      if (buttonProps?.className) {
+        element.classList.remove('.confirm-accept-normal-button');
+        element.classList.remove('.confirm-accept-button');
+        element.classList.remove(buttonProps.className);
+        element.classList.add(buttonProps.className);
+      }
+
+      const styleToApply = buttonProps?.style || buttonProps;
+
+      for (const [key, value] of Object.entries(styleToApply)) {
         element.style[key] = value;
       }
+
+
     }
   }
 

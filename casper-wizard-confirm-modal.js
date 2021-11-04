@@ -160,14 +160,20 @@ class ConfirmWizardConfirmModal extends Casper.I18n(CasperWizard) {
 
 		this.defaultOverrideWizardButtons = {
 			previous: {
-				backgroundColor: '#E5E5E5',
-				color: '#A9A9A9',
-				display: 'flex',
-				border: 'none',
+				style: {
+					backgroundColor: '#E5E5E5',
+					color: '#A9A9A9',
+					display: 'flex',
+					border: 'none',
+				},
+				className: 'confirm-reject-button'
 			},
 			next: {
-				backgroundColor: '#EF5350',
-				display: 'flex',
+				style: {
+					backgroundColor: '#EF5350',
+					display: 'flex',
+				},
+				className: 'confirm-accept-button'
 			},
 		};
 
