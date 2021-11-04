@@ -613,7 +613,6 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
 
   hideStatusAndProgress () {
     clearTimeout(this._fadeInTimer);
-
     if (this._progressPage !== undefined) {
       this._progressPage.style.display = 'none';
       this._progressPage.style.opacity = 0;

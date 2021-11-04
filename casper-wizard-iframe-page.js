@@ -79,6 +79,7 @@ class CasperWizardIframePage extends CasperWizardPage {
           top: 5px;
           right: 0;
           background-color: var(--primary-color);
+          border: 2px var(--primary-color) solid;
           font-weight: normal;
           font-size: 14px;
           -webkit-font-smoothing: antialiased;
@@ -87,6 +88,13 @@ class CasperWizardIframePage extends CasperWizardPage {
           height: 30px;
           box-shadow: none;
           display: none;
+        }
+
+        .print-button:hover {
+          background-color: white;
+          color: var(--primary-color);
+          transition: background 1s;
+          transition: color 0.5s;
         }
 
         .shadow {

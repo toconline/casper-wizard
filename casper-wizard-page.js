@@ -53,6 +53,7 @@ export class CasperWizardPage extends PolymerElement {
 
         .print-button {
           background-color: var(--primary-color);
+          border: 2px var(--primary-color) solid;
           font-weight: normal;
           font-size: 14px;
           -webkit-font-smoothing: antialiased;
@@ -61,6 +62,15 @@ export class CasperWizardPage extends PolymerElement {
           height: 30px;
           box-shadow: none;
           display: none;
+          transition: background 0.5s;
+          transition: color 0.5s;
+        }
+
+        .print-button:hover {
+          background-color: white;
+          color: var(--primary-color);
+          transition: background 1s;
+          transition: color 0.5s;
         }
 
         .headery {
