@@ -251,6 +251,7 @@ class ConfirmWizardConfirmModal extends Casper.I18n(CasperWizard) {
 		}
 
 		this.showAlert = this.options?.alert ? true : false;
+		this.hideReject = this.options?.hideReject ? true : false;
 
 		this._resetReason();
 
@@ -264,6 +265,14 @@ class ConfirmWizardConfirmModal extends Casper.I18n(CasperWizard) {
 			if ( this.showAlert ) {
 				this.shadowRoot.querySelector('.alert-container').setAttribute(this.alertType, true)
 			}
+
+			if ( this.options && this.options.hideReject) {
+				this.hidePrevious();
+			} else {
+				this.showPrevious();
+			}
+
+			super.setOptions({ ...this.defaultOptions, ...this.options });
 
 			if (this.shadowRoot.querySelector('paper-input')) {
 				this.shadowRoot.querySelector('paper-input').focus();
