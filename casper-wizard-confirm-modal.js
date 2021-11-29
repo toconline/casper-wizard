@@ -73,6 +73,61 @@ class ConfirmWizardConfirmModal extends Casper.I18n(CasperWizard) {
 					background: var(--error-color-soft);
 				}
 
+
+
+
+				/* ACCEPT BUTTON (DANGER) */
+
+				/* --accept-color ( RED ) */
+				/* --accept-normal-color ( PRIMARY ) */
+
+				.confirm-accept-button {
+					background-color: var(--accept-color) !important;
+					border-color: var(--accept-color) !important;
+					color: white !important;
+					font-size: 30px;
+				}
+
+				.confirm-accept-button:hover {
+					background-color: #F4D4D5 !important;
+					border-color: var(--accept-color) !important;
+					color: var(--accept-color) !important;
+				}
+
+
+
+				/* ACCEPT BUTTON */
+
+				.confirm-accept-normal-button {
+					background-color: var(--accept-normal-color) !important;
+					border-color: var(--accept-normal-color) !important;
+					color: white !important;
+				}
+
+				.confirm-accept-normal-button:hover {
+					background-color: white !important;
+					border-color: var(--accept-normal-color) !important;
+					color: var(--accept-normal-color) !important;
+				}
+
+
+				/* REJECT BUTTON */
+
+				.confirm-reject-button {
+					background-color: white !important;
+					border: 2px solid var(--accept-color) !important;
+					color: var(--accept-color) !important;
+				}
+
+				.confirm-reject-button:hover {
+					background-color: #F4D4D5 !important;
+					border-color: var(--accept-color) !important;
+					color: var(--accept-color) !important;
+      	}
+
+
+
+
 			</style>
 
 			<casper-wizard-page id="confirm" hide-title next$="[[accept]]" previous$="[[reject]]">
@@ -154,25 +209,17 @@ class ConfirmWizardConfirmModal extends Casper.I18n(CasperWizard) {
 		};
 
 		this.defaultOverrideWizardDimensions = {
-			width: '350px',
-			height: '200px',
+			width: '450px',
+			height: '230px',
 		};
 
 		this.defaultOverrideWizardButtons = {
 			previous: {
-				style: {
-					backgroundColor: '#E5E5E5',
-					color: '#A9A9A9',
-					display: 'flex',
-					border: 'none',
-				},
+				style: { display: 'flex' },
 				className: 'confirm-reject-button'
 			},
 			next: {
-				style: {
-					backgroundColor: '#EF5350',
-					display: 'flex',
-				},
+				style: { display: 'flex' },
 				className: 'confirm-accept-button'
 			},
 		};
@@ -188,8 +235,8 @@ class ConfirmWizardConfirmModal extends Casper.I18n(CasperWizard) {
 			};
 		} else {
 			this.defaultOverrideWizardDimensions = {
-				width: '350px',
-				height: '200px',
+				width: '450px',
+				height: '230px',
 			};
 		}
 
@@ -197,7 +244,7 @@ class ConfirmWizardConfirmModal extends Casper.I18n(CasperWizard) {
 		if ( options.alert ) {
 			this.defaultOverrideWizardDimensions = {
 				width: '450px',
-				height: '350px',
+				height: '450px',
 			};
 		}
 

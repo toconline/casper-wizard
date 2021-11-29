@@ -44,40 +44,6 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
           --reject-color: #EF5350;
         }
 
-        .confirm-accept-button {
-          background-color: var(--accept-color) !important;
-          border-color: var(--accept-color) !important;
-          color: white !important;
-        }
-
-        .confirm-accept-button:hover {
-          background-color: white !important;
-          border-color: var(--accept-color) !important;
-          color: var(--accept-color) !important;
-        }
-
-
-        .confirm-accept-normal-button {
-          background-color: var(--accept-normal-color) !important;
-          border-color: var(--accept-normal-color) !important;
-          color: white !important;
-        }
-
-        .confirm-accept-normal-button:hover {
-          background-color: white !important;
-          border-color: var(--accept-normal-color) !important;
-          color: var(--accept-normal-color) !important;
-        }
-
-        .confirm-reject-button {
-
-        }
-
-        .confirm-reject-button:hover {
-          color: #666666 !important;
-          background-color: #CCCCCC !important;
-        }
-
         .button-animation {
           -moz-transition: width 0.5s;
           -webkit-transition: width 0.5s;
@@ -212,7 +178,7 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
 
 
         .wizard-next-button:hover {
-          background-color: white;
+          background-color: var(--light-primary-color);
           border: 2px solid var(--button-primary-color);
           color: var(--button-primary-color);
         }
@@ -249,8 +215,8 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
 
         .wizard-previous-button:hover {
           border-color: var(--button-primary-color);
-          background-color: var(--button-primary-color);
-          color: white;
+          background-color: var(--light-primary-color, var(--button-primary-color));
+          color: var(--button-primary-color);
           transition: all 0.5s;
         }
 
