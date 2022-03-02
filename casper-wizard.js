@@ -27,6 +27,7 @@ import '@cloudware-casper/casper-icons/casper-icon.js';
 import '@cloudware-casper/casper-icons/casper-icon-button.js';
 import '@cloudware-casper/casper-toast/casper-toast.js';
 import { CasperWizardPage } from './casper-wizard-page.js';
+import { CasperWizardPageLit } from './casper-wizard-page-lit.js';
 import { CasperWizardUploadPage } from './casper-wizard-upload-page.js';
 import { CasperWizardStatusPage } from './casper-wizard-status-page.js';
 import { mixinBehaviors } from '@polymer/polymer/lib/legacy/class.js';
@@ -397,7 +398,7 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
 
     // ... make sure all existing pages get the 'page' class
     for (let page of this.shadowRoot.children) {
-      if (page instanceof CasperWizardPage) {
+      if (page instanceof CasperWizardPage || page instanceof CasperWizardPageLit) {
         page.classList.add('page', 'slide-in');
 
         if (page.hasAttribute('hide-title')) {
@@ -415,7 +416,7 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
     if (pageIdList) {
       // If the page is not in the list hide it
       for (let page of this.shadowRoot.children) {
-        if (page instanceof CasperWizardPage) {
+        if (page instanceof CasperWizardPage || page instanceof CasperWizardPageLit) {
           if (!pageIdList.includes(page.id)) {
             page.style.display = 'none';
           }
@@ -430,7 +431,7 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
     } else {
       // ... grab all children that extend casper-wizard-page ...
       for (let page of this.shadowRoot.children) {
-        if (page instanceof CasperWizardPage) {
+        if (page instanceof CasperWizardPage || page instanceof CasperWizardPageLit) {
           this._pages.push(page);
           page.wizard = this;
         }
