@@ -103,7 +103,17 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
           height: 25px;
         }
 
-        .wizard-container .header .wizard-close-button:hover {
+        .wizard-close-button {
+          background: transparent;
+          border: none;
+          color: #FFF;
+        }
+
+        .wizard-close-button:hover {
+          background-color: #00000040;
+        }
+
+        .wizard-container .header {
           color: #FFF;
           background: transparent;
         }
@@ -807,6 +817,13 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
       }
 
 
+    }
+  }
+
+  overrideWizardHeader (cssProps) {
+    const element = this.shadowRoot.querySelector('.header');
+    for (const [key, value] of Object.entries(cssProps)) {
+      element.style[key] = value;
     }
   }
 
