@@ -113,11 +113,6 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
           background-color: #00000040;
         }
 
-        .wizard-container .header {
-          color: #FFF;
-          background: transparent;
-        }
-
         .wizard-container .page-container {
           width: 100%;
           flex: auto;
