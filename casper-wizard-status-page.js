@@ -137,10 +137,6 @@ export class CasperWizardStatusPage extends CasperWizardPage {
     `;
   }
 
-  static get is () {
-    return 'casper-wizard-status-page';
-  }
-
   static get properties () {
     return {
       pageTitle: {
@@ -180,4 +176,4 @@ export class CasperWizardStatusPage extends CasperWizardPage {
   }
 }
 
-window.customElements.define(CasperWizardStatusPage.is, CasperWizardStatusPage);
+window.customElements.define('casper-wizard-status-page', CasperWizardStatusPage);

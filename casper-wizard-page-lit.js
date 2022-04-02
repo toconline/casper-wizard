@@ -19,6 +19,7 @@
  */
 
 import { LitElement, css } from 'lit';
+import { CasperSocketPromise } from  '@cloudware-casper/casper-socket/casper-socket.js';
 
 export class CasperWizardPageLit extends LitElement {
 
@@ -29,4 +30,38 @@ export class CasperWizardPageLit extends LitElement {
       box-sizing: border-box;
       padding: 24px 24px 0 24px;
     }`;
+
+  jobCompleted (notification) {
+    this._jobPromise.resolve(notification);
+  }
+
+  error (notification) {
+    this._jobPromise.reject(notification);
+  }
+
+  async execJob (job, timeout, ttr) {
+    this._jobPromise = new CasperSocketPromise();
+    this.wizard.submitJobWithStrictValidity(job, timeout, ttr);
+    return this._jobPromise;
+  }
+
+  showResponse (response) {
+    this.wizard.showStatusPage(response);
+    this.wizard._statusPage.showResponse(response)
+  }
+
+  showError (error) {
+    if ( typeof error.message !== 'Array' ) {
+      error.message = [ error.message , {}];
+    }
+    this.wizard.showFatalError(error);
+  }
+
+  previousPage () {
+    this.wizard.previousPage();
+  }
+
+  nextPage () {
+    this.wizard.nextPage();
+  }
 }

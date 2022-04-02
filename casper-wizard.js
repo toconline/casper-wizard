@@ -249,6 +249,14 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
           border-radius: 0px 0px var(--roundie, 10px) var(--roundie, 10px);
         }
 
+        .page-lit {
+          top: 0;
+          opacity: 1;
+          position: absolute;
+          background-color: var(--surface-color, #FFF);
+          border-radius: 0px 0px var(--roundie, 10px) var(--roundie, 10px);
+        }
+
         @supports (-ms-ime-align: auto) {
           .page {
             border-radius: 0px 0px 8px 8px;
@@ -388,6 +396,22 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
     return this._jobChannel;
   }
 
+  get statusPageTag () {
+    return 'casper-wizard-status-page';
+  }
+
+  get statusPageDisplay () {
+    return 'block';
+  }
+
+  get progressPageTag () {
+    return 'casper-wizard-progress-page';
+  }
+
+  get progressPageDisplay () {
+    return 'block';
+  }
+
   /**
    * Constructor, grabs the pages that will be displayed and moves them in the DOM
    */
@@ -404,8 +428,12 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
     // ... make sure all existing pages get the 'page' class
     for (let page of this.shadowRoot.children) {
       if (page instanceof CasperWizardPage || page instanceof CasperWizardPageLit) {
-        page.classList.add('page', 'slide-in');
-
+        if ( page instanceof CasperWizardPageLit ) {
+          page.classList.add('page-lit', 'slide-in');
+        } else {
+          page.classList.add('page', 'slide-in');
+        }
+      
         if (page.hasAttribute('hide-title')) {
           page.classList.add("page--no-title");
         }
@@ -496,7 +524,9 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
   appendPagesAndActivate (index) {
     // ... move the wizard pages from the wizard into the page container ...
     this._pages.forEach(page => this._pageContainer.appendChild(page));
-    this._gotoPage(index);
+    if ( this._pages.length ) {
+      this._gotoPage(index);
+    }
   }
 
   connectedCallback () {
@@ -597,8 +627,10 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
     if (this._statusPage !== undefined) {
       this._statusPage.style.display = 'none';
       this._statusPage.style.opacity = 0;
-      this._statusPage.icon = CasperWizardStatusPage.properties.icon.value;
-      this._statusPage.message = CasperWizardStatusPage.properties.message.value;
+      if ( this._statusPage instanceof CasperWizardStatusPage ) {
+        this._statusPage.icon = CasperWizardStatusPage.properties.icon.value;
+        this._statusPage.message = CasperWizardStatusPage.properties.message.value;
+      }
     }
     this._state = 'normal';
     this._nextButton.disabled = false;
@@ -670,7 +702,7 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
 
     // ... create page if needed ...
     if (this._progressPage === undefined) {
-      this._progressPage = document.createElement('casper-wizard-progress-page');
+      this._progressPage = document.createElement(this.progressPageTag);
       this._progressPage.title = 'Progresso em curso';
       this._progressPage.style.zIndex = 2;
       this._progressPage.style.opacity = 0;
@@ -684,7 +716,7 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
     this.disableNext();
 
     this._fadeInTimer = setTimeout(() => {
-      this._progressPage.style.display = 'block';
+      this._progressPage.style.display = this.progressPageDisplay;
       this._progressPage.classList.add('fade-in');
 
       this._footerSlotContainer.classList.remove('fade-in');
@@ -709,7 +741,7 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
     }
     // ... create page if needed ...
     if (this._statusPage === undefined) {
-      this._statusPage = document.createElement('casper-wizard-status-page');
+      this._statusPage = document.createElement(this.statusPageTag);
       this._statusPage.style.zIndex = 2;
       this._statusPage.style.opacity = 0;
       this._statusPage.style.position = 'absolute';
@@ -742,7 +774,7 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
     this.disableNext();
 
     this._fadeInTimer = setTimeout(() => {
-      this._statusPage.style.display = 'block';
+      this._statusPage.style.display = this.statusPageDisplay;
       this._statusPage.classList.add('fade-in');
 
       this._footerSlotContainer.classList.remove('fade-in');
@@ -875,13 +907,17 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
     let page = this._pageIndex;
     if (page >= 1) {
       page -= 1;
-      if (typeof this['previousOn' + this._getCurrentPage().id] === 'function') {
+      if (typeof this._getCurrentPage().previous === 'function') {
+        this._getCurrentPage().previous();
+      } else if (typeof this['previousOn' + this._getCurrentPage().id] === 'function') {
         this['previousOn' + this._getCurrentPage().id].apply(this);
       } else {
         this._activatePage(page);
       }
     } else {
-      if (typeof this['previousOn' + this._getCurrentPage().id] === 'function') {
+      if (typeof this._getCurrentPage().previous === 'function') {
+        this._getCurrentPage().previous();
+      } else if (typeof this['previousOn' + this._getCurrentPage().id] === 'function') {
         this['previousOn' + this._getCurrentPage().id].apply(this);
       }
     }
@@ -899,13 +935,17 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
     }
 
     if (this._pageIndex < this._pages.length - 1) {
-      if (typeof this['nextOn' + this._getCurrentPage().id] === 'function') {
+      if (typeof this._getCurrentPage().next === 'function') {
+        this._getCurrentPage().next();
+      } else if (typeof this['nextOn' + this._getCurrentPage().id] === 'function') {
         this['nextOn' + this._getCurrentPage().id].apply(this);
       } else {
         this._activatePage(this._pageIndex + 1);
       }
     } else {
-      if (typeof this['nextOn' + this._pages[this._pages.length - 1].id] === 'function') {
+      if (typeof this._getCurrentPage().next === 'function') {
+        this._getCurrentPage().next();
+      } else if (typeof this['nextOn' + this._pages[this._pages.length - 1].id] === 'function') {
         this['nextOn' + this._pages[this._pages.length - 1].id].apply(this);
       } else {
         this.close();
@@ -1001,7 +1041,9 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
 
     // Prevent enterOn execution on close of wizard
     if (!closingWizard) {
-      if (typeof this['enterOn' + this._getCurrentPage().id] === 'function') {
+      if (typeof this._getCurrentPage().enter === 'function') {
+        this._getCurrentPage().enter();
+      } else if (typeof this['enterOn' + this._getCurrentPage().id] === 'function') {
         this['enterOn' + this._getCurrentPage().id].apply(this);
       }
     }
@@ -1230,7 +1272,9 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
           this._setControlledSubmission();
         } else {
           this._updateWizardButtons();
-          if (typeof this['jobCompletedOn' + this._getCurrentPage().id] === 'function') {
+          if (typeof  this._getCurrentPage().jobCompleted === 'function') {
+            this._getCurrentPage().jobCompleted(notification);
+          } else if (typeof this['jobCompletedOn' + this._getCurrentPage().id] === 'function') {
             if (notification.custom === true) {
               // ... Pass the full notification to allow more flexible custom handling ...
               this['jobCompletedOn' + this._getCurrentPage().id].apply(this, [notification.status_code, notification, notification.response]);
@@ -1255,7 +1299,9 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
       case 'failed':
       case 'error':
         this._setControlledSubmission();
-        if (typeof this['errorOn' + this._getCurrentPage().id] === 'function') {
+        if (typeof this._getCurrentPage().error === 'function') {
+          this._getCurrentPage().error(notification);
+        } else if (typeof this['errorOn' + this._getCurrentPage().id] === 'function') {
           this['errorOn' + this._getCurrentPage().id].apply(this, [notification]);
         } else {
           if ( this.errorsAreFatal === true ) {
