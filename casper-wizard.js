@@ -27,7 +27,7 @@ import '@cloudware-casper/casper-icons/casper-icon.js';
 import '@cloudware-casper/casper-icons/casper-icon-button.js';
 import '@cloudware-casper/casper-toast/casper-toast.js';
 import { CasperWizardPage } from './casper-wizard-page.js';
-import { CasperWizardPageLit } from './casper-wizard-page-lit.js';
+import { CasperPaWizardPage } from './casper-pa-wizard-page.js';
 import { CasperWizardUploadPage } from './casper-wizard-upload-page.js';
 import { CasperWizardStatusPage } from './casper-wizard-status-page.js';
 import { mixinBehaviors } from '@polymer/polymer/lib/legacy/class.js';
@@ -427,8 +427,8 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
 
     // ... make sure all existing pages get the 'page' class
     for (let page of this.shadowRoot.children) {
-      if (page instanceof CasperWizardPage || page instanceof CasperWizardPageLit) {
-        if ( page instanceof CasperWizardPageLit ) {
+      if (page instanceof CasperWizardPage || page instanceof CasperPaWizardPage) {
+        if ( page instanceof CasperPaWizardPage ) {
           page.classList.add('page-lit', 'slide-in');
         } else {
           page.classList.add('page', 'slide-in');
@@ -449,7 +449,7 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
     if (pageIdList) {
       // If the page is not in the list hide it
       for (let page of this.shadowRoot.children) {
-        if (page instanceof CasperWizardPage || page instanceof CasperWizardPageLit) {
+        if (page instanceof CasperWizardPage || page instanceof CasperPaWizardPage) {
           if (!pageIdList.includes(page.id)) {
             page.style.display = 'none';
           }
@@ -464,7 +464,7 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
     } else {
       // ... grab all children that extend casper-wizard-page ...
       for (let page of this.shadowRoot.children) {
-        if (page instanceof CasperWizardPage || page instanceof CasperWizardPageLit) {
+        if (page instanceof CasperWizardPage || page instanceof CasperPaWizardPage) {
           this._pages.push(page);
           page.wizard = this;
         }
@@ -651,8 +651,10 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
    * @param {Object}  job
    * @param {Integer} timeout
    * @param {Integer} ttr
+   * 
+   * @return the progress page
    */
-  submitJobWithStrictValidity (job, timeout, ttr) {
+  submitJobWithStrictValidity (job, timeout, ttr, hideTimeout) {
     const ltimeout = parseInt(timeout);
     const lttr     = parseInt(ttr);
 
@@ -667,7 +669,8 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
     }
     this.showProgressPage();
     this._setControlledSubmission();
-    this.socket.submitJob(job, this._submitJobResponse.bind(this), { validity: job.validity, ttr: lttr, timeout: ltimeout });
+    this.socket.submitJob(job, this._submitJobResponse.bind(this), { validity: job.validity, ttr: lttr, timeout: ltimeout, hideTimeout: !!hideTimeout });
+    return this._progressPage;
   }
 
   submitControlledJob (job, timeout, ttr) {

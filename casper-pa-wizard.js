@@ -22,7 +22,7 @@
 import { CasperWizard } from '@cloudware-casper/casper-wizard/casper-wizard.js';
 import { html } from '@polymer/polymer/lib/utils/html-tag.js';
   
-export class CasperWizardNg extends CasperWizard {
+export class CasperPaWizard extends CasperWizard {
   
   // ... we need to return an empty template to avoid a duplication of the skeletom dom
   static get template () {

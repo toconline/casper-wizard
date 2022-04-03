@@ -21,7 +21,7 @@
 import { LitElement, css } from 'lit';
 import { CasperSocketPromise } from  '@cloudware-casper/casper-socket/casper-socket.js';
 
-export class CasperWizardPageLit extends LitElement {
+export class CasperPaWizardPage extends LitElement {
 
   static styles = css`
     :host {
@@ -41,7 +41,8 @@ export class CasperWizardPageLit extends LitElement {
 
   async execJob (job, timeout, ttr) {
     this._jobPromise = new CasperSocketPromise();
-    this.wizard.submitJobWithStrictValidity(job, timeout, ttr);
+    const ppage = this.wizard.submitJobWithStrictValidity(job, timeout, ttr, true);
+    ppage.updateProgress(0, 'Em fila de espera. Por favor, aguarde', 1);
     return this._jobPromise;
   }
 
@@ -51,10 +52,14 @@ export class CasperWizardPageLit extends LitElement {
   }
 
   showError (error) {
-    if ( typeof error.message !== 'Array' ) {
+    if ( Array.isArray(error.message) === false ) {
       error.message = [ error.message , {}];
     }
     this.wizard.showFatalError(error);
+  }
+
+  hideStatusAndProgress () {
+    this.wizard.hideStatusAndProgress();
   }
 
   previousPage () {
@@ -64,4 +69,5 @@ export class CasperWizardPageLit extends LitElement {
   nextPage () {
     this.wizard.nextPage();
   }
+
 }
