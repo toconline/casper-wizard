@@ -36,14 +36,11 @@ export class CasperPaWizard extends CasperWizard {
     }
   
     for (const p of this.options.pages ) {
-      await import(`/src/${app.digest}${p.page}.js`);
-      const page = document.createElement(p.page);
+      await import(`/src/${app.digest}${p}.js`);
+      const page = document.createElement(p);
         
-      if ( p.previous ) page.setAttribute('previous', p.previous);
-      if ( p.next ) page.setAttribute('next', p.next);
-      
       page.classList.add('page-lit', 'slide-in');
-      page.id = p.id;
+      page.id = p;
       page.wizard = this;
       this._pages.push(page);
     }
@@ -55,4 +52,50 @@ export class CasperPaWizard extends CasperWizard {
       this._createTabs();
     }
   }
+
+  /**
+   * Override base class to provide custom and corrected handling of subscriptions
+   * 
+   * @param {Object} response the job status either retrieved from redis or pushed with a redis notification
+   * 
+   * @note There's a ton a legacy here, but I am going the safe way and avoided touching the case class 
+   */
+  _subscribeJobResponse (response) {
+    if ( typeof response.status === 'object' ) {
+      // ... the status of a non-transient job was retrieved from redis that's why status is an object ...
+      const status = response.status;
+
+      if ( status.status === 'queued' ) {
+        // TODO a timer to protect this???
+        console.log('The job is late for the date');
+
+      } else if ( status.status === 'completed' ) {
+        // ... the job already finished just return the response ...
+        this._jobPromise.resolve(status.response);
+        super.close();
+      } else {
+        // ... it's in intermediate state, let's go down the progress road ...
+        if ( Array.isArray(status.progress) ) {
+          // ... array of multiple progresses as sent by the SP-JOB
+          let idx = 0;
+          status.progress.forEach(element => {
+            this._updateUI( {
+              progress: status.progress[idx].value,
+              message:  status.progress[idx].message,
+              status:   status.status,
+              index:    idx 
+            });
+            idx++;
+          });
+        } else {
+          this._updateUI(status);
+        }  
+      }
+      return;
+    }
+
+    // ... otherwise it's a good old notification published via redis channel ...
+    this._updateUI(response);
+  }
+
 }

@@ -32,18 +32,32 @@ export class CasperPaWizardPage extends LitElement {
     }`;
 
   jobCompleted (notification) {
-    this._jobPromise.resolve(notification);
+    this.wizard._jobPromise.resolve(notification);
   }
 
   error (notification) {
-    this._jobPromise.reject(notification);
+    this.wizard._jobPromise.reject(notification);
   }
 
+  /**
+   * Submit a job and return a promise to the caller
+   * 
+   * @param {Object} job     the job payload
+   * @param {Number} timeout in seconds, the maximum time the front will wait for the result
+   * @param {Number} ttr     time to run in seconds, maximum execution time on the server (counted after the job starts)
+   * @returns the promise for the caller to await on
+   */
   async execJob (job, timeout, ttr) {
-    this._jobPromise = new CasperSocketPromise();
-    const ppage = this.wizard.submitJobWithStrictValidity(job, timeout, ttr, true);
-    ppage.updateProgress(0, 'Em fila de espera. Por favor, aguarde', 1);
-    return this._jobPromise;
+    this.wizard._jobPromise = new CasperSocketPromise();
+    this.wizard.submitJobWithStrictValidity(job, timeout, ttr, true)
+      .updateProgress(0, 'Em fila de espera. Por favor, aguarde', 1);
+    return this.wizard._jobPromise;
+  }
+
+  async subscribeJob (job_id) {
+    this.wizard._jobPromise = new CasperSocketPromise();
+    this.wizard.subscribeJob(job_id, 86400);
+    return this.wizard._jobPromise;
   }
 
   showResponse (response) {
@@ -68,6 +82,22 @@ export class CasperPaWizardPage extends LitElement {
 
   nextPage () {
     this.wizard.nextPage();
+  }
+
+  enablePrevious () {
+    this.wizard.enablePrevious();
+  }
+
+  enableNext () {
+    this.wizard.enableNext();
+  }
+
+  close () {
+    this.wizard.close();
+  }
+
+  hidePrevious () {
+    this.wizard.hidePrevious();
   }
 
 }
