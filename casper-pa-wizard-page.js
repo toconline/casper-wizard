@@ -28,11 +28,11 @@ export class CasperPaWizardPage extends LitElement {
       width: 100%;
       height: 100%;
       box-sizing: border-box;
-      padding: 24px 24px 0 24px;
+      padding: 20px 20px 0 20px;
     }`;
 
   jobCompleted (notification) {
-    this.wizard._jobPromise.resolve(notification);
+    this.wizard._jobPromise.resolve(notification.response || notification);
   }
 
   error (notification) {

@@ -71,7 +71,7 @@ export class CasperPaWizard extends CasperWizard {
 
       } else if ( status.status === 'completed' ) {
         // ... the job already finished just return the response ...
-        this._jobPromise.resolve(status.response);
+        this._jobPromise.resolve(status.response.response || status.response);
         super.close();
       } else {
         // ... it's in intermediate state, let's go down the progress road ...
@@ -97,5 +97,4 @@ export class CasperPaWizard extends CasperWizard {
     // ... otherwise it's a good old notification published via redis channel ...
     this._updateUI(response);
   }
-
 }
