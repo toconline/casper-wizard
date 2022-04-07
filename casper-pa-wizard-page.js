@@ -32,7 +32,7 @@ export class CasperPaWizardPage extends LitElement {
     }`;
 
   jobCompleted (notification) {
-    this.wizard._jobPromise.resolve(notification.response || notification);
+    this.wizard._jobPromise.resolve(Object.keys(notification.response).length ? notification.response : notification);
   }
 
   error (notification) {
