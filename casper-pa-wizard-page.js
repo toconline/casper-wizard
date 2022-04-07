@@ -60,9 +60,15 @@ export class CasperPaWizardPage extends LitElement {
     return this.wizard._jobPromise;
   }
 
-  showResponse (response) {
+  showResponse (response, close) {
     this.wizard.showStatusPage(response);
     this.wizard._statusPage.showResponse(response)
+    if ( close ) {
+      this._nextClosesWizard = true;
+      this.hidePrevious();
+      this.changeNextButtonToText('Fechar');
+      this.enableNext();  
+    }
   }
 
   showError (error) {
@@ -84,8 +90,20 @@ export class CasperPaWizardPage extends LitElement {
     this.wizard.nextPage();
   }
 
+  hidePrevious () {
+    this.wizard.hidePrevious();
+  }
+
+  disablePrevious () {
+    this.wizard.disablePrevious();
+  }
+
   enablePrevious () {
     this.wizard.enablePrevious();
+  }
+
+  disableNext () {
+    this.wizard.disableNext();
   }
 
   enableNext () {
@@ -96,8 +114,5 @@ export class CasperPaWizardPage extends LitElement {
     this.wizard.close();
   }
 
-  hidePrevious () {
-    this.wizard.hidePrevious();
-  }
 
 }
