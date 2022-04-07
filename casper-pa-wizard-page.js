@@ -114,5 +114,20 @@ export class CasperPaWizardPage extends LitElement {
     this.wizard.close();
   }
 
+  changePreviousButtonToText (text) {
+    this.wizard.changePreviousButtonToText(text);
+  }
+
+  changePreviousButtonToIcon () {
+    this.wizard.changePreviousButtonToIcon();
+  }
+
+  changeNextButtonToText (text) {
+    this.wizard.changeNextButtonToText(text);
+  }
+
+  changeNextButtonToIcon () {
+    this.wizard.changeNextButtonToIcon();
+  }
 
 }
