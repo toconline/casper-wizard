@@ -94,6 +94,10 @@ export class CasperPaWizardPage extends LitElement {
     this.wizard.hidePrevious();
   }
 
+  showPrevious () {
+    this.wizard.showPrevious();
+  }
+  
   disablePrevious () {
     this.wizard.disablePrevious();
   }
@@ -128,6 +132,16 @@ export class CasperPaWizardPage extends LitElement {
 
   changeNextButtonToIcon () {
     this.wizard.changeNextButtonToIcon();
+  }
+
+  /**
+   * Show toast at the bottow of the wizard
+   *
+   * @param {String} message the text to display.
+   * @param {Boolean} success controls the style, false for errors, true for positive messages.
+   */
+  openToast (message, success) {
+    this.wizard.openToast(message, success);
   }
 
 }

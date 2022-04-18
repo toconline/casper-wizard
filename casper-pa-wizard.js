@@ -53,6 +53,12 @@ export class CasperPaWizard extends CasperWizard {
     }
   }
 
+  hideStatusAndProgress () {
+    const ndis = this._nextButton.disabled;
+    super.hideStatusAndProgress();
+    this._nextButton.disabled = ndis;
+  }
+
   /**
    * Override base class to provide custom and corrected handling of subscriptions
    * 
