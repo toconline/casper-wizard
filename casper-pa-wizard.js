@@ -36,7 +36,7 @@ export class CasperPaWizard extends CasperWizard {
     }
   
     for (const p of this.options.pages ) {
-      await import(`/src/${app.digest}${p}.js`);
+      await import(`/src/${app.digest ? app.digest + '.' : ''}${p}.js`);
       const page = document.createElement(p);
         
       page.classList.add('page-lit', 'slide-in');
