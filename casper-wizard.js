@@ -659,13 +659,11 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
     const lttr     = parseInt(ttr);
 
     if ( isNaN(ltimeout) || isNaN(lttr) ) {
-      console.error("Strict timing requires valid ttr and timeout!!!");
-      return;
+      throw 'Strict timing requires valid ttr and timeout!!!';
     }
     job.validity = ltimeout - lttr - 2; // 2 seconds safety margin
     if ( job.validity < 1 ) {
-      console.error("Strict timing requires a timeout greater than ttr + 3!!!");
-      return;
+      throw 'Strict timing requires a timeout greater than ttr + 3!!!")';
     }
     this.showProgressPage();
     this._setControlledSubmission();
