@@ -18,89 +18,89 @@
   -
  */
 
-
 import { CasperWizard } from '@cloudware-casper/casper-wizard/casper-wizard.js';
 import { html } from '@polymer/polymer/lib/utils/html-tag.js';
-  
+
 export class CasperPaWizard extends CasperWizard {
-  
-  // ... we need to return an empty template to avoid a duplication of the skeletom dom
-  static get template () {
-    return html``;
-  }
-  
-  async appendPagesAndActivate (index) {
-  
-    if ( this.options.title ) {
-      this.setTitle(this.options.title);
-    }
-  
-    for (const p of this.options.pages ) {
-      await import(`/src/${app.digest ? app.digest + '.' : ''}${p}.js`);
-      const page = document.createElement(p);
-        
-      page.classList.add('page-lit', 'slide-in');
-      page.id = p;
-      page.wizard = this;
-      this._pages.push(page);
-    }
-      
-    super.appendPagesAndActivate(index);
-  
-    // ... build tabs if they are not surpressed ...
-    if (this.notabs === undefined || this.notabs === false) {
-      this._createTabs();
-    }
-  }
+	// ... we need to return an empty template to avoid a duplication of the skeletom dom
+	static get template() {
+		return html``;
+	}
 
-  hideStatusAndProgress () {
-    const ndis = this._nextButton.disabled;
-    super.hideStatusAndProgress();
-    this._nextButton.disabled = ndis;
-  }
+	async appendPagesAndActivate(index) {
+		if (this.options.title) {
+			this.setTitle(this.options.title);
+		}
 
-  /**
-   * Override base class to provide custom and corrected handling of subscriptions
-   * 
-   * @param {Object} response the job status either retrieved from redis or pushed with a redis notification
-   * 
-   * @note There's a ton a legacy here, but I am going the safe way and avoided touching the case class 
-   */
-  _subscribeJobResponse (response) {
-    if ( typeof response.status === 'object' ) {
-      // ... the status of a non-transient job was retrieved from redis that's why status is an object ...
-      const status = response.status;
+		for (const p of this.options.pages) {
+			const pagePath = p.split('/');
+			const componentName = pagePath[pagePath.length - 1];
+			const importUrl = `/src/${app.digest ? app.digest + '.' : ''}${p}.js`;
 
-      if ( status.status === 'queued' ) {
-        // TODO a timer to protect this???
-        console.log('The job is late for the date');
+			await import(importUrl);
+			const page = document.createElement(componentName);
 
-      } else if ( status.status === 'completed' ) {
-        // ... the job already finished just return the response ...
-        this._jobPromise.resolve(status.response.response || status.response);
-        super.close();
-      } else {
-        // ... it's in intermediate state, let's go down the progress road ...
-        if ( Array.isArray(status.progress) ) {
-          // ... array of multiple progresses as sent by the SP-JOB
-          let idx = 0;
-          status.progress.forEach(element => {
-            this._updateUI( {
-              progress: status.progress[idx].value,
-              message:  status.progress[idx].message,
-              status:   status.status,
-              index:    idx 
-            });
-            idx++;
-          });
-        } else {
-          this._updateUI(status);
-        }  
-      }
-      return;
-    }
+			page.classList.add('page-lit', 'slide-in');
+			page.id = componentName;
+			page.wizard = this;
+			this._pages.push(page);
+		}
 
-    // ... otherwise it's a good old notification published via redis channel ...
-    this._updateUI(response);
-  }
+		super.appendPagesAndActivate(index);
+
+		// ... build tabs if they are not surpressed ...
+		if (this.notabs === undefined || this.notabs === false) {
+			this._createTabs();
+		}
+	}
+
+	hideStatusAndProgress() {
+		const ndis = this._nextButton.disabled;
+		super.hideStatusAndProgress();
+		this._nextButton.disabled = ndis;
+	}
+
+	/**
+	 * Override base class to provide custom and corrected handling of subscriptions
+	 *
+	 * @param {Object} response the job status either retrieved from redis or pushed with a redis notification
+	 *
+	 * @note There's a ton a legacy here, but I am going the safe way and avoided touching the case class
+	 */
+	_subscribeJobResponse(response) {
+		if (typeof response.status === 'object') {
+			// ... the status of a non-transient job was retrieved from redis that's why status is an object ...
+			const status = response.status;
+
+			if (status.status === 'queued') {
+				// TODO a timer to protect this???
+				console.log('The job is late for the date');
+			} else if (status.status === 'completed') {
+				// ... the job already finished just return the response ...
+				this._jobPromise.resolve(status.response.response || status.response);
+				super.close();
+			} else {
+				// ... it's in intermediate state, let's go down the progress road ...
+				if (Array.isArray(status.progress)) {
+					// ... array of multiple progresses as sent by the SP-JOB
+					let idx = 0;
+					status.progress.forEach((element) => {
+						this._updateUI({
+							progress: status.progress[idx].value,
+							message: status.progress[idx].message,
+							status: status.status,
+							index: idx,
+						});
+						idx++;
+					});
+				} else {
+					this._updateUI(status);
+				}
+			}
+			return;
+		}
+
+		// ... otherwise it's a good old notification published via redis channel ...
+		this._updateUI(response);
+	}
 }
