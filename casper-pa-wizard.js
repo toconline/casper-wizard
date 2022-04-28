@@ -34,8 +34,17 @@ export class CasperPaWizard extends CasperWizard {
 
 		for (const p of this.options.pages) {
 			const pagePath = p.split('/');
+			let tempPath = p.split('/')
+			tempPath.splice(-1);
+			const componentDir = tempPath.length > 0 ? tempPath.join("/") : undefined;
 			const componentName = pagePath[pagePath.length - 1];
-			const importUrl = `/src/${app.digest ? app.digest + '.' : ''}${p}.js`;
+
+			const componentNameDigested = [
+				componentDir,
+				app.digest ? app.digest + '.' + componentName : componentName
+			].filter(e => e).join('/');
+
+			const importUrl = `/src/${componentNameDigested}.js`;
 
 			await import(importUrl);
 			const page = document.createElement(componentName);
