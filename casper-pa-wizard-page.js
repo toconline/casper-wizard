@@ -41,7 +41,7 @@ export class CasperPaWizardPage extends LitElement {
 
   /**
    * Submit a job and return a promise to the caller
-   * 
+   *
    * @param {Object} job     the job payload
    * @param {Number} timeout in seconds, the maximum time the front will wait for the result
    * @param {Number} ttr     time to run in seconds, maximum execution time on the server (counted after the job starts)
@@ -67,13 +67,17 @@ export class CasperPaWizardPage extends LitElement {
       this._nextClosesWizard = true;
       this.hidePrevious();
       this.changeNextButtonToText('Fechar');
-      this.enableNext();  
+      this.enableNext();
     }
   }
 
   showError (error) {
     if ( Array.isArray(error.message) === false ) {
-      error.message = [ error.message , {}];
+      if ( typeof error === 'string' ) {
+        error = { message: [ error, {} ] };
+      } else {
+        error.message = [ error.message , {} ];
+      }
     }
     this.wizard.showFatalError(error);
   }
@@ -97,7 +101,7 @@ export class CasperPaWizardPage extends LitElement {
   showPrevious () {
     this.wizard.showPrevious();
   }
-  
+
   disablePrevious () {
     this.wizard.disablePrevious();
   }
