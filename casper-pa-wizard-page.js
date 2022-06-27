@@ -75,6 +75,8 @@ export class CasperPaWizardPage extends LitElement {
     if ( Array.isArray(error.message) === false ) {
       if ( typeof error === 'string' ) {
         error = { message: [ error, {} ] };
+      } else if ( typeof error.response.body.message === 'string' ) {
+          error.message = [ error.response.body.message, {} ];
       } else {
         error.message = [ error.message , {} ];
       }
