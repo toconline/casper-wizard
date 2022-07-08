@@ -62,6 +62,7 @@ export class CasperWizardStatusPage extends CasperWizardPage {
           white-space: pre-line;
           word-break: break-word;
           flex-direction: column;
+          justify-content: center;
         }
 
         .custom-message {
