@@ -193,6 +193,10 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
           color: var(--button-primary-color);
         }
 
+        .wizard-button:focus {
+          outline: #46a9ff4d solid 4px;
+        }
+
         .wizard-icon-next-button {
           width: 25px;
           height: 25px;
@@ -433,7 +437,7 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
         } else {
           page.classList.add('page', 'slide-in');
         }
-      
+
         if (page.hasAttribute('hide-title')) {
           page.classList.add("page--no-title");
         }
@@ -651,7 +655,7 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
    * @param {Object}  job
    * @param {Integer} timeout
    * @param {Integer} ttr
-   * 
+   *
    * @return the progress page
    */
   submitJobWithStrictValidity (job, timeout, ttr, hideTimeout) {
