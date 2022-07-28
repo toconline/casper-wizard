@@ -28,6 +28,11 @@ export class CasperPaWizard extends CasperWizard {
     return html``;
   }
 
+  constructor () {
+    super();
+    this.data = {};
+  }
+
   async appendPagesAndActivate(index) {
     if (this.options.title) {
       this.setTitle(this.options.title);
