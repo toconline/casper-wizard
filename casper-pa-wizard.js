@@ -28,68 +28,29 @@ export class CasperPaWizard extends CasperWizard {
     return html``;
   }
 
-  constructor () {
-    super();
-    this.data = {};
-  }
-
   async appendPagesAndActivate(index) {
     if (this.options.title) {
       this.setTitle(this.options.title);
     }
-
     for (const p of this.options.pages) {
-      const pagePath = p.split('/');
-      let tempPath = p.split('/')
-      tempPath.splice(-1);
-      const componentDir = tempPath.length > 0 ? tempPath.join("/") : undefined;
-      const componentName = pagePath[pagePath.length - 1];
-
-      const componentNameDigested = [
-              componentDir,
-              app.digest ? app.digest + '.' + componentName : componentName
-      ].filter(e => e).join('/');
-
-      const importUrl = `/src/${componentNameDigested}.js`;
-
-      await import(importUrl);
-      const page = document.createElement(componentName);
-
-      page.classList.add('page-lit', 'slide-in');
-      page.id = componentName;
-      page.wizard = this;
-      this._pages.push(page);
+        const pagePath = p.split('/');
+        let tempPath = p.split('/')
+        tempPath.splice(-1);
+        const componentDir = tempPath.length > 0 ? tempPath.join("/") : undefined;
+        const componentName = pagePath[pagePath.length - 1];
+        const componentNameDigested = [
+            componentDir,
+            app.digest ? app.digest + '.' + componentName : componentName
+        ].filter(e => e).join('/');
+        const importUrl = `/src/${componentNameDigested}.js`;
+        await import(importUrl);
+        const page = document.createElement(componentName);
+        page.classList.add('page-lit', 'slide-in');
+        page.id = componentName;
+        page.wizard = this;
+        this._pages.push(page);
     }
-
     super.appendPagesAndActivate(index);
-
-    // ... build tabs if they are not surpressed ...
-    if (this.notabs === undefined || this.notabs === false) {
-            this._createTabs();
-    }
-  }
-
-  async appendPagesAndActivate(index) {
-    if (this.options.title) {
-      this.setTitle(this.options.title);
-    }
-
-    for (const p of this.options.pages) {
-      const pagePath = p.split('/');
-      const componentName = pagePath[pagePath.length - 1];
-      const importUrl = `/src/${app.digest ? app.digest + '.' : ''}${p}.js`;
-
-      await import(importUrl);
-      const page = document.createElement(componentName);
-
-      page.classList.add('page-lit', 'slide-in');
-      page.id = componentName;
-      page.wizard = this;
-      this._pages.push(page);
-    }
-
-    super.appendPagesAndActivate(index);
-
     // ... build tabs if they are not surpressed ...
     if (this.notabs === undefined || this.notabs === false) {
       this._createTabs();
