@@ -639,7 +639,7 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
     this._state = 'normal';
     this._nextButton.disabled = false;
 
-    this._footerSlotContainer.classList.add('fade-in');
+    this._appendFooterSlotElement();
     this._getCurrentPage().classList.remove('fade-out');
   }
 
