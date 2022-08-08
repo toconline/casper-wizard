@@ -1080,7 +1080,7 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
       }
     });
 
-    if (this._footerSlotContainer.children.length === 1) {
+    if (this._footerSlotContainer.children.length === 1 && previousPageIndex !== undefined) {
       // If there is already a footer slot element, fade it away and then append the new one.
       this._footerSlotContainer.classList.remove('fade-in');
       setTimeout(() => {
