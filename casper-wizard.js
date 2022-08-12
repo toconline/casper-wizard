@@ -639,7 +639,7 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
     this._state = 'normal';
     this._nextButton.disabled = false;
 
-    this._appendFooterSlotElement();
+    this._footerSlotContainer.classList.add('fade-in');
     this._getCurrentPage().classList.remove('fade-out');
   }
 
@@ -1080,7 +1080,7 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
       }
     });
 
-    if (this._footerSlotContainer.children.length === 1 && previousPageIndex !== undefined) {
+    if (this._footerSlotContainer.children.length === 1) {
       // If there is already a footer slot element, fade it away and then append the new one.
       this._footerSlotContainer.classList.remove('fade-in');
       setTimeout(() => {
