@@ -111,4 +111,19 @@ export class CasperPaWizard extends CasperWizard {
     // ... otherwise it's a good old notification published via redis channel ...
     this._updateUI(response);
   }
+
+    /**
+   * Override base class to provide custom handling of open/close wizard
+   *
+   * @note It's the responsibility of the developer to be aware of other page's _onClose events
+   */
+  onOpenedChanged (event) {
+    if (event.detail.value === false) {
+      for (const page of this._pages) {
+        if (typeof page._onClose === 'function') {
+          page._onClose();
+        }
+      }
+    }
+  }
 }

@@ -1340,6 +1340,10 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
   }
 
   __onOpenedChanged (event) {
+    this.onOpenedChanged(event);
+  }
+
+  onOpenedChanged (event) {
     if (event.detail.value === false) {
       if (this.app) this.app.tooltip.hide();
       for (let page of this._pages) {
