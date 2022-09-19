@@ -49,8 +49,9 @@ export class CasperPaWizardPage extends LitElement {
    */
   async execJob (job, timeout, ttr) {
     this.wizard._jobPromise = new CasperSocketPromise();
-    this.wizard.submitJobWithStrictValidity(job, timeout, ttr, true)
-      .updateProgress(0, 'Em fila de espera. Por favor, aguarde', 1);
+    const progressPage = this.wizard.submitJobWithStrictValidity(job, timeout, ttr, true);
+    progressPage.timeout = timeout;
+    progressPage.updateProgress(0, 'Em fila de espera. Por favor, aguarde', undefined);
     return this.wizard._jobPromise;
   }
 
