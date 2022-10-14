@@ -138,7 +138,7 @@ class ConfirmWizardConfirmModal extends Casper.I18n(CasperWizard) {
 				<template is="dom-if" if="[[needsReason]]" restamp>
 					<paper-input
 						id="reason"
-						label="Motivo de anulação"
+						label={{reasonLabel}}
 						value="{{reason}}"
 						required
 					/>
@@ -179,6 +179,10 @@ class ConfirmWizardConfirmModal extends Casper.I18n(CasperWizard) {
 				type: String,
 				value: undefined,
 			},
+			optionalReason: {
+				type: Boolean,
+				value: false,
+			},
 			showAlert: {
 				type: Boolean,
 				value: false,
@@ -190,6 +194,10 @@ class ConfirmWizardConfirmModal extends Casper.I18n(CasperWizard) {
 			alertType: {
 				type: String,
 				value: "info"
+			},
+			reasonLabel: {
+				type: String,
+				value: "Motivo de anulação"
 			}
 		};
 	}
@@ -228,7 +236,7 @@ class ConfirmWizardConfirmModal extends Casper.I18n(CasperWizard) {
 	}
 
 	setOptions(options) {
-		if (options.needs_reason) {
+		if (options.needsReason) {
 			this.defaultOverrideWizardDimensions = {
 				width: '450px',
 				height: '230px',
@@ -354,7 +362,7 @@ class ConfirmWizardConfirmModal extends Casper.I18n(CasperWizard) {
 	_gotoNextPage() {
 		let _canProceed = true;
 
-		if (this.options?.needs_reason) {
+		if (this.options?.needsReason && !this.optionalReason) {
 			_canProceed = this.shadowRoot.querySelector('paper-input').validate();
 		}
 
@@ -371,10 +379,16 @@ class ConfirmWizardConfirmModal extends Casper.I18n(CasperWizard) {
 	}
 
 	_resetReason() {
-		if (this.options.needs_reason) {
-			this.needsReason = true;
-		} else {
-			this.needsReason = false;
+		if (this.options.needsReason) {
+			this.needsReason = this.options.needsReason;
+		}
+
+		if (this.options.optionalReason) {
+			this.optionalReason = this.options.optionalReason;
+		}
+
+		if (this.options.reasonLabel) {
+			this.reasonLabel = this.options.reasonLabel;
 		}
 
 		this.reason = undefined;
