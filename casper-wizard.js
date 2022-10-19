@@ -769,7 +769,7 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
       }
       if (notification.response !== undefined && notification.response.message_icon !== undefined) {
         this._statusPage.icon = notification.response.message_icon;
-        this._statusPage.$.statusIcon.style.fill = notification.response.color_icon;
+        this._statusPage.$.statusIcon.style.color = notification.response.color_icon;
       }
     }
 
