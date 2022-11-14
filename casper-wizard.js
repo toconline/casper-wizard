@@ -713,6 +713,7 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
       this._progressPage.style.opacity = 0;
       this._progressPage.style.position = 'absolute';
       this._progressPage.classList.add('fade-animation');
+      this._progressPage.sideBySide = !!this.options?.progressOptions?.sideBySide;
       this._pageContainer.appendChild(this._progressPage);
     }
 

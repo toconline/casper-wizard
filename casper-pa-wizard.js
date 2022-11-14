@@ -85,8 +85,10 @@ export class CasperPaWizard extends CasperWizard {
         console.log('The job is late for the date');
       } else if (status.status === 'completed') {
         // ... the job already finished just return the response ...
-        this._jobPromise.resolve(status.response.response || status.response);
-        super.close();
+        if (this._jobPromise) {
+          this._jobPromise.resolve(status.response.response || status.response);
+          super.close();
+        }
       } else {
         // ... it's in intermediate state, let's go down the progress road ...
         if (Array.isArray(status.progress)) {
