@@ -709,7 +709,7 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
     if (this._progressPage === undefined) {
       this._progressPage = document.createElement(this.progressPageTag);
       this._progressPage.title = 'Progresso em curso';
-      this._progressPage.style.zIndex = 2;
+      this._progressPage.style.zIndex = 3;
       this._progressPage.style.opacity = 0;
       this._progressPage.style.position = 'absolute';
       this._progressPage.classList.add('fade-animation');

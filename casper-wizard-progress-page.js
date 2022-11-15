@@ -68,7 +68,7 @@ class CasperWizardProgressPage extends PolymerElement {
         .progress-container[side-by-side] {
           display: flex;
           flex-wrap: wrap;
-          gap: 6px;
+          gap: 5px;
           justify-content: space-between;
           flex-direction: column;
         }
