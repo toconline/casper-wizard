@@ -764,7 +764,7 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
       if (notification && notification.title) {
         this._statusPage.title = this.i18n.apply(this, notification.title);
       }
-      this._statusPage.message = this.i18n.apply(this, notification.message);
+      this._statusPage.message = this.i18n.apply(this, notification.message || notification.response.body.message);
       if (notification.response !== undefined && notification.response.title !== undefined) {
         this._statusPage.title = notification.response.title;
       }
