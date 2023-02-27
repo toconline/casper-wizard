@@ -95,6 +95,12 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
           background-color: var(--primary-color);
         }
 
+        .wizard-container .header .title {
+          width: 97%;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
         .wizard-container .header .wizard-close-button {
           padding: 0;
           z-index: 4;

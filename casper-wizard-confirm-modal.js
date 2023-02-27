@@ -379,17 +379,9 @@ class ConfirmWizardConfirmModal extends Casper.I18n(CasperWizard) {
 	}
 
 	_resetReason() {
-		if (this.options.needsReason) {
-			this.needsReason = this.options.needsReason;
-		}
-
-		if (this.options.optionalReason) {
-			this.optionalReason = this.options.optionalReason;
-		}
-
-		if (this.options.reasonLabel) {
-			this.reasonLabel = this.options.reasonLabel;
-		}
+		this.needsReason = this.options?.needsReason ? this.options.needsReason : false;
+		this.optionalReason = this.options?.optionalReason ? this.options.optionalReason : false;
+		this.reasonLabel = this.options?.reasonLabel ? this.options.reasonLabel : "Motivo de anulação";
 
 		this.reason = undefined;
 		if (this.shadowRoot.querySelector('paper-input')) {
