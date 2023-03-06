@@ -87,6 +87,10 @@ export class CasperPaWizardPage extends LitElement {
     this.wizard.showFatalError(error);
   }
 
+  showStatusPage (response) {
+    this.wizard.showStatusPage(response);
+  }
+
   hideStatusAndProgress () {
     this.wizard.hideStatusAndProgress();
   }
