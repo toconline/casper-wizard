@@ -504,8 +504,8 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
     this._closeButton.addEventListener('tap', () => this._closePage());
     window.addEventListener('resize', () => this._applyDimensions());
 
-    if (this?.options?.width && this?.options?.height) {
-      this.overrideWizardDimensions({width: this.options.width, height: this.options.height});
+    if (this?.options?.dimensions) {
+      this.overrideWizardDimensions(this.options.dimensions);
     } else {
       this._setWizardDefaultDimensions();
     }
