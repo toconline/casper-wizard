@@ -510,6 +510,11 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
       this._setWizardDefaultDimensions();
     }
 
+    // ... needed to hide jumps caused by changes in the wizard's dimensions ...
+    if (this?.options?.hasOwnProperty('initial_opacity')) {
+      this.style.opacity = this.options.initial_opacity;
+    }
+
     // ... grab constants from CSS ...
     let style = window.getComputedStyle(this);
     this._slideTime = parseFloat(style.getPropertyValue('--slide-time')) * 1000;
@@ -840,6 +845,14 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
 
     this._applyDimensions();
     this._setWizardTabsDimensions();
+  }
+
+  
+  /* Needed to hide jumps caused by changes in the wizard's dimensions */
+  fixWizardOpacity () {
+    if (this.options.hasOwnProperty('initial_opacity') && window.getComputedStyle(this).opacity === '0') {
+      this.style.removeProperty('opacity');
+    }
   }
 
   overrideWizardButtons (cssProps) {
