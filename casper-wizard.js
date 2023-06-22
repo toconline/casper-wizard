@@ -65,9 +65,9 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
         }
 
         .wizard-button[disabled] {
-          border: none;
-          color: white;
-          background-color: #e0e0e0;
+          border: none !important;
+          color: white !important;
+          background-color: #e0e0e0 !important;
         }
 
         .wizard-container {
@@ -847,7 +847,7 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
     this._setWizardTabsDimensions();
   }
 
-  
+
   /* Needed to hide jumps caused by changes in the wizard's dimensions */
   fixWizardOpacity () {
     if (this.options.hasOwnProperty('initial_opacity') && window.getComputedStyle(this).opacity === '0') {
