@@ -57,7 +57,12 @@ export class CasperPaWizardPage extends LitElement {
     return this.wizard._jobPromise;
   }
 
-  async subscribeJob (job_id) {
+  async subscribeJobWithoutClose(job_id) {
+    this.wizard.doNotClose = true;
+    return await this.subscribeJob(job_id);
+  }
+
+  async subscribeJob(job_id) {
     this.wizard._jobPromise = new CasperSocketPromise();
     this.wizard.subscribeJob(job_id, 86400);
     return this.wizard._jobPromise;
