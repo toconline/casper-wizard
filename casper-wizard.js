@@ -347,6 +347,9 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
           grid-template-rows: 1fr;
         }
 
+        .wizard-toast {
+          position: absolute;
+        }
       </style>
 
       <div class="wizard-container">
@@ -371,7 +374,7 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
           </div>
         </div>
       </div>
-      <casper-toast duration="5000"></casper-toast>
+      <casper-toast class="wizard-toast"></casper-toast>
     `;
   }
 
@@ -529,7 +532,6 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
 
     // ... some options ...
     this.toast = this.shadowRoot.querySelector('casper-toast');
-    this.toast.onclick = () => this.toast.close();
     this.noCancelOnEscKey = false;
     this.noCancelOnOutsideClick = true;
     this.errorsAreFatal = true;
@@ -826,10 +828,13 @@ export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I
    * @param {Boolean} success controls the style, false for errors, true for positive messages.
    */
   openToast (message, success) {
-    this.toast.backgroundColor = success ? 'var(--primary-color)' : 'var(--error-color)';
-    this.toast.fitInto = this;
-    this.toast.text = message;
-    this.toast.open();
+    const options = {
+      text: message,
+      background_color: success ? 'var(--primary-color)' : 'var(--error-color)',
+      duration: 5000
+    };
+
+    this.toast.open(options);
   }
 
   /**
