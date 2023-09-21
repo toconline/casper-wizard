@@ -6,6 +6,10 @@
     "registry": "https://npm.pkg.github.com/"
   },
   "main": "casper-wizard.js",
+  "resolutions": {
+    "lit-element": "^3.x",
+    "@polymer/polymer": "3.4.1"
+  },
   "dependencies": {
     "@cloudware-casper/casper-icons": "^3.x",
     "@cloudware-casper/casper-overlay-behavior": "^1.x",
@@ -13,7 +17,6 @@
     "@polymer/paper-button": "^3.x",
     "@polymer/paper-icon-button": "^3.x",
     "@polymer/paper-ripple": "^3.x",
-    "@polymer/paper-toast": "^3.x",
     "@polymer/polymer": "^3.x",
     "@vaadin/vaadin-progress-bar": "^1.x",
     "@vaadin/vaadin-upload": "^4.x"
