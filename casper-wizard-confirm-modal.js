@@ -20,7 +20,7 @@
 
 import { CasperWizard } from './casper-wizard.js';
 import { html } from '@polymer/polymer/lib/utils/html-tag.js';
-import { Casper } from '@cloudware-casper/casper-common-ui/casper-i18n-behavior.js';
+import { Casper } from '@toconline/casper-common-ui/casper-i18n-behavior.js';
 import { afterNextRender } from '@polymer/polymer/lib/utils/render-status.js';
 
 class ConfirmWizardConfirmModal extends Casper.I18n(CasperWizard) {

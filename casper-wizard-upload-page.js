@@ -20,7 +20,7 @@
 
 import { html } from '@polymer/polymer/lib/utils/html-tag.js';
 import { CasperWizardPage } from './casper-wizard-page.js';
-import '@cloudware-casper/casper-upload-dropzone/casper-upload-dropzone.js';
+import '@toconline/casper-upload-dropzone/casper-upload-dropzone.js';
 
 export class CasperWizardUploadPage extends CasperWizardPage {
   static get template () {

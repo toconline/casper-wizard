@@ -19,7 +19,7 @@
  */
 
 import { LitElement, css } from 'lit';
-import { CasperSocketPromise } from  '@cloudware-casper/casper-socket/casper-socket.js';
+import { CasperSocketPromise } from  '@toconline/casper-socket/casper-socket.js';
 
 export class CasperPaWizardPage extends LitElement {
 
