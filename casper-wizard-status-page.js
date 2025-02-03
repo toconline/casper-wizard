@@ -20,7 +20,7 @@
 
 import { CasperWizardPage } from './casper-wizard-page.js';
 import '@polymer/iron-icon/iron-icon.js';
-import '@cloudware-casper/casper-icons/casper-icon.js';
+import '@toconline/casper-icons/casper-icon.js';
 import { html } from '@polymer/polymer/lib/utils/html-tag.js';
 
 export class CasperWizardStatusPage extends CasperWizardPage {

@@ -2,29 +2,6 @@
 # yarn lockfile v1
 
 
-"@cloudware-casper/casper-icons@^3.x":
-  version "3.2.7"
-  resolved "https://npm.pkg.github.com/download/@cloudware-casper/casper-icons/3.2.7/16145caf17fe1ab9fb020eab0b34bb0d80518ac4#16145caf17fe1ab9fb020eab0b34bb0d80518ac4"
-  integrity sha512-E+6/LJc4PbgFd47mIFN72Gih3or4Zn+wvJhbe8WT1eOZ0DrdSRq5FVsjC9zRBnPZJji5k9d2d8s1Ow+49UGgvA==
-  dependencies:
-    ink-ripple alex-saunders/ink-ripple
-    lit "^2.x"
-
-"@cloudware-casper/casper-overlay-behavior@^1.x":
-  version "1.0.0"
-  resolved "https://npm.pkg.github.com/download/@cloudware-casper/casper-overlay-behavior/1.0.0/00e8d24f2599c0f15ae4500d03fc71fed252251f843d35ae9ee3a63995d01fad#af4a3084958aa01d7eb9623d4dc6121893cdc235"
-  integrity sha512-S7/iafhTc9ukWDOVNFMHWu9cIN78mbm/VP1JmKdS+2I7rXiKxep6W8DNfr7SsU7ix0qT38/uY8hSaqh/11gOLg==
-  dependencies:
-    "@polymer/iron-overlay-behavior" "^3.x"
-
-"@cloudware-casper/casper-toast@^2.x":
-  version "2.1.2"
-  resolved "https://npm.pkg.github.com/download/@cloudware-casper/casper-toast/2.1.2/442a003484f2624253ed1d8602048e249714e538#442a003484f2624253ed1d8602048e249714e538"
-  integrity sha512-aFJAb9JGSJdcjI+v6YjcXLLIuKAdx/jAsu7M0qScF3+hJg+tqXSJgmXL41um4dfzwTNrgipNIirzjSDIcWL7Rw==
-  dependencies:
-    "@cloudware-casper/casper-icons" "^3.x"
-    lit "^2.x"
-
 "@lit-labs/ssr-dom-shim@^1.0.0", "@lit-labs/ssr-dom-shim@^1.1.0":
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@lit-labs/ssr-dom-shim/-/ssr-dom-shim-1.1.1.tgz#64df34e2f12e68e78ac57e571d25ec07fa460ca9"
@@ -190,6 +167,29 @@
   dependencies:
     "@webcomponents/shadycss" "^1.9.1"
 
+"@toconline/casper-icons@^3.x":
+  version "3.2.6"
+  resolved "https://npm.pkg.github.com/download/@toconline/casper-icons/3.2.6/157a96d60ac922bbc38294b02c1de2b7617e4f36#157a96d60ac922bbc38294b02c1de2b7617e4f36"
+  integrity sha512-zl1H4WLCQP7poxEi5Uq1ZAY1EmbGUlAh0QoTloZ7f8ErVKg66/Q70GkgRuL7jnCySa7TWwOxj2wtHktuouksUw==
+  dependencies:
+    ink-ripple alex-saunders/ink-ripple
+    lit "^2.x"
+
+"@toconline/casper-overlay-behavior@^1.x":
+  version "1.0.0"
+  resolved "https://npm.pkg.github.com/download/@toconline/casper-overlay-behavior/1.0.0/33f484114b22907403eb95902e3b1be7f56a14d8#33f484114b22907403eb95902e3b1be7f56a14d8"
+  integrity sha512-bbkOQv8a0rJcjRw0YJBHilBs87nY6BGvIvp16lJPqsMYktr9teaNwLlxhnDw82o8ZfWfUFks9GOjYSoO4P8HYg==
+  dependencies:
+    "@polymer/iron-overlay-behavior" "^3.x"
+
+"@toconline/casper-toast@^2.x":
+  version "2.1.5"
+  resolved "https://npm.pkg.github.com/download/@toconline/casper-toast/2.1.5/0cedc515af10e6525d7686fdf920a259a8fcb308#0cedc515af10e6525d7686fdf920a259a8fcb308"
+  integrity sha512-dOyE48UypPDEHHW9WUyrtwKsATSbwvr1QsFqFeTqk00ZEU9RSnLRqp3NeW/A1JAqFu9aAq8wEqesAMdHM+/Crw==
+  dependencies:
+    "@toconline/casper-icons" "^3.x"
+    lit "^2.x"
+
 "@types/trusted-types@^2.0.2":
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/@types/trusted-types/-/trusted-types-2.0.4.tgz#2b38784cd16957d3782e8e2b31c03bc1d13b4d65"
@@ -288,7 +288,7 @@
   resolved "https://registry.yarnpkg.com/@webcomponents/shadycss/-/shadycss-1.11.2.tgz#7539b0ad29598aa2eafee8b341059e20ac9e1006"
   integrity sha512-vRq+GniJAYSBmTRnhCYPAPq6THYqovJ/gzGThWbgEZUQaBccndGTi1hdiUP15HzEco0I6t4RCtXyX0rsSmwgPw==
 
-ink-ripple@alex-saunders/ink-ripple:
+"ink-ripple@github:alex-saunders/ink-ripple":
   version "0.0.0"
   resolved "https://codeload.github.com/alex-saunders/ink-ripple/tar.gz/88e4d753bba9f7b57b372c62a4517bb091c7f713"
 

@@ -18,7 +18,7 @@
   -
  */
 
-import { CasperWizard } from '@cloudware-casper/casper-wizard/casper-wizard.js';
+import { CasperWizard } from '@toconline/casper-wizard/casper-wizard.js';
 import { html } from '@polymer/polymer/lib/utils/html-tag.js';
 
 export class CasperPaWizard extends CasperWizard {

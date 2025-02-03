@@ -23,17 +23,17 @@ import './casper-wizard-iframe-page.js';
 import './casper-wizard-progress-page.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
-import '@cloudware-casper/casper-icons/casper-icon.js';
-import '@cloudware-casper/casper-icons/casper-icon-button.js';
-import '@cloudware-casper/casper-toast/casper-toast.js';
+import '@toconline/casper-icons/casper-icon.js';
+import '@toconline/casper-icons/casper-icon-button.js';
+import '@toconline/casper-toast/casper-toast.js';
 import { CasperWizardPage } from './casper-wizard-page.js';
 import { CasperPaWizardPage } from './casper-pa-wizard-page.js';
 import { CasperWizardUploadPage } from './casper-wizard-upload-page.js';
 import { CasperWizardStatusPage } from './casper-wizard-status-page.js';
 import { mixinBehaviors } from '@polymer/polymer/lib/legacy/class.js';
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-import { Casper } from '@cloudware-casper/casper-common-ui/casper-i18n-behavior.js';
-import { CasperOverlayBehavior } from '@cloudware-casper/casper-overlay-behavior/casper-overlay-behavior.js';
+import { Casper } from '@toconline/casper-common-ui/casper-i18n-behavior.js';
+import { CasperOverlayBehavior } from '@toconline/casper-overlay-behavior/casper-overlay-behavior.js';
 
 export class CasperWizard extends mixinBehaviors(CasperOverlayBehavior, Casper.I18n(PolymerElement)) {
   static get template () {
